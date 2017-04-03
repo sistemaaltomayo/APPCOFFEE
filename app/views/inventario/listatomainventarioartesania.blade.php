@@ -55,7 +55,7 @@
 			    <table data-filter="#filter" class="table demo" data-page-size="30">
 			      	<thead>
 				        <tr>
-				          	<th data-class="expand" data-sort-initial="descending">
+				          	<th data-class="expand">
 				            	Código Barra
 				          	</th>
 				          	<th>

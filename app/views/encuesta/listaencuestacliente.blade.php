@@ -61,7 +61,7 @@
                                 <th>
                                     Zona
                                 </th>
-                                <th data-sort-initial="descending">
+                                <th>
                                    Fecha Creación 
                                 </th>
                                 <th>

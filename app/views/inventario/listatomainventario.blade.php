@@ -66,7 +66,7 @@
 					          	<th>
 					            	Estado
 					          	</th>
-					          	<th data-sort-initial="descending">
+					          	<th>
 					            	Fecha Creación
 					          	</th>
 					          	<th data-hide="phone,tablet">

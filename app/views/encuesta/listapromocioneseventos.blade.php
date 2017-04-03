@@ -55,7 +55,7 @@
                     <table data-filter="#filter" class="table demo" data-page-size="60">
                         <thead>
                             <tr>
-                                <th class='id' data-class="expand" data-sort-initial="descending">
+                                <th class='id' data-class="expand">
                                     Id
                                 </th>
 
