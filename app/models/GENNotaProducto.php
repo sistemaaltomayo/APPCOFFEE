@@ -1,7 +1,7 @@
 <?php
-class GENProducto extends Eloquent
+class GENNotaProducto extends Eloquent
 {
-	protected $table='GENProducto';
+	protected $table='GEN.NotaProducto';
 	protected $primaryKey='Id';
 	public $timestamps=false;
 }
