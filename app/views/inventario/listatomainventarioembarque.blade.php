@@ -23,9 +23,21 @@
     @endif  
 
     @if (Session::get('alertaMensajeGlobalE'))
+
     <div class="alert alert-danger alert-dismissable">
 	  <button type="button" class="close" data-dismiss="alert">&times;</button>
 	  <strong>¡Error!</strong> {{ Session::get('alertaMensajeGlobalE') }}
+	  <br>
+
+	    @if (Session::get('listaPrioridad'))
+	      {{--*/ $listaPrioridad   = Session::get('listaPrioridad') /*--}}
+            <ul class="list-group">
+		    	@foreach ($listaPrioridad as $item)
+					 <li class="list-group-item">{{$item['CodigoProducto']}} - {{$item['Descripcion']}}</li>
+				@endforeach
+            </ul>
+	    @endif  
+
 	</div>
     @endif 
 

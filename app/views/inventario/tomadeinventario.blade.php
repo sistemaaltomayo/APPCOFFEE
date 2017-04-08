@@ -20,7 +20,7 @@
 
 	<h4 style="text-align:center;">
 		Toma de {{$nombreopcion}} - 
-		{{$listaPlantillaToma[0]->Codigo}} - 
+		{{$listaPlantillaToma[0]->Correlativo}} - 
 		@if($listaPlantillaToma[0]->EstadoProceso=='P')
 			Primera Toma
 		@else
@@ -103,17 +103,43 @@
 						        		@foreach($listaPlantillaToma as $item)
 
 						        		@if($item->Tipo=='N')
-									<tr id="{{$item->IdTomaWeb}}*{{$item->IdProducto}}*{{$item->IdUsuario}}*{{$item->EstadoProceso}}" class='tablapedidodatanormal' data-toggle="modal" data-target="#insertarinventarionormal">
-											{{--*/ $stock = 'StockFisico1' /*--}}
-											@if($item->EstadoProceso=='S')
-												{{--*/ $stock = 'StockFisico2' /*--}}
-											@endif				
-						        			<td class="codigo">{{$item->CodigoProducto}}</td>
-						        			<td class="descripcion">{{strtoupper($item->Descripcion)}}</td>
-						        			<td class="stock" id="S{{$item->IdProducto}}">{{number_format($item->$stock, 3, '.', '')}}</td>
-							        		<td class="unidadd">{{strtoupper($item->Abreviatura)}}</td>
-						            </tr>
-						            @endif
+											<tr id="{{$item->IdTomaWeb}}*{{$item->IdProducto}}*{{$item->IdUsuario}}*{{$item->EstadoProceso}}" class='tablapedidodatanormal' data-toggle="modal" data-target="#insertarinventarionormal">
+													{{--*/ $stock = 'StockFisico1' /*--}}
+													@if($item->EstadoProceso=='S')
+														{{--*/ $stock = 'StockFisico2' /*--}}
+													@endif		
+
+													<!--          Prioridad             -->
+													{{--*/ $prioridad = '' /*--}}
+													{{--*/ $realizo   = '' /*--}}
+
+													@if($item->Codigo!='')
+														{{--*/ $prioridad = '(P)' /*--}}
+
+														{{--*/ $realizo   = '' /*--}}	
+													@endif	
+
+													@if($item->Digito == 0)
+														{{--*/ $realizo   = "<small class='digito'></small>" /*--}}	
+													@endif
+													@if($item->Digito == 1)
+														{{--*/ $realizo   = "<small class='digito'><i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i></small>" /*--}}	
+													@endif	
+
+
+								        			<td class="codigo">{{$item->CodigoProducto}}</td>
+								        			<td class="descripcion">
+								        				{{strtoupper($item->Descripcion)}} <strong>{{$prioridad}} </strong> {{$realizo}}								        				
+
+								        			</td>
+
+								        			<td class="stock" id="S{{$item->IdProducto}}">{{number_format($item->$stock, 3, '.', '')}}</td>
+									        		<td class="unidadd">{{strtoupper($item->Abreviatura)}}</td>
+
+
+
+								            </tr>
+						                @endif
 									@endforeach
 						      	</tbody>
 						      	<tfoot class="footable-pagination">
@@ -175,19 +201,46 @@
 						      	<tbody id="fbodymanufacturado">
 						        
 						        		@foreach($listaPlantillaToma as $item)
-						        		@if($item->Tipo=='M')
-										<tr id="{{$item->IdTomaWeb}}*{{$item->IdProducto}}*{{$item->IdUsuario}}*{{$item->EstadoProceso}}" class='tablapedidodatamanu' data-toggle="modal" data-target="#insertarinventariomanu">
-											{{--*/ $stock = 'StockFisico1' /*--}}
-											@if($item->EstadoProceso=='S')
-												{{--*/ $stock = 'StockFisico2' /*--}}
-											@endif			
-						        			<td class="codigo">{{$item->CodigoProducto}}</td>
-						        			<td class="descripcion">{{strtoupper($item->Descripcion)}}</td>
-						        			<td class="stock" id="S{{$item->IdProducto}}">{{number_format($item->$stock, 3, '.', '')}}</td>
-							        		<td class="unidadd">{{strtoupper($item->Abreviatura)}}</td>
-						            	</tr>
-						            @endif
-									@endforeach
+
+							        		@if($item->Tipo=='M')
+												<tr id="{{$item->IdTomaWeb}}*{{$item->IdProducto}}*{{$item->IdUsuario}}*{{$item->EstadoProceso}}" class='tablapedidodatamanu' data-toggle="modal" data-target="#insertarinventariomanu">
+													{{--*/ $stock = 'StockFisico1' /*--}}
+													@if($item->EstadoProceso=='S')
+														{{--*/ $stock = 'StockFisico2' /*--}}
+													@endif	
+
+
+													<!--          Prioridad             -->
+													{{--*/ $prioridad = '' /*--}}
+													{{--*/ $realizo   = '' /*--}}
+
+													@if($item->Codigo!='')
+														{{--*/ $prioridad = '(P)' /*--}}
+
+														{{--*/ $realizo   = '' /*--}}	
+													@endif	
+
+													@if($item->Digito == 0)
+														{{--*/ $realizo   = "<small class='digito'></small>" /*--}}	
+													@endif
+													@if($item->Digito == 1)
+														{{--*/ $realizo   = "<small class='digito'><i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i></small>" /*--}}	
+													@endif	
+
+													
+
+								        			<td class="codigo">{{$item->CodigoProducto}}</td>
+								        			<td class="descripcion">
+								        				{{strtoupper($item->Descripcion)}}
+								        				<strong>{{$prioridad}} </strong> {{$realizo}}
+
+								        			</td>
+								        			<td class="stock" id="S{{$item->IdProducto}}">{{number_format($item->$stock, 3, '.', '')}}</td>
+									        		<td class="unidadd">{{strtoupper($item->Abreviatura)}}</td>
+								            	</tr>
+							            	@endif
+
+										@endforeach
 						      	</tbody>
 						      	<tfoot class="footable-pagination">
 						        	<tr>

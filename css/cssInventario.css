@@ -1,3 +1,12 @@
+
+ .table .descripcion strong{
+  color: #f3565d;
+}
+
+.fa-check-circle-o{
+  color :#4cae4c;
+}
+
 .dual-list .selector{
   display: none !important;
 }

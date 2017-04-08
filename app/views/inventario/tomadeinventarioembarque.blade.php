@@ -19,7 +19,7 @@
 
 	<h4 style="text-align:center;">
 					Toma de {{$nombreopcion}} - 
-					{{$listaPlantillaToma[0]->Codigo}} - 
+					{{$listaPlantillaToma[0]->Correlativo}} - 
 					@if($listaPlantillaToma[0]->EstadoProceso=='P')
 						Primera Toma
 					@else
@@ -104,9 +104,31 @@
 											@if($item->EstadoProceso=='S')
 												{{--*/ $stock = 'StockFisico2' /*--}}
 											@endif
+
+
+											{{--*/ $prioridad = '' /*--}}
+												{{--*/ $realizo   = '' /*--}}
+
+												@if($item->Codigo!='')
+													{{--*/ $prioridad = '(P)' /*--}}
+
+													{{--*/ $realizo   = '' /*--}}	
+												@endif	
+
+												@if($item->Digito == 0)
+													{{--*/ $realizo   = "<small class='digito'></small>" /*--}}	
+												@endif
+												@if($item->Digito == 1)
+													{{--*/ $realizo   = "<small class='digito'><i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i></small>" /*--}}	
+												@endif	
+
+
+
 											<td style="display:none;">{{$item->CodigoBarra}}</td>
 						        			<td class="codigo">{{$item->CodigoProducto}}</td>
-						        			<td class="descripcion">{{strtoupper($item->Descripcion)}}</td>
+						        			<td class="descripcion">
+						        				{{strtoupper($item->Descripcion)}} <strong>{{$prioridad}} </strong> {{$realizo}}
+						        			</td>
 							        		<td class="stock" id="S{{$item->IdProducto}}">{{number_format($item->$stock, 3, '.', '')}}</td>
 							        		<td class="unidadd">{{strtoupper($item->Abreviatura)}}</td>
 						            	</tr>
@@ -363,6 +385,7 @@
 	                        if(pagina==1){
 
 	                        	$("#S"+array[1]).html(suma.toFixed(3));
+	                        	$("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
 	                        }else{
 	                            window.location.href = '/getion-inventario-embarque/'+idopcion;
 	                        }

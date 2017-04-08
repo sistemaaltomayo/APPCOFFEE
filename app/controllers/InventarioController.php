@@ -118,6 +118,33 @@ class InventarioController extends BaseController
 			        $stmt->bindParam(3, $ubicacion ,PDO::PARAM_STR);
 			        $stmt->execute();
 
+
+			        /************** Plantilla Prioridad *******************/
+
+			        $listaTomaPlantilla = DB::table('INV.TomaPlantilla')
+	    		    ->join('INV.PrioridadToma', 'INV.TomaPlantilla.CodigoProducto', '=', 'INV.PrioridadToma.Codigo')
+	    		    ->where('INV.TomaPlantilla.IdTomaWeb','=', $idtomaweb)
+	    		    ->where('INV.PrioridadToma.Activo','=', 1)
+	    		    ->where('INV.PrioridadToma.IdLocal','=', $idLocal[0]->Idlocal)
+            	    ->select('INV.TomaPlantilla.*')
+            	    ->get();
+
+
+					foreach($listaTomaPlantilla as $item){
+
+						$tINVPlantillaPrioridadToma 				= new INVPlantillaPrioridadToma;
+						$tINVPlantillaPrioridadToma->Codigo 		= $item->CodigoProducto;
+						$tINVPlantillaPrioridadToma->IdLocal 		= $idLocal[0]->Idlocal;
+						$tINVPlantillaPrioridadToma->IdTomaWeb 		= $idtomaweb;
+						$tINVPlantillaPrioridadToma->Digito         = 0;
+						$tINVPlantillaPrioridadToma->save();
+
+					}
+
+
+					/*********************************************************/
+
+
 					return Redirect::to('/getion-inventario-cafeteria'.'/'.$idOpcion)->with('alertaMensajeGlobal', 'Registro Exitoso');
 
 				}
@@ -257,12 +284,15 @@ class InventarioController extends BaseController
 	           	->on('INV.TomaPlantillaUsuario.IdProducto', '=', 'INV.TomaPlantilla.IdProducto');
 	        })
 	        ->join('INV.TomaWeb', 'INV.TomaWeb.Id', '=', 'INV.TomaPlantilla.IdTomaWeb')
+	        ->leftJoin('INV.PlantillaPrioridadToma', 'INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
 	   		->where('INV.TomaPlantillaUsuario.Activo', '=', 1)
 	   		->where('INV.TomaPlantilla.Activo', '=', 1)
 	   		->where('INV.TomaPlantilla.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaUsuario.IdTomaWeb', '=', $idtomaweb)
 	   		->where('INV.TomaPlantillaUsuario.IdUsuario', '=', $idusuario)
-	   		->orderBy('INV.TomaPlantilla.Descripcion', 'asc')
+		   	->select('INV.TomaPlantillaUsuario.*','INV.TomaPlantilla.*','INV.TomaWeb.Codigo as Correlativo','INV.TomaWeb.EstadoProceso',
+		   	    	'INV.PlantillaPrioridadToma.Codigo','INV.PlantillaPrioridadToma.Digito')
+	   		->orderBy('INV.PlantillaPrioridadToma.Digito', 'desc')
 	   	    ->get();
 
     		return View::make('inventario/tomadeinventario', 
@@ -273,6 +303,8 @@ class InventarioController extends BaseController
 			]);
 
 		}else{
+
+
 
 			if($listatoma[0]->EstadoProceso=="S"){
 
@@ -286,18 +318,34 @@ class InventarioController extends BaseController
 		        })
 		   		->where('INV.TomaPlantillaUsuario.IdTomaWeb', '=', $idtomaweb)
 		   		->where('INV.TomaPlantilla.Tipo', '=', 'N')
-		   		->select('INV.TomaPlantillaUsuario.IdProducto')
-		   		->groupBy('INV.TomaPlantillaUsuario.IdProducto')
+		   		->select('INV.TomaPlantillaUsuario.IdProducto','INV.TomaPlantilla.CodigoProducto')
+		   		->groupBy('INV.TomaPlantillaUsuario.IdProducto','INV.TomaPlantilla.CodigoProducto')
 		   		->havingRaw('SUM(INV.TomaPlantillaUsuario.StockFisico1) = max(INV.TomaPlantilla.Existencia)')
 		   	    ->get();
-
-
 
 				$IdProducto=array(-1);
 
 				for ( $i = 0 ; $i < count($listadoProductoE) ; $i ++) {
-					$IdProducto[$i]=$listadoProductoE[$i]->IdProducto;
+
+
+					/********************* Prioridad **************/
+					$prioridadplanilla = DB::table('INV.PlantillaPrioridadToma')->where('IdTomaWeb', '=', $idtomaweb)
+							  			 ->where('Codigo', '=', $listadoProductoE[$i]->CodigoProducto)
+							  			 ->where('Digito', '=', 0)
+							  			 ->first();
+
+					if(count($prioridadplanilla)==0){
+						$IdProducto[$i]=$listadoProductoE[$i]->IdProducto;
+					}
+
+					/***********************************************/
+
+
 				}
+
+
+
+
 
 				$listaPlantillaToma = DB::table('INV.TomaPlantillaUsuario')
 				->join('INV.TomaPlantilla', function($join)
@@ -306,12 +354,15 @@ class InventarioController extends BaseController
 		           	->on('INV.TomaPlantillaUsuario.IdProducto', '=', 'INV.TomaPlantilla.IdProducto');
 		        })
 		        ->join('INV.TomaWeb', 'INV.TomaWeb.Id', '=', 'INV.TomaPlantilla.IdTomaWeb')
+				->leftJoin('INV.PlantillaPrioridadToma', 'INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
 		   		->where('INV.TomaPlantillaUsuario.Activo', '=', 1)
 		   		->where('INV.TomaPlantilla.Activo', '=', 1)
+		   	    ->select('INV.TomaPlantillaUsuario.*','INV.TomaPlantilla.*','INV.TomaWeb.Codigo as Correlativo','INV.TomaWeb.EstadoProceso',
+		   	    	'INV.PlantillaPrioridadToma.Codigo','INV.PlantillaPrioridadToma.Digito')
 		   		->whereNotIn('INV.TomaPlantillaUsuario.IdProducto',$IdProducto)
 		   		->where('INV.TomaPlantillaUsuario.IdTomaWeb', '=', $idtomaweb)
 		   		->where('INV.TomaPlantillaUsuario.IdUsuario', '=', $idusuario)
-		   		->orderBy('INV.TomaPlantilla.Descripcion', 'asc')
+		   		->orderBy('INV.PlantillaPrioridadToma.Digito', 'desc')
 		   	    ->get();
 
 				return View::make('inventario/tomadeinventario', 
@@ -335,7 +386,6 @@ class InventarioController extends BaseController
 		$arraystock = explode('*',  Input::get('idstock'));
 		$stock = Input::get('stock');
 
-
 		$idtomaweb = $arraystock[0];
 		$idproducto = $arraystock[1];
 		$idusuario = $arraystock[2];
@@ -357,6 +407,27 @@ class InventarioController extends BaseController
 			->where('IdProducto', $idproducto)
 			->where('IdUsuario', $idusuario)
 			->update(array( $nombrecampo => $stock));
+
+
+			/**************** Prioridad *****************/
+
+			$tomaplantilla = DB::table('INV.TomaPlantilla')
+							 ->where('IdTomaWeb', '=', $idtomaweb)
+							 ->where('IdProducto', '=', $idproducto)->first();
+
+			if(count($tomaplantilla)>0){
+
+				$idusuariocrea = Session::get('Usuario')[0]->Id;
+
+				DB::table('INV.PlantillaPrioridadToma')
+				->where('IdTomaWeb', $idtomaweb)
+				->where('Codigo', $tomaplantilla->CodigoProducto)
+				->update(array( 'Digito' => 1 , 'UsuarioDig' => $idusuariocrea));
+
+			}				 
+
+
+
 			echo 1;
 
 		}else{
@@ -668,6 +739,42 @@ class InventarioController extends BaseController
         $stmt->bindParam(1, $idtomaweb ,PDO::PARAM_STR);
         $stmt->execute();
 
+
+
+        /****************** Prioridad ************************/
+
+		$listaPlantillaToma = DB::table('INV.TomaPlantillaUsuario')
+		->join('INV.TomaPlantilla', function($join)
+        {
+            $join->on('INV.TomaPlantillaUsuario.IdTomaWeb', '=', 'INV.TomaPlantilla.IdTomaWeb')
+           	->on('INV.TomaPlantillaUsuario.IdProducto', '=', 'INV.TomaPlantilla.IdProducto');
+        })
+        ->leftJoin('INV.PlantillaPrioridadToma', 'INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
+   		->where('INV.TomaPlantillaUsuario.Activo', '=', 1)
+   		->where('INV.TomaPlantilla.Activo', '=', 1)
+   		->where('INV.TomaPlantilla.IdTomaWeb', '=', $idtomaweb)
+   		->select('INV.TomaPlantillaUsuario.*','INV.TomaPlantilla.*')
+   	    ->get();
+
+   	    $idusuariocrea = Session::get('Usuario')[0]->Id;
+
+		foreach($listaPlantillaToma as $item){
+
+			if($item->StockFisico1>0){
+
+				DB::table('INV.PlantillaPrioridadToma')
+				->where('IdTomaWeb', $idtomaweb)
+				->where('Codigo', $item->CodigoProducto)
+				->update(array( 'Digito' => 1 , 'UsuarioDig' => $idusuariocrea));
+
+			}
+
+		}
+
+		/*********************************************************/
+
+
+
         $codigo = DB::table('INV.TomaWeb')->where('INV.TomaWeb.Id', '=', $idtomaweb)->first(); 
 		return Redirect::to('/getion-inventario-cafeteria/'.$idOpcion)->with('alertaMensajeGlobal', 'Primer Cierre del Inventario '.$codigo->Codigo.' Exitoso');
 
@@ -684,7 +791,16 @@ class InventarioController extends BaseController
 			return Redirect::back()->with('alertaMensajeGlobalE', 'No tiene autorización para esta Opcion(Segundo Cierre)');
 		}
 
+		$primercierre = DB::table('INV.TomaWeb')->where('Id', '=', $idtomaweb)->where('EstadoProceso', '=', 'S')->first();
+
+  		if(count($primercierre)==0){
+			return Redirect::back()->with('alertaMensajeGlobalE', 'Debe Tener un Primer Cierre');
+		}
+
+
 		
+
+
 		$listaExistencia = DB::table('INV.TOMAPLANTILLA')
    		->leftjoin('ProductoNoDescargable', function ($join) {
             $join->on('ProductoNoDescargable.idProducto', '=', 'INV.TOMAPLANTILLA.idProducto')
@@ -721,9 +837,20 @@ class InventarioController extends BaseController
 	    ->where('GEN.ConfiguracionTablet.Id ', '=', 'LIM01CEN000000000001')
 		->get();
 
+		/************************** Prioridad *************************/
+
+	    $listaPrioridad = 		INVPlantillaPrioridadToma::join('INV.TomaPlantilla', 'INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
+   							    ->where('INV.PlantillaPrioridadToma.IdTomaWeb', '=', $idtomaweb)
+   							    ->where('INV.PlantillaPrioridadToma.Digito', '=', 0)
+   							    ->select('INV.TomaPlantilla.CodigoProducto','INV.TomaPlantilla.Descripcion')
+   							    ->get()->toArray();
+
+   		/***************************************************************/
+
+
 		$max = (int)$maxConfiguracion[0]->MaxInventario;
 
-	    if( count($listaInventariocount) >= $max){
+	    if( count($listaPrioridad) == 0){
 
 			$idLocal = DB::table('GEN.EquipoTablet')
 			->select('GEN.EquipoTablet.Idlocal')
@@ -735,6 +862,8 @@ class InventarioController extends BaseController
 	   		->where('DetalleProductoNoDescargable.Fecha', '=', date("Y-m-d"))
 	   		->where('GEN.Local.Id', '=', $idLocal[0]->Idlocal)
 		    ->get();
+
+
 
 		    if(count($nodescargable)>0){
 
@@ -751,6 +880,8 @@ class InventarioController extends BaseController
 		        $stmt->bindParam(1, $idusuario ,PDO::PARAM_STR);
 		        $stmt->execute();
 
+
+
 		        $codigo = DB::table('INV.TomaWeb')->where('INV.TomaWeb.Id', '=', $idtomaweb)->first();
 				return Redirect::to('/getion-inventario-cafeteria/'.$idOpcion)->with('alertaMensajeGlobal', 'Segundo Cierre del Inventario '.$codigo->Codigo.' Exitoso');
 			
@@ -762,7 +893,8 @@ class InventarioController extends BaseController
 
 	    }else{
 
-	    	return Redirect::back()->with('alertaMensajeGlobalE', 'Debe realizar inventario a un total de '. $max .' productos por lo menos.');
+			Session::flash('listaPrioridad', $listaPrioridad);
+	    	return Redirect::back()->with('alertaMensajeGlobalE', 'Aun falta  '. count($listaPrioridad) .' productos por tomar inventario <br> ');
 	    }
 
 
@@ -975,6 +1107,37 @@ class InventarioController extends BaseController
 			        $stmt->bindParam(2, $idusuario ,PDO::PARAM_STR);
 			        $stmt->execute();
 
+
+
+
+			        /************** Plantilla Prioridad *******************/
+
+			        $listaTomaPlantilla = DB::table('INV.TomaPlantillaA')
+	    		    ->join('INV.PrioridadToma', 'INV.TomaPlantillaA.CodigoProducto', '=', 'INV.PrioridadToma.Codigo')
+	    		    ->where('INV.TomaPlantillaA.IdTomaWeb','=', $idtomaweb)
+	    		    ->where('INV.PrioridadToma.Activo','=', 1)
+	    		    ->where('INV.PrioridadToma.IdLocal','=', $idLo->IdLocal)
+            	    ->select('INV.TomaPlantillaA.*')
+            	    ->get();
+
+
+					foreach($listaTomaPlantilla as $item){
+
+						$tINVPlantillaPrioridadToma 				= new INVPlantillaPrioridadTomaA;
+						$tINVPlantillaPrioridadToma->Codigo 		= $item->CodigoProducto;
+						$tINVPlantillaPrioridadToma->IdLocal 		= $idLo->IdLocal;
+						$tINVPlantillaPrioridadToma->IdTomaWeb 		= $idtomaweb;
+						$tINVPlantillaPrioridadToma->Digito         = 0;
+						$tINVPlantillaPrioridadToma->save();
+
+					}
+
+
+					/*********************************************************/
+
+
+
+
 					return Redirect::to('/getion-inventario-market'.'/'.$idOpcion)->with('alertaMensajeGlobal', 'Registro Exitoso');
 
 				}
@@ -1086,13 +1249,17 @@ class InventarioController extends BaseController
 	           	->on('INV.TomaPlantillaUsuarioA.IdProducto', '=', 'INV.TomaPlantillaA.IdProducto');
 	        })
 	        ->join('INV.TomaWebA', 'INV.TomaWebA.Id', '=', 'INV.TomaPlantillaA.IdTomaWeb')
+	        ->leftJoin('INV.PlantillaPrioridadTomaA', 'INV.PlantillaPrioridadTomaA.Codigo', '=', 'INV.TomaPlantillaA.CodigoProducto')
 	   		->where('INV.TomaPlantillaUsuarioA.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaA.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaA.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaUsuarioA.IdTomaWeb', '=', $idtomaweb)
 	   		->where('INV.TomaPlantillaUsuarioA.IdUsuario', '=', $idusuario)
-	   		->orderBy('INV.TomaPlantillaA.Descripcion', 'asc')
+		   	->select('INV.TomaPlantillaUsuarioA.*','INV.TomaPlantillaA.*','INV.TomaWebA.Codigo as Correlativo','INV.TomaWebA.EstadoProceso',
+		   	    	'INV.PlantillaPrioridadTomaA.Codigo','INV.PlantillaPrioridadTomaA.Digito')
+	   		->orderBy('INV.PlantillaPrioridadTomaA.Digito', 'desc')
 	   	    ->get();
+
 
     		return View::make('inventario/tomadeinventarioartesania', 
 			['listaPlantillaToma'  => $listaPlantillaToma,
@@ -1112,15 +1279,28 @@ class InventarioController extends BaseController
 		           	->on('INV.TomaPlantillaUsuarioA.IdTomaWeb', '=', 'INV.TomaPlantillaA.IdTomaWeb');
 		        })
 		   		->where('INV.TomaPlantillaUsuarioA.IdTomaWeb', '=', $idtomaweb)
-		   		->select('INV.TomaPlantillaUsuarioA.IdProducto')
-		   		->groupBy('INV.TomaPlantillaUsuarioA.IdProducto')
+		   		->select('INV.TomaPlantillaUsuarioA.IdProducto','INV.TomaPlantillaA.CodigoProducto')
+		   		->groupBy('INV.TomaPlantillaUsuarioA.IdProducto','INV.TomaPlantillaA.CodigoProducto')
 		   		->havingRaw('SUM(INV.TomaPlantillaUsuarioA.StockFisico1) = max(INV.TomaPlantillaA.Existencia)')
 		   	    ->get();
 
 				$IdProducto=array(-1);
 
 				for ( $i = 0 ; $i < count($listadoProductoE) ; $i ++) {
-					$IdProducto[$i]=$listadoProductoE[$i]->IdProducto;
+
+					/********************* Prioridad **************/
+					$prioridadplanilla = DB::table('INV.PlantillaPrioridadTomaA')->where('IdTomaWeb', '=', $idtomaweb)
+							  			 ->where('Codigo', '=', $listadoProductoE[$i]->CodigoProducto)
+							  			 ->where('Digito', '=', 0)
+							  			 ->first();
+
+					if(count($prioridadplanilla)==0){
+						$IdProducto[$i]=$listadoProductoE[$i]->IdProducto;
+					}
+
+					/***********************************************/
+
+
 				}
 
 				$listaPlantillaToma = DB::table('INV.TomaPlantillaUsuarioA')
@@ -1130,12 +1310,15 @@ class InventarioController extends BaseController
 		           	->on('INV.TomaPlantillaUsuarioA.IdProducto', '=', 'INV.TomaPlantillaA.IdProducto');
 		        })
 		        ->join('INV.TomaWebA', 'INV.TomaWebA.Id', '=', 'INV.TomaPlantillaA.IdTomaWeb')
+		        ->leftJoin('INV.PlantillaPrioridadTomaA', 'INV.PlantillaPrioridadTomaA.Codigo', '=', 'INV.TomaPlantillaA.CodigoProducto')
 		   		->where('INV.TomaPlantillaUsuarioA.Activo', '=', 1)
 		   		->where('INV.TomaPlantillaA.Activo', '=', 1)
+		   		->select('INV.TomaPlantillaUsuarioA.*','INV.TomaPlantillaA.*','INV.TomaWebA.Codigo as Correlativo','INV.TomaWebA.EstadoProceso',
+		   	    	'INV.PlantillaPrioridadTomaA.Codigo','INV.PlantillaPrioridadTomaA.Digito')
 		   		->whereNotIn('INV.TomaPlantillaUsuarioA.IdProducto',$IdProducto)
 		   		->where('INV.TomaPlantillaUsuarioA.IdTomaWeb', '=', $idtomaweb)
 		   		->where('INV.TomaPlantillaUsuarioA.IdUsuario', '=', $idusuario)
-		   		->orderBy('INV.TomaPlantillaA.Descripcion', 'asc')
+		   		->orderBy('INV.PlantillaPrioridadTomaA.Digito', 'desc')
 		   	    ->get();
 
 				return View::make('inventario/tomadeinventarioartesania', 
@@ -1184,6 +1367,27 @@ class InventarioController extends BaseController
 			->where('IdProducto', $idproducto)
 			->where('IdUsuario', $idusuario)
 			->update(array( $nombrecampo => $stock));
+
+
+
+			/**************** Prioridad *****************/
+
+			$tomaplantilla = DB::table('INV.TomaPlantillaA')
+							 ->where('IdTomaWeb', '=', $idtomaweb)
+							 ->where('IdProducto', '=', $idproducto)->first();
+
+			if(count($tomaplantilla)>0){
+
+				$idusuariocrea = Session::get('Usuario')[0]->Id;
+
+				DB::table('INV.PlantillaPrioridadTomaA')
+				->where('IdTomaWeb', $idtomaweb)
+				->where('Codigo', $tomaplantilla->CodigoProducto)
+				->update(array( 'Digito' => 1 , 'UsuarioDig' => $idusuariocrea));
+
+			}	
+
+
 			echo 1;
 
 
@@ -1494,6 +1698,17 @@ class InventarioController extends BaseController
 			return Redirect::back()->with('alertaMensajeGlobalE', 'No tiene autorización para esta Opcion(Segundo Cierre)');
 		}
 
+
+
+		$primercierre = DB::table('INV.TomaWebA')->where('Id', '=', $idtomaweb)->where('EstadoProceso', '=', 'S')->first();
+
+  		if(count($primercierre)==0){
+			return Redirect::back()->with('alertaMensajeGlobalE', 'Debe Tener un Primer Cierre');
+		}
+
+
+
+
 		$listaExistencia = DB::table('INV.TOMAPLANTILLAA')
    		->leftjoin('ProductoNoDescargable', function ($join) {
             $join->on('ProductoNoDescargable.idProducto', '=', 'INV.TOMAPLANTILLAA.idProducto')
@@ -1531,9 +1746,20 @@ class InventarioController extends BaseController
 	    ->where('GEN.ConfiguracionTablet.Id ', '=', 'LIM01CEN000000000002')
 		->get();
 
+		/************************** Prioridad *************************/
+
+	    $listaPrioridad = 		INVPlantillaPrioridadTomaA::join('INV.TomaPlantillaA', 'INV.PlantillaPrioridadTomaA.Codigo', '=', 'INV.TomaPlantillaA.CodigoProducto')
+   							    ->where('INV.PlantillaPrioridadTomaA.IdTomaWeb', '=', $idtomaweb)
+   							    ->where('INV.PlantillaPrioridadTomaA.Digito', '=', 0)
+   							    ->select('INV.TomaPlantillaA.CodigoProducto','INV.TomaPlantillaA.Descripcion')
+   							    ->get()->toArray();
+
+   		/***************************************************************/
+
+
 		$max = (int)$maxConfiguracion[0]->MaxInventario;
 
-	    if((count($listaInventariocount)) >= $max){
+	    if(count($listaPrioridad) == 0){
 
 	    	$idLo = DB::table('INV.Sublocales')->where('INV.Sublocales.Id', '=', 'LIM01CEN000000000002')->first();
 
@@ -1563,7 +1789,8 @@ class InventarioController extends BaseController
 
 		    }
 	    }else{
-	    	return Redirect::back()->with('alertaMensajeGlobalE', 'Debe realizar inventario a un total de '. $max .' productos por lo menos.');
+	    	Session::flash('listaPrioridad', $listaPrioridad);
+	    	return Redirect::back()->with('alertaMensajeGlobalE', 'Aun falta  '. count($listaPrioridad) .' productos por tomar inventario <br> ');
 	    }
 
 
@@ -1712,6 +1939,36 @@ class InventarioController extends BaseController
 			        $stmt->bindParam(2, $idusuario ,PDO::PARAM_STR);
 			        $stmt->execute();
 
+
+
+
+			        /************** Plantilla Prioridad *******************/
+
+			        $listaTomaPlantilla = DB::table('INV.TomaPlantillaE')
+	    		    ->join('INV.PrioridadToma', 'INV.TomaPlantillaE.CodigoProducto', '=', 'INV.PrioridadToma.Codigo')
+	    		    ->where('INV.TomaPlantillaE.IdTomaWeb','=', $idtomaweb)
+	    		    ->where('INV.PrioridadToma.Activo','=', 1)
+	    		    ->where('INV.PrioridadToma.IdLocal','=', $idLo->IdLocal)
+            	    ->select('INV.TomaPlantillaE.*')
+            	    ->get();
+
+
+					foreach($listaTomaPlantilla as $item){
+
+						$tINVPlantillaPrioridadToma 				= new INVPlantillaPrioridadTomaE;
+						$tINVPlantillaPrioridadToma->Codigo 		= $item->CodigoProducto;
+						$tINVPlantillaPrioridadToma->IdLocal 		= $idLo->IdLocal;
+						$tINVPlantillaPrioridadToma->IdTomaWeb 		= $idtomaweb;
+						$tINVPlantillaPrioridadToma->Digito         = 0;
+						$tINVPlantillaPrioridadToma->save();
+
+					}
+
+
+					/*********************************************************/
+
+
+
 			        return Redirect::to('/getion-inventario-embarque'.'/'.$idOpcion)->with('alertaMensajeGlobal', 'Registro Exitoso');
 
 				}
@@ -1824,13 +2081,17 @@ class InventarioController extends BaseController
 	           	->on('INV.TomaPlantillaUsuarioE.IdProducto', '=', 'INV.TomaPlantillaE.IdProducto');
 	        })
 	        ->join('INV.TomaWebE', 'INV.TomaWebE.Id', '=', 'INV.TomaPlantillaE.IdTomaWeb')
+	        ->leftJoin('INV.PlantillaPrioridadTomaE', 'INV.PlantillaPrioridadTomaE.Codigo', '=', 'INV.TomaPlantillaE.CodigoProducto')
 	   		->where('INV.TomaPlantillaUsuarioE.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaE.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaE.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaUsuarioE.IdTomaWeb', '=', $idtomaweb)
 	   		->where('INV.TomaPlantillaUsuarioE.IdUsuario', '=', $idusuario)
-	   		->orderBy('INV.TomaPlantillaE.Descripcion', 'asc')
+		   	->select('INV.TomaPlantillaUsuarioE.*','INV.TomaPlantillaE.*','INV.TomaWebE.Codigo as Correlativo','INV.TomaWebE.EstadoProceso',
+		   	    	'INV.PlantillaPrioridadTomaE.Codigo','INV.PlantillaPrioridadTomaE.Digito')
+	   		->orderBy('INV.PlantillaPrioridadTomaE.Digito', 'desc')
 	   	    ->get();
+
 
     		return View::make('inventario/tomadeinventarioembarque', 
 			['listaPlantillaToma'  => $listaPlantillaToma,
@@ -1850,16 +2111,33 @@ class InventarioController extends BaseController
 		           	->on('INV.TomaPlantillaUsuarioE.IdTomaWeb', '=', 'INV.TomaPlantillaE.IdTomaWeb');
 		        })
 		   		->where('INV.TomaPlantillaUsuarioE.IdTomaWeb', '=', $idtomaweb)
-		   		->select('INV.TomaPlantillaUsuarioE.IdProducto')
-		   		->groupBy('INV.TomaPlantillaUsuarioE.IdProducto')
+		   		->select('INV.TomaPlantillaUsuarioE.IdProducto','INV.TomaPlantillaE.CodigoProducto')
+		   		->groupBy('INV.TomaPlantillaUsuarioE.IdProducto','INV.TomaPlantillaE.CodigoProducto')
 		   		->havingRaw('SUM(INV.TomaPlantillaUsuarioE.StockFisico1) = max(INV.TomaPlantillaE.Existencia)')
 		   	    ->get();
+
+
 
 				$IdProducto=array(-1);
 
 				for ( $i = 0 ; $i < count($listadoProductoE) ; $i ++) {
-					$IdProducto[$i]=$listadoProductoE[$i]->IdProducto;
+
+
+					$prioridadplanilla = DB::table('INV.PlantillaPrioridadTomaE')->where('IdTomaWeb', '=', $idtomaweb)
+							  			 ->where('Codigo', '=', $listadoProductoE[$i]->CodigoProducto)
+							  			 ->where('Digito', '=', 0)
+							  			 ->first();
+
+					if(count($prioridadplanilla)==0){
+						$IdProducto[$i]=$listadoProductoE[$i]->IdProducto;
+					}
+
+					/***********************************************/
+
+
 				}
+
+
 
 				$listaPlantillaToma = DB::table('INV.TomaPlantillaUsuarioE')
 				->join('INV.TomaPlantillaE', function($join)
@@ -1868,13 +2146,17 @@ class InventarioController extends BaseController
 		           	->on('INV.TomaPlantillaUsuarioE.IdProducto', '=', 'INV.TomaPlantillaE.IdProducto');
 		        })
 		        ->join('INV.TomaWebE', 'INV.TomaWebE.Id', '=', 'INV.TomaPlantillaE.IdTomaWeb')
+		        ->leftJoin('INV.PlantillaPrioridadTomaE', 'INV.PlantillaPrioridadTomaE.Codigo', '=', 'INV.TomaPlantillaE.CodigoProducto')
 		   		->where('INV.TomaPlantillaUsuarioE.Activo', '=', 1)
 		   		->where('INV.TomaPlantillaE.Activo', '=', 1)
+		   		->select('INV.TomaPlantillaUsuarioE.*','INV.TomaPlantillaE.*','INV.TomaWebE.Codigo as Correlativo','INV.TomaWebE.EstadoProceso',
+		   	    	'INV.PlantillaPrioridadTomaE.Codigo','INV.PlantillaPrioridadTomaE.Digito')
 		   		->whereNotIn('INV.TomaPlantillaUsuarioE.IdProducto',$IdProducto)
 		   		->where('INV.TomaPlantillaUsuarioE.IdTomaWeb', '=', $idtomaweb)
 		   		->where('INV.TomaPlantillaUsuarioE.IdUsuario', '=', $idusuario)
-		   		->orderBy('INV.TomaPlantillaE.Descripcion', 'asc')
+		   		->orderBy('INV.PlantillaPrioridadTomaE.Digito', 'desc')
 		   	    ->get();
+
 
 				return View::make('inventario/tomadeinventarioembarque', 
 					['listaPlantillaToma'  => $listaPlantillaToma,
@@ -1917,6 +2199,26 @@ class InventarioController extends BaseController
 			->where('IdProducto', $idproducto)
 			->where('IdUsuario', $idusuario)
 			->update(array( $nombrecampo => $stock));
+
+			/**************** Prioridad *****************/
+
+			$tomaplantilla = DB::table('INV.TomaPlantillaE')
+							 ->where('IdTomaWeb', '=', $idtomaweb)
+							 ->where('IdProducto', '=', $idproducto)->first();
+
+			if(count($tomaplantilla)>0){
+
+				$idusuariocrea = Session::get('Usuario')[0]->Id;
+
+				DB::table('INV.PlantillaPrioridadTomaE')
+				->where('IdTomaWeb', $idtomaweb)
+				->where('Codigo', $tomaplantilla->CodigoProducto)
+				->update(array( 'Digito' => 1 , 'UsuarioDig' => $idusuariocrea));
+
+			}	
+
+
+
 			echo 1;
 
 
@@ -2223,7 +2525,13 @@ class InventarioController extends BaseController
   		if(count($listaOpcionPlus)==0){
 			return Redirect::back()->with('alertaMensajeGlobalE', 'No tiene autorización para esta Opcion(Segundo Cierre)');
 		}
-		
+
+		$primercierre = DB::table('INV.TomaWebE')->where('Id', '=', $idtomaweb)->where('EstadoProceso', '=', 'S')->first();
+  		if(count($primercierre)==0){
+			return Redirect::back()->with('alertaMensajeGlobalE', 'Debe Tener un Primer Cierre');
+		}
+
+
 		$listaExistencia = DB::table('INV.TOMAPLANTILLAE')
    		->leftjoin('ProductoNoDescargable', function ($join) {
             $join->on('ProductoNoDescargable.idProducto', '=', 'INV.TOMAPLANTILLAE.idProducto')
@@ -2261,9 +2569,20 @@ class InventarioController extends BaseController
 	    ->where('GEN.ConfiguracionTablet.Id ', '=', 'LIM01CEN000000000003')
 		->get();
 
+		/************************** Prioridad *************************/
+
+	    $listaPrioridad = 		INVPlantillaPrioridadTomaE::join('INV.TomaPlantillaE', 'INV.PlantillaPrioridadTomaE.Codigo', '=', 'INV.TomaPlantillaE.CodigoProducto')
+   							    ->where('INV.PlantillaPrioridadTomaE.IdTomaWeb', '=', $idtomaweb)
+   							    ->where('INV.PlantillaPrioridadTomaE.Digito', '=', 0)
+   							    ->select('INV.TomaPlantillaE.CodigoProducto','INV.TomaPlantillaE.Descripcion')
+   							    ->get()->toArray();
+
+   		/***************************************************************/
+
+
 		$max = (int)$maxConfiguracion[0]->MaxInventario;
 
-	    if((count($listaInventariocount)) >= $max){
+	    if(count($listaPrioridad) == 0){
 
 	    	$idLo = DB::table('INV.Sublocales')->where('INV.Sublocales.Id', '=', 'LIM01CEN000000000003')->first();
 
@@ -2293,8 +2612,11 @@ class InventarioController extends BaseController
 
 		    }
 	    }else{
-	    	return Redirect::back()->with('alertaMensajeGlobalE', 'Debe realizar inventario a un total de '. $max  .' productos por lo menos.');
-	    }
+	    	
+	    	Session::flash('listaPrioridad', $listaPrioridad);
+	    	return Redirect::back()->with('alertaMensajeGlobalE', 'Aun falta  '. count($listaPrioridad) .' productos por tomar inventario <br> ');
+	    
+		}
 
 
 	}

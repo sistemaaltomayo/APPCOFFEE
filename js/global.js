@@ -192,6 +192,7 @@ $( document ).ready(function() {
                     {
 
                         if(pagina==1){
+
                             $(puntero).parent().siblings('#totalstock').html(parseFloat(suma).toFixed(3));
                             $("#S"+array[1]).html(suma.toFixed(3));
                             $(puntero).parent().siblings('#plusstock').val('');
@@ -202,6 +203,9 @@ $( document ).ready(function() {
                             $(puntero).children('.loader').css("display", "none");
                             $('#insertarinventarionormal #plusstock').focus();
                             $('#insertarinventariomanu #plusstock').focus();
+                            //alert("#S"+array[1]);
+                            $("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
+
                         }else{
                             window.location.href = '/APPCOFFEE/getion-inventario-cafeteria/'+idopcion;
                         }
@@ -266,6 +270,8 @@ $( document ).ready(function() {
                         $(puntero).children('.loader').css("display", "none");
                         $('#insertarinventarionormal #plusstock').focus();
                         $('#insertarinventariomanu #plusstock').focus();
+                        $("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
+
                     }else{
                         window.location.href = '/APPCOFFEE/getion-inventario-cafeteria/'+idopcion;
                     }
@@ -325,6 +331,9 @@ $( document ).ready(function() {
                         $(puntero).children('.loader').css("display", "none");
                         $('#insertarinventarionormal #plusstock').focus();
                         $('#insertarinventariomanu #plusstock').focus();
+
+                        $("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
+
                     }else{
                         window.location.href = '/APPCOFFEE/getion-inventario-cafeteria/'+idopcion;
                     }
@@ -461,6 +470,8 @@ $( document ).ready(function() {
                             $(puntero).children('.fa-check').css("display", "inline-block");
                             $(puntero).children('.fa-floppy-o').css("display", "inline-block");
                             $(puntero).children('.loader').css("display", "none");
+                            $("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
+
                             $('#plusstock').focus();
                         }else{
                             window.location.href = '/APPCOFFEE/getion-inventario-market/'+idopcion;
@@ -522,6 +533,8 @@ $( document ).ready(function() {
                         $(puntero).children('.fa-check').css("display", "inline-block");
                         $(puntero).children('.fa-floppy-o').css("display", "inline-block");
                         $(puntero).children('.loader').css("display", "none");
+                        $("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
+
                         $('#plusstock').focus();
                     }else{
                          window.location.href = '/APPCOFFEE/getion-inventario-market/'+idopcion;
@@ -586,6 +599,8 @@ $( document ).ready(function() {
                         $(puntero).children('.fa-check').css("display", "inline-block");
                         $(puntero).children('.fa-floppy-o').css("display", "inline-block");
                         $(puntero).children('.loader').css("display", "none");
+                        $("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
+
                         $('#plusstock').focus();
 
                     }else{
@@ -682,6 +697,8 @@ $( document ).ready(function() {
                             $(puntero).children('.fa-check').css("display", "inline-block");
                             $(puntero).children('.fa-floppy-o').css("display", "inline-block");
                             $(puntero).children('.loader').css("display", "none");
+                            $("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
+
                             $('#plusstock').focus();
                         }else{
                             window.location.href = '/APPCOFFEE/getion-inventario-embarque/'+idopcion;
@@ -745,6 +762,8 @@ $( document ).ready(function() {
                         $(puntero).children('.fa-check').css("display", "inline-block");
                         $(puntero).children('.fa-floppy-o').css("display", "inline-block");
                         $(puntero).children('.loader').css("display", "none");
+                        $("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
+
                         $('#plusstock').focus();
                     }else{
                         window.location.href = '/APPCOFFEE/getion-inventario-embarque/'+idopcion;
@@ -809,6 +828,8 @@ $( document ).ready(function() {
                         $(puntero).children('.fa-check').css("display", "inline-block");
                         $(puntero).children('.fa-floppy-o').css("display", "inline-block");
                         $(puntero).children('.loader').css("display", "none");
+                        $("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
+
                         $('#plusstock').focus();
 
                     }else{

@@ -7,7 +7,11 @@
     {{ HTML::style('/css/tabla/footable.paginate.css') }}
     {{ HTML::style('/css/tabla/bootstrapSwitch.css') }}
     {{ HTML::style('/css/font-awesome.min.css') }}
-
+    <style type="text/css">
+	.alert-danger .panel{
+	  border:1px solid #a94442 !important;
+	}
+    </style>
 
 @stop
 
@@ -16,17 +20,31 @@
 
 
     @if (Session::get('alertaMensajeGlobal'))
+
       <div class="alert alert-success alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-             <strong>Bien Hecho!</strong> {{ Session::get('alertaMensajeGlobal') }}
-       
+        <strong>Bien Hecho!</strong> {{ Session::get('alertaMensajeGlobal') }}
       </div>
+
+
     @endif  
 
     @if (Session::get('alertaMensajeGlobalE'))
+
     <div class="alert alert-danger alert-dismissable">
 	  <button type="button" class="close" data-dismiss="alert">&times;</button>
 	  <strong>¡Error!</strong> {{ Session::get('alertaMensajeGlobalE') }}
+	  <br>
+
+	    @if (Session::get('listaPrioridad'))
+	      {{--*/ $listaPrioridad   = Session::get('listaPrioridad') /*--}}
+            <ul class="list-group">
+		    	@foreach ($listaPrioridad as $item)
+					 <li class="list-group-item">{{$item['CodigoProducto']}} - {{$item['Descripcion']}}</li>
+				@endforeach
+            </ul>
+	    @endif  
+
 	</div>
     @endif 
 
