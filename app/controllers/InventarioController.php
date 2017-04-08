@@ -840,7 +840,7 @@ class InventarioController extends BaseController
 		/************************** Prioridad *************************/
 
 	    $listaPrioridad = 		INVPlantillaPrioridadToma::join('INV.TomaPlantilla', 'INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
-   							    ->where('INV.PlantillaPrioridadToma.IdTomaWeb', '=', $idtomaweb)
+   							    ->where('INV.TomaPlantilla.IdTomaWeb', '=', $idtomaweb)
    							    ->where('INV.PlantillaPrioridadToma.Digito', '=', 0)
    							    ->select('INV.TomaPlantilla.CodigoProducto','INV.TomaPlantilla.Descripcion')
    							    ->get()->toArray();
@@ -1749,7 +1749,7 @@ class InventarioController extends BaseController
 		/************************** Prioridad *************************/
 
 	    $listaPrioridad = 		INVPlantillaPrioridadTomaA::join('INV.TomaPlantillaA', 'INV.PlantillaPrioridadTomaA.Codigo', '=', 'INV.TomaPlantillaA.CodigoProducto')
-   							    ->where('INV.PlantillaPrioridadTomaA.IdTomaWeb', '=', $idtomaweb)
+   							    ->where('INV.TomaPlantillaA.IdTomaWeb', '=', $idtomaweb)
    							    ->where('INV.PlantillaPrioridadTomaA.Digito', '=', 0)
    							    ->select('INV.TomaPlantillaA.CodigoProducto','INV.TomaPlantillaA.Descripcion')
    							    ->get()->toArray();
@@ -2572,7 +2572,7 @@ class InventarioController extends BaseController
 		/************************** Prioridad *************************/
 
 	    $listaPrioridad = 		INVPlantillaPrioridadTomaE::join('INV.TomaPlantillaE', 'INV.PlantillaPrioridadTomaE.Codigo', '=', 'INV.TomaPlantillaE.CodigoProducto')
-   							    ->where('INV.PlantillaPrioridadTomaE.IdTomaWeb', '=', $idtomaweb)
+   							    ->where('INV.TomaPlantillaE.IdTomaWeb', '=', $idtomaweb)
    							    ->where('INV.PlantillaPrioridadTomaE.Digito', '=', 0)
    							    ->select('INV.TomaPlantillaE.CodigoProducto','INV.TomaPlantillaE.Descripcion')
    							    ->get()->toArray();
