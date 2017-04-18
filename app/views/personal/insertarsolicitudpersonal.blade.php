@@ -101,15 +101,15 @@
 
 						<div class="input-group grupo-imput">
 						    <span class="input-group-addon" id="basic-addon1">Número Vacantes: </span>
-						  	{{Form::number('numerovacantes','1', array('class' => 'form-control control', 'id' => 'numerovacantes' , 'min' => '1' ))}}
+						  	{{Form::number('numerovacantes','1', array('class' => 'solonumero form-control control', 'id' => 'numerovacantes'))}}
 						</div>
 
 
 						<div class="input-group grupo-imput">
 						    <span class="input-group-addon" id="basic-addon1">Edad: </span>
-						  	{{Form::number('edadinicio','0', array('class' => 'form-control control', 'id' => 'edadinicio' , 'min' => '18' ))}}
+						  	{{Form::number('edadinicio','18', array('class' => 'solonumero form-control control', 'id' => 'edadinicio' ))}}
 						  	<span class="input-group-addon">entre</span>
-						  	{{Form::number('edadfin','0', array('class' => 'form-control control', 'id' => 'edadfin' , 'min' => '18' ))}}
+						  	{{Form::number('edadfin','18', array('class' => 'solonumero form-control control', 'id' => 'edadfin'  ))}}
 						</div>
 
 
@@ -140,7 +140,7 @@
 
 						<div class="input-group grupo-imput">
 						    <span class="input-group-addon" id="basic-addon1">Sueldo: S/.</span>
-						  	{{Form::number('sueldo','0', array('class' => 'form-control control', 'id' => 'sueldo' ))}}
+						  	{{Form::text('sueldo','0', array('class' => 'decimal form-control control', 'id' => 'sueldo' ))}}
 						</div>
 
 						<div class="input-group grupo-imput">
