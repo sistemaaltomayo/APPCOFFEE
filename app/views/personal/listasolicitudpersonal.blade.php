@@ -109,9 +109,7 @@
 
 										      @foreach($listaOpcionPlus as $itemp)
 
-										      		{{--*/ $idOpcioncerrar = '/'.$idOpcion /*--}}
-
-										      	<li><a href="{{ url('/'.$itemp->Pagina.'/'.Hashids::encode(substr($itemp->Id, -12)).'/'.$item->Id.$idOpcioncerrar)}}">{{$itemp->Nombre}}</a></li>										    	
+										      	<li><a href="{{ url('/'.$itemp->Pagina.'/'.Hashids::encode(substr($itemp->Id, -12)).'/'.$item->Id)}}">{{$itemp->Nombre}}</a></li>										    	
 										      @endforeach
 
 										    </ul>

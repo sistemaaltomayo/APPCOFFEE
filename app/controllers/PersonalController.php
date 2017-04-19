@@ -5,7 +5,40 @@ class PersonalController extends BaseController
 {
 
 
-    /**************************************** Personal ************************************/
+
+	/******************************* Personal ************************************/
+
+
+	public function actionAgregarPersonalSolicitud($idOpcionRolPlus,$idSolicitud)
+	{
+
+		/***** Permiso a la Opciones PLus ******/
+		$validarpermiso = new GeneralClass();
+    	$listaOpcionPlus = $validarpermiso->getPermisoPlus($idOpcionRolPlus);
+  		if(count($listaOpcionPlus)==0){
+			return Redirect::back()->with('alertaMensajeGlobalE', 'No tiene autorización para esta Opcion(Agregar Personal)');
+		}
+
+
+		$solicitud  				= PERSolicitud::where('Id','=',$idSolicitud)->first();
+
+		return View::make('personal/agregarpersonalsolicitud',
+		[
+		 'idOpcionRolPlus' 			=> $idOpcionRolPlus,
+		 'idSolicitud' 				=> $idSolicitud,
+		 'solicitud' 				=> $solicitud,
+
+		 
+		]);
+
+	}	
+
+
+
+
+
+
+    /**************************************** Solicitud Personal ************************************/
 
 	public function actionListaSolicitudPersonal($idOpcion)
 	{

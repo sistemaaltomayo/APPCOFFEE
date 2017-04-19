@@ -131,6 +131,7 @@
 	Route::any('/getion-solicitud-personal/{idOpcion}', 'PersonalController@actionListaSolicitudPersonal');
 	Route::any('/insertar-solicitud-personal/{idOpcion}', 'PersonalController@actionInsertarSolicitudPersonal');
 	Route::any('/modificar-solicitud-personal/{idOpcion}/{idSolicitud}', 'PersonalController@actionModificarSolicitudPersonal');
+	Route::any('/agregar-personal-solicitud/{idOpcionPlus}/{idSolicitud}', 'PersonalController@actionAgregarPersonalSolicitud');
 
 
 

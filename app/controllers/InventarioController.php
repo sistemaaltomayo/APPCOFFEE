@@ -284,9 +284,13 @@ class InventarioController extends BaseController
 	           	->on('INV.TomaPlantillaUsuario.IdProducto', '=', 'INV.TomaPlantilla.IdProducto');
 	        })
 	        ->join('INV.TomaWeb', 'INV.TomaWeb.Id', '=', 'INV.TomaPlantilla.IdTomaWeb')
-	        ->leftJoin('INV.PlantillaPrioridadToma', 'INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
+	   		->leftjoin('INV.PlantillaPrioridadToma', function ($join) use($idtomaweb){
+	            $join->on('INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
+	            ->where('INV.PlantillaPrioridadToma.IdTomaWeb', '=', $idtomaweb);
+	            
+	        })
+	        //->leftJoin('INV.PlantillaPrioridadToma', 'INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
 	   		->where('INV.TomaPlantillaUsuario.Activo', '=', 1)
-	   		->where('INV.TomaPlantilla.Activo', '=', 1)
 	   		->where('INV.TomaPlantilla.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaUsuario.IdTomaWeb', '=', $idtomaweb)
 	   		->where('INV.TomaPlantillaUsuario.IdUsuario', '=', $idusuario)
@@ -344,9 +348,6 @@ class InventarioController extends BaseController
 				}
 
 
-
-
-
 				$listaPlantillaToma = DB::table('INV.TomaPlantillaUsuario')
 				->join('INV.TomaPlantilla', function($join)
 		        {
@@ -354,7 +355,14 @@ class InventarioController extends BaseController
 		           	->on('INV.TomaPlantillaUsuario.IdProducto', '=', 'INV.TomaPlantilla.IdProducto');
 		        })
 		        ->join('INV.TomaWeb', 'INV.TomaWeb.Id', '=', 'INV.TomaPlantilla.IdTomaWeb')
-				->leftJoin('INV.PlantillaPrioridadToma', 'INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
+
+		   		->leftjoin('INV.PlantillaPrioridadToma', function ($join) use($idtomaweb){
+		            $join->on('INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
+		            ->where('INV.PlantillaPrioridadToma.IdTomaWeb', '=', $idtomaweb);
+		            
+		        })
+
+				//->leftJoin('INV.PlantillaPrioridadToma', 'INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
 		   		->where('INV.TomaPlantillaUsuario.Activo', '=', 1)
 		   		->where('INV.TomaPlantilla.Activo', '=', 1)
 		   	    ->select('INV.TomaPlantillaUsuario.*','INV.TomaPlantilla.*','INV.TomaWeb.Codigo as Correlativo','INV.TomaWeb.EstadoProceso',
@@ -841,12 +849,12 @@ class InventarioController extends BaseController
 
 	    $listaPrioridad = 		INVPlantillaPrioridadToma::join('INV.TomaPlantilla', 'INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
    							    ->where('INV.TomaPlantilla.IdTomaWeb', '=', $idtomaweb)
+   							    ->where('INV.PlantillaPrioridadToma.IdTomaWeb', '=', $idtomaweb)
    							    ->where('INV.PlantillaPrioridadToma.Digito', '=', 0)
    							    ->select('INV.TomaPlantilla.CodigoProducto','INV.TomaPlantilla.Descripcion')
    							    ->get()->toArray();
 
    		/***************************************************************/
-
 
 		$max = (int)$maxConfiguracion[0]->MaxInventario;
 
@@ -1249,9 +1257,13 @@ class InventarioController extends BaseController
 	           	->on('INV.TomaPlantillaUsuarioA.IdProducto', '=', 'INV.TomaPlantillaA.IdProducto');
 	        })
 	        ->join('INV.TomaWebA', 'INV.TomaWebA.Id', '=', 'INV.TomaPlantillaA.IdTomaWeb')
-	        ->leftJoin('INV.PlantillaPrioridadTomaA', 'INV.PlantillaPrioridadTomaA.Codigo', '=', 'INV.TomaPlantillaA.CodigoProducto')
+	   		->leftjoin('INV.PlantillaPrioridadTomaA', function ($join) use($idtomaweb){
+	            $join->on('INV.PlantillaPrioridadTomaA.Codigo', '=', 'INV.TomaPlantillaA.CodigoProducto')
+	            ->where('INV.PlantillaPrioridadTomaA.IdTomaWeb', '=', $idtomaweb);
+	        })
+
+	        //->leftJoin('INV.PlantillaPrioridadTomaA', 'INV.PlantillaPrioridadTomaA.Codigo', '=', 'INV.TomaPlantillaA.CodigoProducto')
 	   		->where('INV.TomaPlantillaUsuarioA.Activo', '=', 1)
-	   		->where('INV.TomaPlantillaA.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaA.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaUsuarioA.IdTomaWeb', '=', $idtomaweb)
 	   		->where('INV.TomaPlantillaUsuarioA.IdUsuario', '=', $idusuario)
@@ -1310,7 +1322,12 @@ class InventarioController extends BaseController
 		           	->on('INV.TomaPlantillaUsuarioA.IdProducto', '=', 'INV.TomaPlantillaA.IdProducto');
 		        })
 		        ->join('INV.TomaWebA', 'INV.TomaWebA.Id', '=', 'INV.TomaPlantillaA.IdTomaWeb')
-		        ->leftJoin('INV.PlantillaPrioridadTomaA', 'INV.PlantillaPrioridadTomaA.Codigo', '=', 'INV.TomaPlantillaA.CodigoProducto')
+		   		->leftjoin('INV.PlantillaPrioridadTomaA', function ($join) use($idtomaweb){
+		            $join->on('INV.PlantillaPrioridadTomaA.Codigo', '=', 'INV.TomaPlantillaA.CodigoProducto')
+		            ->where('INV.PlantillaPrioridadTomaA.IdTomaWeb', '=', $idtomaweb);
+		        })
+
+		        //->leftJoin('INV.PlantillaPrioridadTomaA', 'INV.PlantillaPrioridadTomaA.Codigo', '=', 'INV.TomaPlantillaA.CodigoProducto')
 		   		->where('INV.TomaPlantillaUsuarioA.Activo', '=', 1)
 		   		->where('INV.TomaPlantillaA.Activo', '=', 1)
 		   		->select('INV.TomaPlantillaUsuarioA.*','INV.TomaPlantillaA.*','INV.TomaWebA.Codigo as Correlativo','INV.TomaWebA.EstadoProceso',
@@ -1750,6 +1767,7 @@ class InventarioController extends BaseController
 
 	    $listaPrioridad = 		INVPlantillaPrioridadTomaA::join('INV.TomaPlantillaA', 'INV.PlantillaPrioridadTomaA.Codigo', '=', 'INV.TomaPlantillaA.CodigoProducto')
    							    ->where('INV.TomaPlantillaA.IdTomaWeb', '=', $idtomaweb)
+   							    ->where('INV.PlantillaPrioridadTomaA.IdTomaWeb', '=', $idtomaweb)
    							    ->where('INV.PlantillaPrioridadTomaA.Digito', '=', 0)
    							    ->select('INV.TomaPlantillaA.CodigoProducto','INV.TomaPlantillaA.Descripcion')
    							    ->get()->toArray();
@@ -2081,7 +2099,11 @@ class InventarioController extends BaseController
 	           	->on('INV.TomaPlantillaUsuarioE.IdProducto', '=', 'INV.TomaPlantillaE.IdProducto');
 	        })
 	        ->join('INV.TomaWebE', 'INV.TomaWebE.Id', '=', 'INV.TomaPlantillaE.IdTomaWeb')
-	        ->leftJoin('INV.PlantillaPrioridadTomaE', 'INV.PlantillaPrioridadTomaE.Codigo', '=', 'INV.TomaPlantillaE.CodigoProducto')
+	   		->leftjoin('INV.PlantillaPrioridadTomaE', function ($join) use($idtomaweb){
+	            $join->on('INV.PlantillaPrioridadTomaE.Codigo', '=', 'INV.TomaPlantillaE.CodigoProducto')
+	            ->where('INV.PlantillaPrioridadTomaE.IdTomaWeb', '=', $idtomaweb);
+	        })
+	        //->leftJoin('INV.PlantillaPrioridadTomaE', 'INV.PlantillaPrioridadTomaE.Codigo', '=', 'INV.TomaPlantillaE.CodigoProducto')
 	   		->where('INV.TomaPlantillaUsuarioE.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaE.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaE.Activo', '=', 1)
@@ -2146,7 +2168,11 @@ class InventarioController extends BaseController
 		           	->on('INV.TomaPlantillaUsuarioE.IdProducto', '=', 'INV.TomaPlantillaE.IdProducto');
 		        })
 		        ->join('INV.TomaWebE', 'INV.TomaWebE.Id', '=', 'INV.TomaPlantillaE.IdTomaWeb')
-		        ->leftJoin('INV.PlantillaPrioridadTomaE', 'INV.PlantillaPrioridadTomaE.Codigo', '=', 'INV.TomaPlantillaE.CodigoProducto')
+		        ->leftjoin('INV.PlantillaPrioridadTomaE', function ($join) use($idtomaweb){
+	            $join->on('INV.PlantillaPrioridadTomaE.Codigo', '=', 'INV.TomaPlantillaE.CodigoProducto')
+	            ->where('INV.PlantillaPrioridadTomaE.IdTomaWeb', '=', $idtomaweb);
+	        	})
+		        //->leftJoin('INV.PlantillaPrioridadTomaE', 'INV.PlantillaPrioridadTomaE.Codigo', '=', 'INV.TomaPlantillaE.CodigoProducto')
 		   		->where('INV.TomaPlantillaUsuarioE.Activo', '=', 1)
 		   		->where('INV.TomaPlantillaE.Activo', '=', 1)
 		   		->select('INV.TomaPlantillaUsuarioE.*','INV.TomaPlantillaE.*','INV.TomaWebE.Codigo as Correlativo','INV.TomaWebE.EstadoProceso',
@@ -2573,6 +2599,7 @@ class InventarioController extends BaseController
 
 	    $listaPrioridad = 		INVPlantillaPrioridadTomaE::join('INV.TomaPlantillaE', 'INV.PlantillaPrioridadTomaE.Codigo', '=', 'INV.TomaPlantillaE.CodigoProducto')
    							    ->where('INV.TomaPlantillaE.IdTomaWeb', '=', $idtomaweb)
+   							    ->where('INV.PlantillaPrioridadTomaE.IdTomaWeb', '=', $idtomaweb)
    							    ->where('INV.PlantillaPrioridadTomaE.Digito', '=', 0)
    							    ->select('INV.TomaPlantillaE.CodigoProducto','INV.TomaPlantillaE.Descripcion')
    							    ->get()->toArray();
