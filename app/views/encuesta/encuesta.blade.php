@@ -25,15 +25,25 @@
 		        	<span class="input-group-addon"  id="basic-addon2">
 				       <span class="glyphicon glyphicon-qrcode" style="color:#286090" aria-hidden="true"></span>
 				  	</span>
-				  	<input type="text" name="txtDni" id="dni" maxlength="8" class="form-control" placeholder="Dni">
+				  	<input type="text" name="txtDni" id="dni"  maxlength="8" class="solonumero form-control" placeholder="Dni">
 				</div>
 				<br>
+
+				<div class="input-group">
+		        	<span class="input-group-addon"  id="basic-addon2">
+				       <span class="glyphicon glyphicon-user" style="color:#286090" aria-hidden="true"></span>
+				  	</span>
+				  	<input type="text" name="txtNombre" id="nombre" maxlength="40" class="form-control" placeholder="Nombre">
+				</div>
+				<br>
+
 				<div class="input-group">
 		        	<span class="input-group-addon"  id="basic-addon2">
 				       <span class="glyphicon glyphicon-phone" style="color:#286090" aria-hidden="true"></span>
 				  	</span>
-				  	<input type="text" name="txtCelular" id="celular" maxlength="9" class="form-control" placeholder="Celular" >
+				  	<input type="text" name="txtCelular" id="celular" maxlength="9" class="solonumero form-control" placeholder="Celular" >
 				</div>
+
 			</div>
 
 
@@ -48,7 +58,7 @@
 					
 		        	@if($item->Id!=$idPregunta)
 						<div class="col-xs-12 col-md-12">
-							<div class="preguntas">
+							<div class="preguntas pregunta{{$contadorItem}}">
 
 								<div class="numero"><p>{{$contadorItem}}</p></div>
 								<div class="pregunta">
@@ -164,18 +174,32 @@
 
 				
 				var xml="";
+				var contador=0;
 				var xmlt="";
 				var alertaMensajeGlobal="";
 				var idopcion = $("#idopcion").html();
+				var listapregunta = '';
 
 				$(".alerta").html("");
+				$('.preguntas').css("border", "1px solid #ccc");
 
 
 				for (i=1; i<=$("#contadorUnico").html(); i++)
 				{
+
 					if($('input:radio[name=radio'+i+']').is(':checked')) { 
+
 						xml=xml+($('input:radio[name=radio'+i+']:checked').val())+'*';
-					}	
+						contador=contador+1;
+
+					}else{
+
+						$('.pregunta'+i).css("border", "2px solid #a94442");
+						listapregunta = listapregunta + i + '-';
+
+					}
+
+
 				}
 
 				for (i=1; i<=$("#contadorMultiple").html(); i++)
@@ -183,6 +207,7 @@
 					$('input:checkbox[name=checkbox'+i+']:checked').each(   
 				    function() {
 				    	xml=xml+$(this).val()+'*';
+				    	contador=contador+1;
 				    }
 					);
 				}
@@ -192,11 +217,22 @@
 						xmlt=xmlt+$('#text'+i).val()+'*';
 				}
 
+				//alert(contador);
+
 
 				alertaMensajeGlobal+=(!valVacio($('#dni').val()) ? '<strong>¡Error!</strong> Complete el campo Dni<br>' : '');
+				alertaMensajeGlobal+=(!valVacio($('#nombre').val()) ? '<strong>¡Error!</strong> Complete el campo Nombre<br>' : '');
+
 				alertaMensajeGlobal+=(!valCantidad($('#dni').val(),8) && $('#dni').val()!="" ? '<strong>¡Error!</strong> Dni son 8 Digitos<br>' : '');
 				alertaMensajeGlobal+=(!valCantidad($('#celular').val(),9) && $('#celular').val()!="" ? '<strong>¡Error!</strong> Celular son 9 Digitos<br>' : '');
-				alertaMensajeGlobal+=(!valVacio(xml) ? '<strong>¡Error!</strong> Complete la Encuesta <br>' : '');
+
+
+				if(contador<parseInt($("#contadorUnico").html())){
+					alertaMensajeGlobal+='<strong>¡Error!</strong> Complete la Encuesta Preguntas('+listapregunta+')<br> ';
+				}
+				//alertaMensajeGlobal+=(!valVacio(xml) ? '<strong>¡Error!</strong> Complete la Encuesta <br>' : '');
+
+
 				var cadenaHtml="<div class='alert alert-danger'>"+alertaMensajeGlobal+"</div>"
 				if(alertaMensajeGlobal!='')
 				{
@@ -214,7 +250,8 @@
 					    {
 					        url: "/APPCOFFEE/insertarencuesta",
 					        type: "POST",
-					        data: "xml="+xml+"&xmlt="+xmlt+"&dni="+$('#dni').val()+"&celular="+$('#celular').val(),
+					        data: "xml="+xml+"&xmlt="+xmlt+"&dni="+$('#dni').val()+"&celular="+$('#celular').val()+"&nombre="+$('#nombre').val(),
+
 					    }).done(function(pagina) 
 		                {
 

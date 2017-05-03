@@ -404,6 +404,13 @@ text-align: center;
  } 
 
 
+.msj{
+  position: fixed;
+  right: 0px;
+  top: 0px;
+  z-index: 1025;
+}
+
 .navbar-login
 {
     width: 305px;

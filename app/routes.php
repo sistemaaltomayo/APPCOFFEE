@@ -58,6 +58,10 @@
  	Route::any('/ajaxlistarchecklist/{idOpcion}', 'InspeccionController@actionajaxListarCheckList');
 
 
+ 	Route::any('/getion-libro-reclamaciones/{idOpcion}', 'EncuestaController@actionLibroReclamaciones');
+ 	Route::any('/agregar-reclamaciones/{idOpcion}', 'EncuestaController@actionAgregarReclamaciones');
+ 	Route::any('/insertar-libro-reclamaciones/{idOpcion}', 'EncuestaController@actionRegistrarLibroReclamaciones');
+
 /*****************************************************************************************************/ 
 /***************************************  Inventario ******************************************/
 
@@ -132,8 +136,13 @@
 	Route::any('/insertar-solicitud-personal/{idOpcion}', 'PersonalController@actionInsertarSolicitudPersonal');
 	Route::any('/modificar-solicitud-personal/{idOpcion}/{idSolicitud}', 'PersonalController@actionModificarSolicitudPersonal');
 	Route::any('/agregar-personal-solicitud/{idOpcionPlus}/{idSolicitud}', 'PersonalController@actionAgregarPersonalSolicitud');
+	Route::any('/agregar-personal-termino-solicitud-ajax', 'PersonalController@actionAgregarPersonalTerminoSolicitudAjax');
 
 
+ /***************************************  AJAX ******************************************/
+
+
+	Route::any('/ajax-select-distrito', 'GeneralAjaxController@actiondistritoajax');
 
 /*****************************************************************************************************/
 

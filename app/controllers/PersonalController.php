@@ -9,6 +9,30 @@ class PersonalController extends BaseController
 	/******************************* Personal ************************************/
 
 
+
+	public function actionAgregarPersonalTerminoSolicitudAjax()
+	{
+
+
+		$generalclass        = new GeneralClass();
+		$idsolicitud  	 	 = Input::get('idsolicitud');
+		$nombre  	 	 	 = Input::get('nombre');
+		$termino  	 	 	 = Input::get('termino');
+		$dni  	 	 	 	 = Input::get('dni');
+		$id 				 = $generalclass->getCreateIdInvictus('PER.SolicitudPersonal');
+
+		$tPERSolicitudPersonal						= new PERSolicitudPersonal;
+		$tPERSolicitudPersonal->Id 					= $id;
+		$tPERSolicitudPersonal->IdSolicitud 		= $idsolicitud;
+		$tPERSolicitudPersonal->Nombre				= $nombre;
+		$tPERSolicitudPersonal->Dni 			    = $dni;
+		$tPERSolicitudPersonal->Termino				= $termino;
+		$tPERSolicitudPersonal->Completo			= 0;
+		$tPERSolicitudPersonal->save();
+
+	}	
+
+
 	public function actionAgregarPersonalSolicitud($idOpcionRolPlus,$idSolicitud)
 	{
 
@@ -19,16 +43,31 @@ class PersonalController extends BaseController
 			return Redirect::back()->with('alertaMensajeGlobalE', 'No tiene autorización para esta Opcion(Agregar Personal)');
 		}
 
-
 		$solicitud  				= PERSolicitud::where('Id','=',$idSolicitud)->first();
+
+		$provincia  				= GENProvincia::where('Activo','=',1)->orderBy('Descripcion', 'asc')->lists('Descripcion', 'Id');
+		$comboprovincia  			= array(0 => "Seleccione Provincia") + $provincia;
+
+		/*$distrito  					= GENDistrito::where('Activo','=',1)->orderBy('Descripcion', 'asc')->lists('Descripcion', 'Id');
+		$combodistrito  			= array(0 => "Seleccione Distrito") + $distrito;*/
+
+		$gradoinstruccion  			= PERGradoInstruccion::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
+		$combogradoinstruccion  	= array(0 => "Seleccione Grado Instrucción") + $gradoinstruccion;
+
+		$estadocivil  				= PEREstadoCivil::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
+		$comboestadocivil  			= array(0 => "Seleccione Estado Civil") + $estadocivil;
+
+
+
 
 		return View::make('personal/agregarpersonalsolicitud',
 		[
 		 'idOpcionRolPlus' 			=> $idOpcionRolPlus,
 		 'idSolicitud' 				=> $idSolicitud,
 		 'solicitud' 				=> $solicitud,
-
-		 
+		 'comboprovincia' 			=> $comboprovincia,
+		 'combogradoinstruccion' 	=> $combogradoinstruccion,
+		 'comboestadocivil' 		=> $comboestadocivil
 		]);
 
 	}	

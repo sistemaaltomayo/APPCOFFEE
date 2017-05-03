@@ -5,6 +5,144 @@ class EncuestaController extends BaseController
 {
 
 
+	public function actionLibroReclamaciones($idOpcion)
+	{
+
+		$validarurl = new GeneralClass();
+    	$exits = $validarurl->getUrl($idOpcion);
+
+    	if(!$exits){
+    		return Response::view('error.error404',array(), 404);
+    	}
+
+
+		$listaReclamaciones = DB::table('GEN.LibroReclamaciones')
+		->join('GEN.Local', 'GEN.LibroReclamaciones.IdLocal', '=', 'GEN.Local.Id')
+		->select('GEN.LibroReclamaciones.*','GEN.Local.Descripcion as NombreLocal')
+   		->orderBy('GEN.LibroReclamaciones.FechaCrea', 'desc')
+   		->take(30)
+	    ->get();
+
+
+		return View::make('encuesta/listalibroreclamaciones',
+		[
+		 	'idOpcion' 		 =>  $idOpcion,
+		 	'listaReclamaciones'  =>  $listaReclamaciones
+		]);
+
+	}
+
+
+	public function actionAgregarReclamaciones($idOpcion)
+	{
+
+
+		$localmovil  	= GENLocalMovil::where('Activo','=',1)->where('IdLocal','!=','LIM01CEN000000000000')->lists('Descripcion', 'IdLocal');
+		$combolocal  	= array(0 => "Seleccione Sede") + $localmovil;
+		$combobiencontratado  	= array(0 => "Seleccione Bien Contratado",'PRODUCTO' => "PRODUCTO",'SERVICIO' => "SERVICIO");
+		$comboreclamo  	= array(0 => "Seleccione Reclamo",'RECLAMACION' => "RECLAMACION",'QUEJA' => "QUEJA");
+
+
+
+		return View::make('encuesta/agregarreclamaciones',
+						  [
+						   'idOpcion'   => $idOpcion,
+						   'combolocal' => $combolocal,
+						   'combobiencontratado' => $combobiencontratado,
+						   'comboreclamo' => $comboreclamo,
+						  ]
+						 );
+	}
+
+	
+
+	public function actionRegistrarLibroReclamaciones($idOpcion)
+	{
+
+		if($_POST){
+
+			try{
+
+				DB::beginTransaction();
+
+				$local 				= Input::get('local');
+				$fecha 				= Input::get('fecha'); //(string)date_format(date_create(Input::get('fecha')), 'Y-m-d');
+
+				$numeroreclamacion 	= Input::get('numeroreclamacion');
+
+				$nombres 			= Input::get('nombres');
+				$dnice 				= Input::get('dnice');
+				$domicilio 			= Input::get('domicilio');
+				$telefono 			= Input::get('telefono');
+				$email 				= Input::get('email');		
+				$padresmadre 		= Input::get('padresmadre');
+
+				$biencontratado 	= Input::get('biencontratado');
+				$montoreclamado 	= Input::get('montoreclamado');
+				$descripcionbien 	= Input::get('descripcionbien');
+
+				$reclamacionqueja 	= Input::get('reclamacionqueja');
+				$descripcionreque 	= Input::get('descripcionreque');
+
+				$descripcionadop 	= Input::get('descripcionadop');
+
+				$IdUsuarioCrea 		= Session::get('Usuario')[0]->Id;
+				$fechacrea 			= date("Y-m-d H:i:s");
+
+				
+
+
+				$clases 			= new GeneralClass();
+		    	$id 				= $clases->getCreateIdInvictus('GEN.LibroReclamaciones');
+
+
+				
+				$tGENLibroReclamaciones						= new GENLibroReclamaciones;
+				$tGENLibroReclamaciones->Id 				= $id;
+				$tGENLibroReclamaciones->IdLocal 			= $local;
+				$tGENLibroReclamaciones->Fecha				= $fecha;
+				$tGENLibroReclamaciones->NumeroReclamacion	= $numeroreclamacion;
+
+				$tGENLibroReclamaciones->Nombres			= $nombres;
+				$tGENLibroReclamaciones->Domicilio			= $dnice;
+				$tGENLibroReclamaciones->DNICE				= $domicilio;
+				$tGENLibroReclamaciones->Telefono			= $telefono;
+				$tGENLibroReclamaciones->Email				= $email;
+				$tGENLibroReclamaciones->PadresMadre		= $padresmadre;
+
+				$tGENLibroReclamaciones->BienContratado		= $biencontratado;
+				$tGENLibroReclamaciones->MontoReclamado		= $montoreclamado;
+				$tGENLibroReclamaciones->DescripcionBien	= $descripcionbien;
+
+				$tGENLibroReclamaciones->ReclamacionQueja	= $reclamacionqueja;
+				$tGENLibroReclamaciones->DescripcionReQue	= $descripcionreque;
+				$tGENLibroReclamaciones->DescripcionAdopt	= $descripcionadop;
+				$tGENLibroReclamaciones->FechaCrea			= $fechacrea;
+				$tGENLibroReclamaciones->IdUsuario			= $IdUsuarioCrea;
+
+				$tGENLibroReclamaciones->save();
+
+				DB::commit();
+
+
+			}catch(Exception $ex){
+				DB::rollback();
+				return Redirect::to('/getion-libro-reclamaciones/'.$idOpcion)->with('alertaMensajeGlobalE', 'Ocurrio un error inesperado. Porfavor contacte con el administrador del sistema');	
+			}
+
+
+			return Redirect::to('/getion-libro-reclamaciones'.'/'.$idOpcion)->with('alertaMensajeGlobal', 'Registro Exitoso');
+			
+
+		}
+	}	
+
+
+
+
+
+
+
 
 	public function actionEncuesta($idOpcion)
 	{
@@ -80,18 +218,20 @@ class EncuestaController extends BaseController
 		$xmle=explode('*', Input::get('xml'));
 		$xmlt=explode('*', Input::get('xmlt'));
 		$dni=Input::get('dni');
+		$nombre=Input::get('nombre');
+
 		$cont=0;
 		$celular=Input::get('celular');
 		$xml='<R>';
 			// radio y check
 		for ($i = 0; $i < count($xmle)-1; $i++) {
 			$cont=$cont+1;
-			$xml=$xml.'<ent><fil>'.($cont).'</fil><idpr>'.$xmle[$i].'</idpr><idu>'.$idusuario.'</idu><dni>'.$dni.'</dni><cel>'.$celular.'</cel><de></de></ent>';
+			$xml=$xml.'<ent><fil>'.($cont).'</fil><idpr>'.$xmle[$i].'</idpr><idu>'.$idusuario.'</idu><dni>'.$dni.'</dni><cel>'.$celular.'</cel><nom>'.$nombre.'</nom><de></de></ent>';
 		}
 			//text
 		for ($i = 0; $i < count($xmlt)-1; $i++) {
 			$cont=$cont+1;
-			$xml=$xml.'<ent><fil>'.($cont).'</fil><idpr></idpr><idu>'.$idusuario.'</idu><dni>'.$dni.'</dni><cel>'.$celular.'</cel><de>'.$xmlt[$i].'</de></ent>';
+			$xml=$xml.'<ent><fil>'.($cont).'</fil><idpr></idpr><idu>'.$idusuario.'</idu><dni>'.$dni.'</dni><cel>'.$celular.'</cel><nom>'.$nombre.'</nom><de>'.$xmlt[$i].'</de></ent>';
 		}
 
 		$xml=$xml.'</R>';
