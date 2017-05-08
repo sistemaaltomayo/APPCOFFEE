@@ -215,7 +215,9 @@ class EncuestaController extends BaseController
 	public function actionInsertarEncuesta(){
 
 		$idusuario=Session::get('Usuario')[0]->Id;
-		$xmle=explode('*', Input::get('xml'));
+
+		$xmle=explode('***', Input::get('xml'));
+
 		$xmlt=explode('*', Input::get('xmlt'));
 		$dni=Input::get('dni');
 		$nombre=Input::get('nombre');
@@ -225,16 +227,20 @@ class EncuestaController extends BaseController
 		$xml='<R>';
 			// radio y check
 		for ($i = 0; $i < count($xmle)-1; $i++) {
+
+			$separar=explode('&&&', $xmle[$i]);
 			$cont=$cont+1;
-			$xml=$xml.'<ent><fil>'.($cont).'</fil><idpr>'.$xmle[$i].'</idpr><idu>'.$idusuario.'</idu><dni>'.$dni.'</dni><cel>'.$celular.'</cel><nom>'.$nombre.'</nom><de></de></ent>';
+			$xml=$xml.'<ent><fil>'.($cont).'</fil><idpr>'.$separar[0].'</idpr><rec>'.$separar[1].'</rec><idu>'.$idusuario.'</idu><dni>'.$dni.'</dni><cel>'.$celular.'</cel><nom>'.$nombre.'</nom><de></de></ent>';
 		}
 			//text
 		for ($i = 0; $i < count($xmlt)-1; $i++) {
 			$cont=$cont+1;
-			$xml=$xml.'<ent><fil>'.($cont).'</fil><idpr></idpr><idu>'.$idusuario.'</idu><dni>'.$dni.'</dni><cel>'.$celular.'</cel><nom>'.$nombre.'</nom><de>'.$xmlt[$i].'</de></ent>';
+			$xml=$xml.'<ent><fil>'.($cont).'</fil><idpr></idpr><rec></rec><idu>'.$idusuario.'</idu><dni>'.$dni.'</dni><cel>'.$celular.'</cel><nom>'.$nombre.'</nom><de>'.$xmlt[$i].'</de></ent>';
 		}
 
 		$xml=$xml.'</R>';
+
+
 
 		$stmt = DB::connection('sqlsrv')->getPdo()->prepare('SET NOCOUNT ON;EXEC AM_ENCUESTAXML ?');
         $stmt->bindParam(1, $xml ,PDO::PARAM_STR); 

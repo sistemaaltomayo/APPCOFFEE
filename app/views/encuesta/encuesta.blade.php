@@ -9,6 +9,7 @@
     {{ HTML::style('/css/font-awesome.min.css') }}
 
     {{ HTML::style('/css/cssCliente.css') }}
+
 @stop
 @section('section')
 
@@ -54,8 +55,13 @@
 				{{--*/ $contadorUnico = 0 /*--}}
 				{{--*/ $contadorMultiple = 0 /*--}}
 				{{--*/ $contadorText = 0 /*--}}
+
+				{{--*/ $contrecomendacion = 0 /*--}}
+
 		        @foreach($listaPregunta as $item)
 					
+					{{--*/ $contrecomendacion = $contrecomendacion + 1 /*--}}
+
 		        	@if($item->Id!=$idPregunta)
 						<div class="col-xs-12 col-md-12">
 							<div class="preguntas pregunta{{$contadorItem}}">
@@ -86,16 +92,36 @@
 					        	</div>
 						@else
 							@if($item->DescripcionTipo=='Unica') 
+
 							    <div class="funkyradio-success">
 						            <input type="radio" name="radio{{$contadorUnico}}" id="radio{{$contador}}" value="{{$item->IdPreguntaRespuesta}}" />
 						            <label for="radio{{$contador}}">{{$item->DescripcionResp}}</label>
 						        </div>
+
 							@else
 								<textarea class="form-control textarea" id="text{{$contadorText}}" rows="6"></textarea>
 							@endif
 						        
 						@endif
-						  
+
+					@if($contrecomendacion == 5)
+
+								<div class="input-group grupo-imput">
+								    <span class="titulospan input-group-addon" id="basic-addon1">¿ALGUNA RECOMENDACION? </span>
+								</div>
+
+								<br>
+								<textarea class="form-control textarea" id="recomendacion{{$contadorItem}}" rows="5" placeholder='¿ALGUNA RECOMENDACION? .....'></textarea>
+
+
+								{{--*/ $contrecomendacion = 0 /*--}}
+
+					@endif
+
+
+
+
+
 					@if(!isset($listaPregunta[$contador+1]->Id))
 								  </div>
 							</div>
@@ -187,9 +213,10 @@
 				for (i=1; i<=$("#contadorUnico").html(); i++)
 				{
 
-					if($('input:radio[name=radio'+i+']').is(':checked')) { 
+					if($('input:radio[name=radio'+i+']').is(':checked')) {
 
-						xml=xml+($('input:radio[name=radio'+i+']:checked').val())+'*';
+						contr = i+1; 
+						xml = xml + ($('input:radio[name=radio'+i+']:checked').val()) + '&&&' + $('#recomendacion'+contr).val() + '***';
 						contador=contador+1;
 
 					}else{
@@ -217,7 +244,7 @@
 						xmlt=xmlt+$('#text'+i).val()+'*';
 				}
 
-				//alert(contador);
+
 
 
 				alertaMensajeGlobal+=(!valVacio($('#dni').val()) ? '<strong>¡Error!</strong> Complete el campo Dni<br>' : '');
@@ -230,7 +257,7 @@
 				if(contador<parseInt($("#contadorUnico").html())){
 					alertaMensajeGlobal+='<strong>¡Error!</strong> Complete la Encuesta Preguntas('+listapregunta+')<br> ';
 				}
-				//alertaMensajeGlobal+=(!valVacio(xml) ? '<strong>¡Error!</strong> Complete la Encuesta <br>' : '');
+				
 
 
 				var cadenaHtml="<div class='alert alert-danger'>"+alertaMensajeGlobal+"</div>"
@@ -245,16 +272,23 @@
 						puntero = this;
 						$(puntero).prop("disabled",true);
 
+						console.log(xml);
+
 
 						$.ajax(
 					    {
+
+			                				    	
 					        url: "/APPCOFFEE/insertarencuesta",
 					        type: "POST",
-					        data: "xml="+xml+"&xmlt="+xmlt+"&dni="+$('#dni').val()+"&celular="+$('#celular').val()+"&nombre="+$('#nombre').val(),
+					        //data: "xml="+xml+"&xmlt="+xmlt+"&dni="+$('#dni').val()+"&celular="+$('#celular').val()+"&nombre="+$('#nombre').val(),
+					        data: { xml : xml, xmlt : xmlt, dni : $('#dni').val(), celular : $('#celular').val(), nombre : $('#nombre').val() },	
 
 					    }).done(function(pagina) 
 		                {
 
+		                	//console.log(pagina);
+		                	
 					    	$(puntero).prop("disabled",false);
 					    	window.location.href = '/APPCOFFEE/atencione/'+idopcion;
 		                    $('#modalcargando').modal('hide');
