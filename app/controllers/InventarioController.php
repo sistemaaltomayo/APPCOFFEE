@@ -289,7 +289,6 @@ class InventarioController extends BaseController
 	            ->where('INV.PlantillaPrioridadToma.IdTomaWeb', '=', $idtomaweb);
 	            
 	        })
-	        //->leftJoin('INV.PlantillaPrioridadToma', 'INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
 	   		->where('INV.TomaPlantillaUsuario.Activo', '=', 1)
 	   		->where('INV.TomaPlantilla.Activo', '=', 1)
 	   		->where('INV.TomaPlantillaUsuario.IdTomaWeb', '=', $idtomaweb)
@@ -325,9 +324,12 @@ class InventarioController extends BaseController
 		   		->select('INV.TomaPlantillaUsuario.IdProducto','INV.TomaPlantilla.CodigoProducto')
 		   		->groupBy('INV.TomaPlantillaUsuario.IdProducto','INV.TomaPlantilla.CodigoProducto')
 		   		->havingRaw('SUM(INV.TomaPlantillaUsuario.StockFisico1) = max(INV.TomaPlantilla.Existencia)')
+		   		->take(1950)
 		   	    ->get();
 
+
 				$IdProducto=array(-1);
+				$j=0;
 
 				for ( $i = 0 ; $i < count($listadoProductoE) ; $i ++) {
 
@@ -339,7 +341,8 @@ class InventarioController extends BaseController
 							  			 ->first();
 
 					if(count($prioridadplanilla)==0){
-						$IdProducto[$i]=$listadoProductoE[$i]->IdProducto;
+						$IdProducto[$j]=$listadoProductoE[$i]->IdProducto;
+						$j=$j+1;
 					}
 
 					/***********************************************/
@@ -355,13 +358,11 @@ class InventarioController extends BaseController
 		           	->on('INV.TomaPlantillaUsuario.IdProducto', '=', 'INV.TomaPlantilla.IdProducto');
 		        })
 		        ->join('INV.TomaWeb', 'INV.TomaWeb.Id', '=', 'INV.TomaPlantilla.IdTomaWeb')
-
 		   		->leftjoin('INV.PlantillaPrioridadToma', function ($join) use($idtomaweb){
 		            $join->on('INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
 		            ->where('INV.PlantillaPrioridadToma.IdTomaWeb', '=', $idtomaweb);
 		            
 		        })
-
 				//->leftJoin('INV.PlantillaPrioridadToma', 'INV.PlantillaPrioridadToma.Codigo', '=', 'INV.TomaPlantilla.CodigoProducto')
 		   		->where('INV.TomaPlantillaUsuario.Activo', '=', 1)
 		   		->where('INV.TomaPlantilla.Activo', '=', 1)
@@ -1284,6 +1285,7 @@ class InventarioController extends BaseController
 
 			if($listatoma[0]->EstadoProceso=="S"){
 
+
 				$listadoProductoE = DB::table('INV.TomaPlantillaUsuarioA')
 				->join('INV.TomaPlantillaA', function($join)
 		        {
@@ -1294,9 +1296,12 @@ class InventarioController extends BaseController
 		   		->select('INV.TomaPlantillaUsuarioA.IdProducto','INV.TomaPlantillaA.CodigoProducto')
 		   		->groupBy('INV.TomaPlantillaUsuarioA.IdProducto','INV.TomaPlantillaA.CodigoProducto')
 		   		->havingRaw('SUM(INV.TomaPlantillaUsuarioA.StockFisico1) = max(INV.TomaPlantillaA.Existencia)')
+		   		->take(1950)
 		   	    ->get();
 
+
 				$IdProducto=array(-1);
+				$j=0;
 
 				for ( $i = 0 ; $i < count($listadoProductoE) ; $i ++) {
 
@@ -1307,13 +1312,16 @@ class InventarioController extends BaseController
 							  			 ->first();
 
 					if(count($prioridadplanilla)==0){
-						$IdProducto[$i]=$listadoProductoE[$i]->IdProducto;
+						$IdProducto[$j]=$listadoProductoE[$i]->IdProducto;
+						$j=$j+1;
 					}
 
 					/***********************************************/
-
-
 				}
+
+
+
+
 
 				$listaPlantillaToma = DB::table('INV.TomaPlantillaUsuarioA')
 				->join('INV.TomaPlantillaA', function($join)
@@ -2136,11 +2144,13 @@ class InventarioController extends BaseController
 		   		->select('INV.TomaPlantillaUsuarioE.IdProducto','INV.TomaPlantillaE.CodigoProducto')
 		   		->groupBy('INV.TomaPlantillaUsuarioE.IdProducto','INV.TomaPlantillaE.CodigoProducto')
 		   		->havingRaw('SUM(INV.TomaPlantillaUsuarioE.StockFisico1) = max(INV.TomaPlantillaE.Existencia)')
+		   		->take(1950)
 		   	    ->get();
 
 
 
 				$IdProducto=array(-1);
+				$j=0;
 
 				for ( $i = 0 ; $i < count($listadoProductoE) ; $i ++) {
 
@@ -2151,7 +2161,8 @@ class InventarioController extends BaseController
 							  			 ->first();
 
 					if(count($prioridadplanilla)==0){
-						$IdProducto[$i]=$listadoProductoE[$i]->IdProducto;
+						$IdProducto[$j]=$listadoProductoE[$i]->IdProducto;
+						$j=$j+1;
 					}
 
 					/***********************************************/

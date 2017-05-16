@@ -141,8 +141,6 @@
 
 
 
-
-
 				<div class="panel panel-info">
 					<div class="panel-heading" style="text-align:center;">
 						<h3 class="panel-title">3. DETALLE DE LA RECLAMACION</h3>
