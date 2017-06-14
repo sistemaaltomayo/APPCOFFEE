@@ -1,5 +1,20 @@
 
 
+
+.continua p{
+  font-style: italic;
+  color: #000;
+  font-weight: bold;
+  text-align: center;
+}
+
+.terminar p{
+  font-style: italic;
+  color: #c9302c;
+  font-weight: bold;
+  text-align: center;
+}
+
 .containercocina .cabecerageneral{
   padding-top: 20px;
 }
@@ -26,6 +41,8 @@ img{
   font-weight: bold;
   text-align: center;
 }
+
+
 
 #cargandocampana {
   background: #FFFFFF;
@@ -584,6 +601,12 @@ tbody{
   background: #08257C;
   color: #fff;
   border-color :  #08257C;
+}
+
+
+.panel-success>.panel-heading{
+  background: #3c763d;
+  color:#fff;
 }
 .panel-info{
   border-color: #08257C;

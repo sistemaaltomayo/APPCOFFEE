@@ -7,33 +7,770 @@ class PersonalController extends BaseController
 
 
 	/******************************* Personal ************************************/
+	public function actionGuardarSegundoExamen()
+	{
+
+		$generalclass        		 	= new GeneralClass();
+		$idpostulante  	 	 	     	= Input::get('idpostulante');
+		$xml  	 	 	     		 	= Input::get('xml');
+		$fecha 				 			= date("Ymd H:i:s");
+
+		$id 						 	= $generalclass->getDecodificarId($idpostulante);
+		$idcabe 					  	= $generalclass->getCreateIdInvictus('PER.SegundoExamenVenta');
+
+		$tCabecera            	 		=  new PERSegundoExamenVenta;
+		$tCabecera->Id 	     	 		=  $idcabe;
+		$tCabecera->IdSolicitudPersonal =  $id;
+		$tCabecera->FechaCrea 			=  $fecha;
+		$tCabecera->save();
+
+		$listarexamen 					= explode('&&&', $xml);
+		$calificacion  	 	 	     	= '';
+		$puntaje  	 	 	     		= 0;
+
+		for ($i = 0; $i < count($listarexamen)-1; $i++) {
+
+			$idexa 			 					= $listarexamen[$i];
+			$respuesta 	  						= PERRespuestaVenta::whereId($idexa)->first();
+
+			$iddet = $generalclass->getCreateIdInvictus('PER.RespuestaVentaPostulante');
+
+			$tDetalle							= new PERRespuestaVentaPostulante;
+			$tDetalle->Id 						= $iddet;
+			$tDetalle->IdRespuestaVenta 		= $respuesta->Id;
+			$tDetalle->IdPreguntaVenta 			= $respuesta->IdPreguntaVenta;
+			$tDetalle->IdSegundoExamenVenta		= $idcabe;
+			$tDetalle->IdSolicitudPersonal 		= $id;
+			$tDetalle->Descripcion				= $respuesta->Descripcion;
+			$tDetalle->Valoracion				= $respuesta->Valoracion;
+			$tDetalle->save();
+
+			$puntaje = $puntaje + $respuesta->Valoracion;
+
+		}
+
+
+		if($puntaje <= 10){ $calificacion = 'MUY MALO'; }else{ if($puntaje <= 20){	$calificacion = 'MALO'; }else{ if($puntaje <= 30){ $calificacion = 'REGULAR'; }else{ $calificacion = 'BUENO'; }	} }
+
+
+		$tCabecera 							= PERSegundoExamenVenta::find($idcabe); 
+		$tCabecera->Puntaje 				= $puntaje;
+		$tCabecera->Calificacion 			= $calificacion;	
+		$tCabecera->save();
+
+		$tPERSolicitudPersonal 				= PERSolicitudPersonal::find($id); 
+		$tPERSolicitudPersonal->Estado 		= 8;
+		$tPERSolicitudPersonal->save();	
+
+
+	}
 
 
 
-	public function actionAgregarPersonalTerminoSolicitudAjax()
+
+
+	public function actionGuardarExamenAdministrativoPostulante()
+	{
+
+		$generalclass        		 	= new GeneralClass();
+		$idpostulante  	 	 	     	= Input::get('idpostulante');
+		$comentarioexamen  	 	 	    = Input::get('comentarioexamen');
+		$xml  	 	 	     		 	= Input::get('xml');
+		//$fecha 				 			= date("Y-m-d H:i:s");
+		$fecha 				 			= date("Ymd H:i:s");
+		$id 						 	= $generalclass->getDecodificarId($idpostulante);
+		$idcabe 					  	= $generalclass->getCreateIdInvictus('PER.RespuestaZonaADM');
+
+		$tCabecera            	 		=  new PERRespuestaZonaADM;
+		$tCabecera->Id 	     	 		=  $idcabe;
+		$tCabecera->IdSolicitudPersonal =  $id;
+		$tCabecera->Comentario 			=  $comentarioexamen;
+		$tCabecera->FechaCrea 			=  $fecha;
+		$tCabecera->save();
+
+		$listarexamen 					= explode('&&&', $xml);
+		$calificacion  	 	 	     	= '';
+		$si  	 	 	     			= 0;
+		$no  	 	 	     		    = 0;
+
+
+
+		for ($i = 0; $i < count($listarexamen)-1; $i++) {
+
+			$listadetalleexamen 	= explode('***', $listarexamen[$i]);
+			$idexa 			 		= $listadetalleexamen[0];
+			$respuesta 			 	= (int)$listadetalleexamen[1];
+
+			$iddet = $generalclass->getCreateIdInvictus('PER.RespuestaDetalleADM');
+
+			$preguntadetallebpm 	  			= PERPreguntaDetalleADM::whereId($idexa)->first();
+
+
+			$tDetalle							= new PERRespuestaDetalleADM;
+			$tDetalle->Id 						= $iddet;
+			$tDetalle->IdPreguntaDetalleADM 	= $idexa;
+			$tDetalle->IdRespuestaZonaADM 		= $idcabe;
+			$tDetalle->IdLugarInspeccionADM		= $preguntadetallebpm->IdLugarInspeccionADM;
+			$tDetalle->IdTituloInspeccionADM 	= $preguntadetallebpm->IdTituloInspeccionADM;
+			$tDetalle->Puntaje					= $respuesta;
+			$tDetalle->Activo					= 1;
+			$tDetalle->save();
+
+			if($respuesta == 1){ $si = $si +1; }else{ $no = $no +1; } 
+
+		}
+
+
+		if($si <= 9){ $calificacion = 'MUY MALO'; }else{ if($si <= 14){	$calificacion = 'MALO'; }else{ if($si <= 19){ $calificacion = 'REGULAR'; }else{ $calificacion = 'BUENO'; }	} }
+
+
+
+		$tCabecera 					= PERRespuestaZonaADM::find($idcabe); 
+		$tCabecera->Si 				= $si;	
+		$tCabecera->No 				= $no;
+		$tCabecera->Calificacion 	= $calificacion;	
+		$tCabecera->save();
+
+		$tPERSolicitudPersonal = PERSolicitudPersonal::find($id); 
+		$tPERSolicitudPersonal->Estado 				= 2;
+		if($si <= 14){
+			$tPERSolicitudPersonal->EstadoCulmino 	= 2;
+		}
+		$tPERSolicitudPersonal->save();	
+
+
+		$arrayjson[] = array(
+							'si'           		=> $si,
+							'calificacion'      => $calificacion
+		);
+		echo json_encode($arrayjson);
+
+	}
+
+
+
+	public function actionPrimerExamenATC()
+	{
+
+		$generalclass        		 	= new GeneralClass();
+		$idpostulante  	 	 	     	= Input::get('idpostulante');
+		$xml  	 	 	     		 	= Input::get('xml');
+
+		$id 						 	= $generalclass->getDecodificarId($idpostulante);
+
+		$idcabe 					  	= $generalclass->getCreateIdInvictus('PER.PrimerExamenAtcPostulante');
+
+		$tCabecera            	 		=  new PERPrimerExamenAtcPostulante;
+		$tCabecera->Id 	     	 		=  $idcabe;
+		$tCabecera->IdSolicitudPersonal =  $id;
+		$tCabecera->save();
+
+
+		$listarexamen 	= explode('&&&', $xml);
+		$calificacion  	 	 	     	= '';
+		$buenas  	 	 	     		= 0;
+		$malas  	 	 	     		= 0;
+
+	    $listaprimerexamenatc     = DB::table('PER.PrimerExamenAtc')
+				            	    ->get();
+
+		for ($i = 0; $i < count($listarexamen)-1; $i++) {
+
+			$listadetalleexamen 	= explode('***', $listarexamen[$i]);
+			$idexa 			 		= $listadetalleexamen[0];
+			$rpt1 			 		= (float)$listadetalleexamen[1];
+			$rpt2 			 		= (float)$listadetalleexamen[2];
+
+			$iddet 					= $generalclass->getCreateIdInvictus('PER.DetallePrimerExamenAtcPostulante');
+
+			$tDetalle            	 							=  new PERDetallePrimerExamenAtcPostulante;
+			$tDetalle->Id 	     	 							=  $iddet;
+			$tDetalle->IdPrimerExamenAtc  						=  $idexa;
+			$tDetalle->IdPrimerExamenAtcPostulante 				=  $idcabe;
+			$tDetalle->IdSolicitudPersonal 						=  $id;
+			$tDetalle->X 										=  $rpt1;
+			$tDetalle->Y 										=  $rpt2;										
+			$tDetalle->save();
+
+			foreach($listaprimerexamenatc as $item){
+
+				if($item->Id ==  $idexa){
+
+					if($rpt1 != 0){ if($item->X == $rpt1){ $buenas = $buenas +1; }else{ $malas = $malas +1; } }
+					if($rpt2 != 0){ if($item->Y == $rpt2){ $buenas = $buenas +1; }else{ $malas = $malas +1; } }
+				}
+			}
+
+		}
+
+		if($buenas <= 11){ $calificacion = 'MALO'; }else{ if($buenas <= 23){ $calificacion = 'REGULAR'; }else{ $calificacion = 'BUENO'; } }
+
+
+		$tCabecera = PERPrimerExamenAtcPostulante::find($idcabe); 
+		$tCabecera->Buenas 				= $buenas;	
+		$tCabecera->Malas 				= $malas;
+		$tCabecera->Calificacion 		= $calificacion;	
+		$tCabecera->save();
+
+		$tPERSolicitudPersonal = PERSolicitudPersonal::find($id); 
+		$tPERSolicitudPersonal->Estado 				= 6;		
+		$tPERSolicitudPersonal->save();		
+
+		echo("1");
+	}
+
+
+
+
+	public function actionPrimerExamenAdministrativo()
+	{
+
+		$generalclass        		 	= new GeneralClass();
+		$idpostulante  	 	 	     	= Input::get('idpostulante');
+		$xml  	 	 	     		 	= Input::get('xml');
+
+		$id 						 	= $generalclass->getDecodificarId($idpostulante);
+
+		$idcabe 					  	= $generalclass->getCreateIdInvictus('PER.PrimerExamenAdministradorPostulante');
+
+		$tCabecera            	 		=  new PERPrimerExamenAdministradorPostulante;
+		$tCabecera->Id 	     	 		=  $idcabe;
+		$tCabecera->IdSolicitudPersonal =  $id;
+		$tCabecera->save();
+
+
+		$listarexamen 	= explode('&&&', $xml);
+		$calificacion  	 	 	     	= '';
+		$buenas  	 	 	     		= 0;
+		$malas  	 	 	     		= 0;
+
+	    $listaprimerexamenadmin     = DB::table('PER.PrimerExamenAdministrador')
+				            	    ->get();
+
+		for ($i = 0; $i < count($listarexamen)-1; $i++) {
+
+			$listadetalleexamen 	= explode('***', $listarexamen[$i]);
+			$idexa 			 		= $listadetalleexamen[0];
+			$uno 			 		= (int)$listadetalleexamen[1];
+			$dos 			 		= (int)$listadetalleexamen[2];
+			$tres 			 		= (int)$listadetalleexamen[3];
+
+			$iddet = $generalclass->getCreateIdInvictus('PER.DetallePrimerExamenAdministradorPostulante');
+
+			$tDetalle            	 							=  new PERDetallePrimerExamenAdministradorPostulante;
+			$tDetalle->Id 	     	 							=  $iddet;
+			$tDetalle->IdPrimerExamenAdministrador  			=  $idexa;
+			$tDetalle->IdPrimerExamenAdministradorPostulante 	=  $idcabe;
+			$tDetalle->IdSolicitudPersonal 						=  $id;
+			$tDetalle->Uno 										=  $uno;
+			$tDetalle->Dos 										=  $dos;	
+			$tDetalle->Tres 									=  $tres;									
+			$tDetalle->save();
+
+			foreach($listaprimerexamenadmin as $item){
+
+				if($item->Id ==  $idexa){
+					if($uno == 1){ if($item->Uno == 1){	$buenas = $buenas +1; }else{ $malas = $malas +1; } }
+					if($dos == 1){ if($item->Dos == 1){	$buenas = $buenas +1; }else{ $malas = $malas +1; } }
+					if($tres == 1){ if($item->Tres == 1){ $buenas = $buenas +1; }else{ $malas = $malas +1; } }
+				}
+			}
+
+		}
+
+		if($buenas <= 9){ $calificacion = 'MALO'; }else{ if($buenas <= 14){	$calificacion = 'REGULAR'; }else{ if($buenas <= 19){ $calificacion = 'BUENO'; }else{ $calificacion = 'MUY BUENO'; }	} }
+
+		$tCabecera = PERPrimerExamenAdministradorPostulante::find($idcabe); 
+		$tCabecera->Buenas 				= $buenas;	
+		$tCabecera->Malas 				= $malas;
+		$tCabecera->Calificacion 		= $calificacion;	
+		$tCabecera->save();
+
+		$tPERSolicitudPersonal = PERSolicitudPersonal::find($id); 
+		$tPERSolicitudPersonal->Estado 				= 6;		
+		$tPERSolicitudPersonal->save();		
+
+		echo("1");
+	}
+
+
+
+
+	public function actionActualizarCronometroExamen()
+	{
+
+		$generalclass        		 = new GeneralClass();
+		$idpostulante  	 	 	     = Input::get('idpostulante');
+		$horacompleta  	 	 	     = Input::get('horacompleta');
+		$accionhora  	 	 	     = (int)Input::get('accionhora');
+
+		$id = $generalclass->getDecodificarId($idpostulante);
+
+		$tPERSolicitudPersonal = PERSolicitudPersonal::find($id); 
+
+		if($accionhora == 1){
+			$tPERSolicitudPersonal->TiempoPrimerExamenAdmTer = $horacompleta;
+		}else{
+			if($accionhora == 2){
+				$tPERSolicitudPersonal->TiempoPrimerExamenAtcTer = $horacompleta;
+			}else{
+				if($accionhora == 3){
+					$tPERSolicitudPersonal->TiempoSegundoExamenAdmTer = $horacompleta;
+				}else{
+					$tPERSolicitudPersonal->TiempoSegundoExamenAtcTer = $horacompleta;
+				}				
+			}			
+		}	
+		$tPERSolicitudPersonal->save();
+
+		echo("1");
+	}
+
+
+
+	public function actionEmpezarSegundoExamen()
+	{
+
+		$generalclass        		 = new GeneralClass();
+		$idpostulante  	 	 	     = Input::get('idpostulante');
+
+		$id = $generalclass->getDecodificarId($idpostulante);
+
+		$tPERSolicitudPersonal = PERSolicitudPersonal::find($id); 
+		$tPERSolicitudPersonal->Estado 				= 7;		
+		$tPERSolicitudPersonal->save();
+
+		echo("1");
+	}
+
+
+
+	public function actionEmpezarPrimerExamen()
+	{
+
+		$generalclass        		 = new GeneralClass();
+		$idpostulante  	 	 	     = Input::get('idpostulante');
+
+		$id = $generalclass->getDecodificarId($idpostulante);
+
+		$tPERSolicitudPersonal = PERSolicitudPersonal::find($id); 
+		$tPERSolicitudPersonal->Estado 				= 5;		
+		$tPERSolicitudPersonal->save();
+
+		echo("1");
+	}
+
+
+
+
+	public function actionContinuarTerminoCondiciones()
+	{
+
+		$generalclass        		 = new GeneralClass();
+		$idpostulante  	 	 	     = Input::get('idpostulante');
+
+		$id = $generalclass->getDecodificarId($idpostulante);
+
+		$tPERSolicitudPersonal = PERSolicitudPersonal::find($id); 
+		$tPERSolicitudPersonal->Estado 				= 1;		
+		$tPERSolicitudPersonal->save();
+
+		echo("1");
+	}
+
+
+	public function actionContinuarProcesoSeleccion()
+	{
+
+		$generalclass        		 = new GeneralClass();
+		$idpostulante  	 	 	     = Input::get('idpostulante');
+
+		$id = $generalclass->getDecodificarId($idpostulante);
+
+		$tPERSolicitudPersonal = PERSolicitudPersonal::find($id); 
+		$tPERSolicitudPersonal->Estado 				= 3;		
+		$tPERSolicitudPersonal->save();
+
+		echo("1");
+	}
+
+
+
+
+	public function actionInsertarDatosPersonalesPostulante()
 	{
 
 
-		$generalclass        = new GeneralClass();
-		$idsolicitud  	 	 = Input::get('idsolicitud');
-		$nombre  	 	 	 = Input::get('nombre');
-		$termino  	 	 	 = Input::get('termino');
-		$dni  	 	 	 	 = Input::get('dni');
-		$id 				 = $generalclass->getCreateIdInvictus('PER.SolicitudPersonal');
+		$generalclass        		 = new GeneralClass();
+		$nombretermino  	 	 	 = Input::get('nombretermino');
+		$dnitermino  	 	 	 	 = Input::get('dnitermino');
+		$fechanacimiento  	 	 	 = Input::get('fechanacimiento');
+		$direccion  	 	 	     = Input::get('direccion');
+		$provincia  	 	 	     = Input::get('provincia');
+		$distrito  	 	 	         = Input::get('distrito');
+		$celular  	 	 	         = Input::get('celular');
+		$telefono  	 	 	         = Input::get('telefono');
+		$correoelectronico  	 	 = Input::get('correoelectronico');
+		$gradoinstruccion  	 	 	 = Input::get('gradoinstruccion');
+		$medio  	 	 	         = Input::get('medio');
+		$idpostulante  	 	 	     = Input::get('idpostulante');
+		$xmlreferencia  	 	 	 = Input::get('xmlreferencia');
+		$xmlprograma  	 	 	     = Input::get('xmlprograma');
+		$xmlidioma  	 	 	     = Input::get('xmlidioma');
+		$xmltrabajo  	 	 	     = Input::get('xmltrabajo');
+		$especificarmedio  	 	 	 = Input::get('especificarmedio');
 
-		$tPERSolicitudPersonal						= new PERSolicitudPersonal;
-		$tPERSolicitudPersonal->Id 					= $id;
-		$tPERSolicitudPersonal->IdSolicitud 		= $idsolicitud;
-		$tPERSolicitudPersonal->Nombre				= $nombre;
-		$tPERSolicitudPersonal->Dni 			    = $dni;
-		$tPERSolicitudPersonal->Termino				= $termino;
-		$tPERSolicitudPersonal->Completo			= 0;
+		$talento  	 	 	     	 = Input::get('talento');
+		$xmlhijosesposa  	 	 	 = Input::get('xmlhijosesposa');
+		$xmlcursoadicional  	 	 = Input::get('xmlcursoadicional');
+		$nombreultimo  	 	 	     = Input::get('nombreultimo');
+		$celularultimmo  	 	 	 = Input::get('celularultimmo');				
+
+
+		$id = $generalclass->getDecodificarId($idpostulante);
+
+		$tPERSolicitudPersonal = PERSolicitudPersonal::find($id); 
+		$tPERSolicitudPersonal->FechaNac 	 		= $fechanacimiento;
+		$tPERSolicitudPersonal->Direccion 	 		= $direccion;
+		$tPERSolicitudPersonal->IdDistrito 	 		= $distrito;
+		$tPERSolicitudPersonal->TelefonoFijo 		= $telefono;
+		$tPERSolicitudPersonal->Celular 	 		= $celular;
+		$tPERSolicitudPersonal->CorreoElectronico 	= $correoelectronico;
+		$tPERSolicitudPersonal->IdGradoInstruccion 	= $gradoinstruccion;
+		$tPERSolicitudPersonal->IdMedio 	 		= $medio;
+		$tPERSolicitudPersonal->EspecificarMedio 	= $especificarmedio;
+		$tPERSolicitudPersonal->CelularUltimoTrabajo = $celularultimmo;
+		$tPERSolicitudPersonal->NombreUltimoTrabajo = $nombreultimo;
+		$tPERSolicitudPersonal->Talento 			= $talento;
+		$tPERSolicitudPersonal->Estado 				= 4;		
 		$tPERSolicitudPersonal->save();
+
+
+
+		$listareferencia 	= explode('&&&', $xmlreferencia);
+
+		for ($i = 0; $i < count($listareferencia)-1; $i++) {
+
+			$listareferencianumero 	= explode('***', $listareferencia[$i]);
+			$tr 			 	= $listareferencianumero[0];
+			$nr 			 	= $listareferencianumero[1];
+
+			$iddet = $generalclass->getCreateIdInvictus('PER.ReferenciaPostulante');
+
+			$tDetalle            	 		=  new PERReferenciaPostulante;
+			$tDetalle->Id 	     	 		=  $iddet;
+			$tDetalle->IdSolicitudPersonal  =  $id;
+			$tDetalle->NombreReferencia 	=  $nr;
+			$tDetalle->TelefonoReferencia 	=  $tr;
+			$tDetalle->save();
+
+		}
+
+
+		$listahijosesposa 	= explode('&&&', $xmlhijosesposa);
+
+		for ($i = 0; $i < count($listahijosesposa)-1; $i++) {
+
+			$listahijosesposanumero 	= explode('***', $listahijosesposa[$i]);
+			$ne 			 	= $listahijosesposanumero[0];
+			$ee 			 	= (int)$listahijosesposanumero[1];
+			$nh 			 	= $listahijosesposanumero[2];
+			$eh 			 	= $listahijosesposanumero[3];
+
+			$iddet = $generalclass->getCreateIdInvictus('PER.EsposaHijoPostulante');
+
+			$tDetalle            	 		=  new PEREsposaHijoPostulante;
+			$tDetalle->Id 	     	 		=  $iddet;
+			$tDetalle->IdSolicitudPersonal  =  $id;
+			$tDetalle->NombreEsposo 		=  $ne;
+			$tDetalle->EdadEsposo 			=  $ee;
+			if($nh != ''){
+				$tDetalle->NombreHijo 			=  $nh;
+				$tDetalle->EdadHijo 			=  (int)$eh;	
+
+			}
+			$tDetalle->save();
+
+		}
+
+
+		$listaprograma 	= explode('&&&', $xmlprograma);
+
+		for ($i = 0; $i < count($listaprograma)-1; $i++) {
+
+			$listaprogramadet 	= explode('***', $listaprograma[$i]);
+			$idprograma 			 	= $listaprogramadet[0];
+			$idnivelprograma			= $listaprogramadet[1];
+
+			$iddet = $generalclass->getCreateIdInvictus('PER.ComputacionPostulante');
+
+			$tDetalle            	 		=  new PERComputacionPostulante;
+			$tDetalle->Id 	     	 		=  $iddet;
+			$tDetalle->IdSolicitudPersonal  =  $id;
+			$tDetalle->IdProgramas 			=  $idprograma;
+			$tDetalle->IdNivel 				=  $idnivelprograma;
+			$tDetalle->save();
+
+		}
+
+
+		$listaidioma 	= explode('&&&', $xmlidioma);
+
+		for ($i = 0; $i < count($listaidioma)-1; $i++) {
+
+			$listaidiomadet 			= explode('***', $listaidioma[$i]);
+			$ididioma			 		= $listaidiomadet[0];
+			$idnivelidioma				= $listaidiomadet[1];
+
+			$iddet = $generalclass->getCreateIdInvictus('PER.IdiomaPostulante');
+
+			$tDetalle            	 		=  new PERIdiomaPostulante;
+			$tDetalle->Id 	     	 		=  $iddet;
+			$tDetalle->IdSolicitudPersonal  =  $id;
+			$tDetalle->IdIdioma 			=  $ididioma;
+			$tDetalle->IdNivel 				=  $idnivelidioma;
+			$tDetalle->save();
+
+		}
+
+		$listacursoadicional	= explode('&&&', $xmlcursoadicional);
+
+		for ($i = 0; $i < count($listacursoadicional)-1; $i++) {
+
+			$cursoadicional	 = $listacursoadicional[$i];
+			$iddet = $generalclass->getCreateIdInvictus('PER.CursoAdicionalPostulante');
+
+			$tDetalle            	 		=  new PERCursoAdicionalPostulante;
+			$tDetalle->Id 	     	 		=  $iddet;
+			$tDetalle->IdSolicitudPersonal  =  $id;
+			$tDetalle->NombreCurso 			=  $cursoadicional;
+			$tDetalle->save();
+
+		}
+
+
+
+
+
+		$listatrabajo 	= explode('&&&', $xmltrabajo);
+
+		for ($i = 0; $i < count($listatrabajo)-1; $i++) {
+
+			$listatrabajodet 			= explode('***', $listatrabajo[$i]);
+			$empresa			 		= $listatrabajodet[0];
+			$iddepartamento				= $listatrabajodet[1];
+			$cargo						= $listatrabajodet[2];
+			$funcion					= $listatrabajodet[3];			
+
+
+			$iddet = $generalclass->getCreateIdInvictus('PER.ReferenciaTrabajoPostulante');
+
+			$tDetalle            	 		=  new PERReferenciaTrabajoPostulante;
+			$tDetalle->Id 	     	 		=  $iddet;
+			$tDetalle->IdSolicitudPersonal  =  $id;
+			$tDetalle->Empresa 				=  $empresa;
+			$tDetalle->IdDepartamento 		=  $iddepartamento;
+			$tDetalle->Cargo 				=  $cargo;						
+			$tDetalle->Funcion 				=  $funcion;
+			$tDetalle->save();
+
+		}
+
+		echo("1");
+	}
+
+
+	public function actionProcesoSeleccionPostulante($idsolicitud,$idpostulante,$idopcion)
+	{
+
+
+		$generalclass        		= new GeneralClass();
+
+		$solicitud  		 		= PERSolicitud::where('Id','=',$generalclass->getDecodificarId($idsolicitud))->first();
+		if($solicitud->IdTipoUsuario == 'LIM01CEN000000000003'){ $puestotrabajo = 'ATC'; }else{ $puestotrabajo = 'ADM';	}
+
+
+
+		$postulante  		 		= PERSolicitudPersonal::where('Id','=',$generalclass->getDecodificarId($idpostulante))->first();
+		$codigo 			 		= Session::get('Usuario')[0]->Codigo;
+
+		$provincia  				= GENProvincia::where('Activo','=',1)->orderBy('Descripcion', 'asc')->lists('Descripcion', 'Id');
+		$comboprovincia  			= array(0 => "Seleccione Provincia") + $provincia;
+
+		$departamento  				= GENDepartamento::where('Activo','=',1)->orderBy('Descripcion', 'asc')->lists('Descripcion', 'Id');
+		$combodepartamento 			= array(0 => "Seleccione Departamento") + $departamento;
+
+		$gradoinstruccion  			= PERGradoInstruccion::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
+		$combogradoinstruccion  	= array(0 => "Seleccione Grado Instrucción") + $gradoinstruccion;
+
+		$nivel  					= PERNivel::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
+		$combonivel  				= array(0 => "Seleccione Nivel") + $nivel;
+
+		$programas  				= PERProgramas::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
+		$comboprograma 				= array(0 => "Seleccione Programa") + $programas;
+
+		$idioma  					= PERIdioma::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
+		$comboidioma 				= array(0 => "Seleccione Idioma") + $idioma;
+
+		$medios  					= PERMedios::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
+		$combomedio 				= array(0 => "Seleccione Medio") + $medios;
+
+		$estadocivil  				= PEREstadoCivil::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
+		$comboestadocivil  			= array(0 => "Seleccione Estado Civil") + $estadocivil;
+
+
+		/************************   Examen del Administrador al Postulante *********************/
+
+		$listaLugarInspeccion    	= PERLugarInspeccionADM::where('Activo','=','1')
+									 ->orderBy('Id', 'asc')
+									 ->get();
+
+		$listaTituloInspeccion   	= PERTituloInspeccionADM::where('Activo','=','1')
+									 ->orderBy('Id', 'asc')
+									 ->get();	
+		$listaPreguntaDetalleBPM 	= PERPreguntaDetalleADM::where('Activo','=','1')
+									 ->orderBy('Id', 'asc')
+									 ->get();
+
+		$respuestaexamenadmin       = DB::table('PER.RespuestaZonaADM')->where('IdSolicitudPersonal','=',$generalclass->getDecodificarId($idpostulante))->first();
+
+		/****************************************************************************************/
+
+
+
+	    $listaprimerexamenadmin     = DB::table('PER.PrimerExamenAdministrador')
+				            	    ->get();
+
+	    $listaprimerexamenatc     = DB::table('PER.PrimerExamenAtc')
+				            	    ->get();				            	    
+
+
+
+		/************************   Segundo Examen seleccion *********************/
+
+		$listasegundoexamen    		= PERPreguntaVentas::join('PER.RespuestaVenta', 'PER.PreguntaVentas.Id', '=', 'PER.RespuestaVenta.IdPreguntaVenta')
+									 ->select('PER.PreguntaVentas.Descripcion as NombrePregunta','PER.RespuestaVenta.IdPreguntaVenta','PER.RespuestaVenta.Id',
+									 		  'PER.RespuestaVenta.Descripcion','PER.RespuestaVenta.Valoracion')
+									 ->where('PER.PreguntaVentas.Activo','=','1')
+									 ->where('PER.RespuestaVenta.Activo','=','1')
+									 ->orderBy('PER.RespuestaVenta.IdPreguntaVenta', 'asc')
+									 ->get();
+
+		/****************************************************************************************/
+
+
+		/*print_r($listasegundoexamen);
+		exit();*/
+
+
+		return View::make('personal/procesoseleccion',
+		[
+		 'idsolicitud' 		  		=> $idsolicitud,
+		 'puestotrabajo'  			=> $puestotrabajo,
+		 'idpostulante' 	  		=> $idpostulante,
+		 'postulante' 		  		=> $postulante,
+		 'codigo' 		  	  		=> $codigo,
+		 'idopcion' 		  		=> $idopcion,
+		 'comboprovincia' 			=> $comboprovincia,
+		 'combogradoinstruccion' 	=> $combogradoinstruccion,
+		 'comboestadocivil' 		=> $comboestadocivil,
+		 'combonivel' 				=> $combonivel,
+		 'comboprograma' 			=> $comboprograma,
+		 'comboidioma' 				=> $comboidioma,
+		 'combomedio' 				=> $combomedio,
+		 'combodepartamento' 		=> $combodepartamento,
+		 'listaLugarInspeccion'     => $listaLugarInspeccion,
+		 'listaTituloInspeccion'    => $listaTituloInspeccion,
+		 'listaPreguntaDetalleBPM'  => $listaPreguntaDetalleBPM,
+		 'respuestaexamenadmin'  	=> $respuestaexamenadmin,
+		 'listaprimerexamenadmin' 	=> $listaprimerexamenadmin,
+		 'listaprimerexamenatc' 	=> $listaprimerexamenatc,
+		 'listasegundoexamen' 		=> $listasegundoexamen,		 
+		]);
+
+
 
 	}	
 
 
-	public function actionAgregarPersonalSolicitud($idOpcionRolPlus,$idSolicitud)
+	public function actionInsertarTerminoCondicion()
+	{
+
+		$generalclass        = new GeneralClass();
+		$idsolicitud  	 	 = Input::get('idSolicitud');
+		$nombre  	 	 	 = Input::get('nombretermino');
+		$termino  	 	 	 = Input::get('termino');
+		$dni  	 	 	 	 = Input::get('dnitermino');
+		$cantidadplay  	 	 = Input::get('cantidadplay');
+
+
+		$idopcion  	 	 	 = Input::get('idopcion');
+		//$fecha 				 = date("Y-m-d H:i:s");
+		$fecha 				 = date("Ymd H:i:s");
+		$idusuario 			 = Session::get('Usuario')[0]->Id;
+		$id 				 = $generalclass->getCreateIdInvictus('PER.SolicitudPersonal');
+
+		$postulante 			 							= PERSolicitudPersonal::where('Dni','=',$dni)->first();
+
+		if(count($postulante)>0){ return Redirect::back()->with('alertaMensajeGlobalE', 'Este DNI ya se encuentra registrado (Llamar al Administrador)'); }
+
+		$tiempo 			 								= PERTiemposExamen::first();
+		$tPERSolicitudPersonal								= new PERSolicitudPersonal;
+		$tPERSolicitudPersonal->Id 							= $id;
+		$tPERSolicitudPersonal->IdSolicitud 				= $generalclass->getDecodificarId($idsolicitud);
+		$tPERSolicitudPersonal->Nombre						= $nombre;
+		$tPERSolicitudPersonal->Dni 			    		= $dni;
+		$tPERSolicitudPersonal->CantidadPlay 			    = $cantidadplay;
+		$tPERSolicitudPersonal->Termino						= $termino;
+
+		$tPERSolicitudPersonal->TiempoPrimerExamenAdm		= $tiempo->TiempoPrimerExamenAdm;
+		$tPERSolicitudPersonal->TiempoPrimerExamenAtc 		= $tiempo->TiempoPrimerExamenAtc;
+		$tPERSolicitudPersonal->TiempoSegundoExamenAdm		= $tiempo->TiempoSegundoExamenAdm;
+		$tPERSolicitudPersonal->TiempoSegundoExamenAtc		= $tiempo->TiempoSegundoExamenAtc;
+		$tPERSolicitudPersonal->TiempoPrimerExamenAdmTer 	= '00:00';
+		$tPERSolicitudPersonal->TiempoPrimerExamenAtcTer	= '00:00';
+		$tPERSolicitudPersonal->TiempoSegundoExamenAdmTer	= '00:00';
+		$tPERSolicitudPersonal->TiempoSegundoExamenAtcTer 	= '00:00';
+
+		$tPERSolicitudPersonal->IdUsuario					= $idusuario;
+		$tPERSolicitudPersonal->FechaCrea					= $fecha;
+		$tPERSolicitudPersonal->Activo						= 1;
+		$tPERSolicitudPersonal->Estado						= '0';
+		if($termino == '0'){
+			$tPERSolicitudPersonal->EstadoCulmino			= '0';
+		}
+		$tPERSolicitudPersonal->save();
+
+
+		return Redirect::to('/proceso-seleccion-postulante'.'/'.$idsolicitud.'/'.Hashids::encode(substr($id, -12)).'/'.$idopcion);
+
+
+	}	
+
+
+
+
+
+
+	public function actionListaPostulanteSolicitud()
+	{
+
+		$idsolicitud  	 	 	 = Input::get('idsolicitud');
+		$idopcion  	 	 	 	 = Input::get('idopcion');
+		$listapostulante 		 = PERSolicitudPersonal::where('IdSolicitud','=',$idsolicitud)->get();
+
+		return View::make('personalajax/listapersonalajax',
+		[
+		 'idsolicitud' 			 => $idsolicitud,
+		 'idopcion' 			 => $idopcion,
+		 'listapostulante' 		 => $listapostulante
+		]);
+
+	}
+
+
+
+	public function actionAgregarPersonalSolicitud($idOpcionRolPlus,$idSolicitud,$idopcion)
 	{
 
 		/***** Permiso a la Opciones PLus ******/
@@ -45,29 +782,12 @@ class PersonalController extends BaseController
 
 		$solicitud  				= PERSolicitud::where('Id','=',$idSolicitud)->first();
 
-		$provincia  				= GENProvincia::where('Activo','=',1)->orderBy('Descripcion', 'asc')->lists('Descripcion', 'Id');
-		$comboprovincia  			= array(0 => "Seleccione Provincia") + $provincia;
-
-		/*$distrito  					= GENDistrito::where('Activo','=',1)->orderBy('Descripcion', 'asc')->lists('Descripcion', 'Id');
-		$combodistrito  			= array(0 => "Seleccione Distrito") + $distrito;*/
-
-		$gradoinstruccion  			= PERGradoInstruccion::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
-		$combogradoinstruccion  	= array(0 => "Seleccione Grado Instrucción") + $gradoinstruccion;
-
-		$estadocivil  				= PEREstadoCivil::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
-		$comboestadocivil  			= array(0 => "Seleccione Estado Civil") + $estadocivil;
-
-
-
-
 		return View::make('personal/agregarpersonalsolicitud',
 		[
 		 'idOpcionRolPlus' 			=> $idOpcionRolPlus,
 		 'idSolicitud' 				=> $idSolicitud,
 		 'solicitud' 				=> $solicitud,
-		 'comboprovincia' 			=> $comboprovincia,
-		 'combogradoinstruccion' 	=> $combogradoinstruccion,
-		 'comboestadocivil' 		=> $comboestadocivil
+		 'idopcion' 				=> $idopcion,
 		]);
 
 	}	
@@ -95,9 +815,9 @@ class PersonalController extends BaseController
 		$listaSolicitudPersonal = DB::table('PER.Solicitud')
 		->join('GEN.Local', 'GEN.Local.Id', '=', 'PER.Solicitud.IdLocal')
 		->join('PER.MotivoSolicitud', 'PER.MotivoSolicitud.Id', '=', 'PER.Solicitud.IdMotivoSolicitud')
-		->join('SEG.TipoUsuario', 'SEG.TipoUsuario.Id', '=', 'PER.Solicitud.IdTipoUsuario')
+		->join('PER.PuestoTrabajo', 'PER.PuestoTrabajo.Id', '=', 'PER.Solicitud.IdTipoUsuario')
 		->join('tbUsuarioLocal', 'tbUsuarioLocal.Id', '=', 'PER.Solicitud.IdUsuarioCrea')
-		->select('PER.Solicitud.Id','PER.Solicitud.Correlativo','GEN.Local.Nombre','PER.Solicitud.FechaCrea','PER.MotivoSolicitud.Nombre as MotivoSolicitud','SEG.TipoUsuario.Descripcion as Cargo','tbUsuarioLocal.Nombre as Nombreusuario','tbUsuarioLocal.Apellido as Apellidousuario')
+		->select('PER.Solicitud.Id','PER.Solicitud.Correlativo','GEN.Local.Nombre','PER.Solicitud.FechaCrea','PER.MotivoSolicitud.Nombre as MotivoSolicitud','PER.PuestoTrabajo.Nombre as Cargo','tbUsuarioLocal.Nombre as Nombreusuario','tbUsuarioLocal.Apellido as Apellidousuario')
    		->orderBy('PER.Solicitud.FechaCrea', 'desc')
    		->take(30)
 	    ->get();
@@ -126,18 +846,10 @@ class PersonalController extends BaseController
 				DB::beginTransaction();
 
 				$IdMotivoSolicitud 	= Input::get('motivosolicitud');
-				$IdUsuario 			= Input::get('usuarior');
-				$IdMotivoRemplazo 	= Input::get('motivoreemplazo');
+				$xmlusuariomotivo 	= Input::get('xmlusuariomotivo');
 				$Autorizacion 		= Input::get('autorizacion');
 				$IdTipoUsuario 		= Input::get('tipousuario');
-				$IdLocal 			= Input::get('local');
 				$NumeroVacantes 	= Input::get('numerovacantes');
-				$EdadInicio 		= Input::get('edadinicio');		
-				$EdadFin 			= Input::get('edadfin');	
-				$PerfilPuesto 		= Input::get('perfilpuesto');
-				$FuncionesPuesto 	= Input::get('funcionpuesto');
-				$HorariosTrabajo 	= Input::get('horatrabajo');			
-				$Sueldo 			= Input::get('sueldo');
 				$Observacion 		= Input::get('observacion');
 				$IdUsuarioCrea 		= Session::get('Usuario')[0]->Id;
 				$fecha 				= date("Ymd H:i:s");
@@ -146,23 +858,16 @@ class PersonalController extends BaseController
 		    	$id 				= $clases->getCreateIdInvictus('PER.Solicitud');
 				$correlativo 		= $clases->getCorrelativo('PER.Solicitud'); 
 
-				
+				$idLo = DB::table('INV.Sublocales')->where('INV.Sublocales.Id', '=', 'LIM01CEN000000000001')->first(); 
+
 				$tPERSolicitud						= new PERSolicitud;
 				$tPERSolicitud->Id 					= $id;
 				$tPERSolicitud->Correlativo 		= $correlativo;
+				$tPERSolicitud->IdLocal				= $idLo->IdLocal;
 				$tPERSolicitud->IdMotivoSolicitud	= $IdMotivoSolicitud;
-				$tPERSolicitud->IdUsuario			= $IdUsuario;
-				$tPERSolicitud->IdMotivoRemplazo	= $IdMotivoRemplazo;
 				$tPERSolicitud->Autorizacion		= $Autorizacion;
 				$tPERSolicitud->IdTipoUsuario		= $IdTipoUsuario;
-				$tPERSolicitud->IdLocal				= $IdLocal;
 				$tPERSolicitud->NumeroVacantes		= $NumeroVacantes;
-				$tPERSolicitud->EdadInicio			= $EdadInicio;
-				$tPERSolicitud->EdadFin				= $EdadFin;
-				$tPERSolicitud->PerfilPuesto		= $PerfilPuesto;
-				$tPERSolicitud->FuncionesPuesto		= $FuncionesPuesto;
-				$tPERSolicitud->HorariosTrabajo		= $HorariosTrabajo;
-				$tPERSolicitud->Sueldo				= $Sueldo;
 				$tPERSolicitud->Observacion			= $Observacion;
 				$tPERSolicitud->IdUsuarioCrea		= $IdUsuarioCrea;
 				$tPERSolicitud->Activo 				= 1;
@@ -170,6 +875,32 @@ class PersonalController extends BaseController
 				$tPERSolicitud->EmailMod 			= 0;
 				$tPERSolicitud->FechaCrea			= $fecha;
 				$tPERSolicitud->save();
+
+
+				$listausuario 	= explode('&&&', $xmlusuariomotivo);
+
+				for ($i = 0; $i < count($listausuario)-1; $i++) {
+
+					$listausuariomotivo = explode('***', $listausuario[$i]);
+					$idusuario 			 = $listausuariomotivo[0];
+					$idmotivo 			 = $listausuariomotivo[1];
+					$usuario 			 = $listausuariomotivo[2];
+					$motivo 			 = $listausuariomotivo[3];
+
+
+					$iddet = $clases->getCreateIdInvictus('PER.SolicitudPersonalMotivo');
+
+					$tDetalle            	 	=	new PERSolicitudPersonalMotivo;
+					$tDetalle->Id 	     	 	=  $iddet;
+					$tDetalle->IdSolicitud  	=  $id;
+					$tDetalle->IdUsuario 	 	=  $idusuario;
+					$tDetalle->IdMotivoRemplazo =  $idmotivo;
+					$tDetalle->Usuario 	 		=  $usuario;
+					$tDetalle->Remplazo 	 	=  $motivo;
+					$tDetalle->Activo  	 		=  1;
+					$tDetalle->save();
+				}
+
 
 				DB::commit();
 
@@ -185,14 +916,20 @@ class PersonalController extends BaseController
 
 			$data = PERSolicitud::join('GEN.Local', 'GEN.Local.Id', '=', 'PER.Solicitud.IdLocal')
 			->join('PER.MotivoSolicitud', 'PER.MotivoSolicitud.Id', '=', 'PER.Solicitud.IdMotivoSolicitud')
-			->join('SEG.TipoUsuario', 'SEG.TipoUsuario.Id', '=', 'PER.Solicitud.IdTipoUsuario')
+			->join('PER.PuestoTrabajo', 'PER.PuestoTrabajo.Id', '=', 'PER.Solicitud.IdTipoUsuario')
 			->join('tbUsuarioLocal', 'tbUsuarioLocal.Id', '=', 'PER.Solicitud.IdUsuarioCrea')		
-			->select('PER.Solicitud.Id','PER.Solicitud.IdUsuario','PER.Solicitud.IdMotivoRemplazo','PER.Solicitud.Correlativo','PER.MotivoSolicitud.Nombre as MotivoSolicitud','tbUsuarioLocal.Nombre as Nombreusuario','tbUsuarioLocal.Apellido as Apellidousuario','PER.Solicitud.Autorizacion','SEG.TipoUsuario.Descripcion as Cargo','GEN.Local.Nombre as NombreLocal','PER.Solicitud.NumeroVacantes','PER.Solicitud.EdadInicio','PER.Solicitud.EdadFin','PER.Solicitud.PerfilPuesto','PER.Solicitud.FuncionesPuesto','PER.Solicitud.HorariosTrabajo','PER.Solicitud.Sueldo','PER.Solicitud.Observacion','PER.Solicitud.FechaCrea','PER.Solicitud.IdUsuarioMod')
+			->select('PER.Solicitud.Id','PER.Solicitud.Correlativo','PER.Solicitud.Autorizacion','PER.PuestoTrabajo.Nombre as Cargo',
+					'GEN.Local.Nombre as NombreLocal','PER.Solicitud.NumeroVacantes','PER.Solicitud.Observacion','PER.Solicitud.FechaCrea',
+					'PER.Solicitud.IdUsuarioMod','PER.MotivoSolicitud.Nombre as MotivoSolicitud','PER.Solicitud.IdMotivoSolicitud')
 			->where('PER.Solicitud.Id','=',$id)
 		    ->first();
 
+
+
 		    $email = GENSmsEmail::where('GEN.SmsEmail.Id','=','LIM01CEN000000000002')->first(); 
 			$asunto = $data->NombreLocal;
+
+
 			$array = $data->toArray();
 
 	        try {
@@ -232,9 +969,8 @@ class PersonalController extends BaseController
 				$motivosolicitud = PERMotivoSolicitud::where('Activo','=',1)->lists('Nombre', 'Id');
 				$combomotivosolicitud  = array(0 => "Seleccione Motivo Solicitud") + $motivosolicitud;
 
-				$tipousuario= SEGTipoUsuario::where('Activo','=',1)
-							  ->whereIn('Id', ['LIM01CEN000000000002','LIM01CEN000000000003'])
-							  ->lists('Descripcion', 'Id');
+				$tipousuario= PERPuestoTrabajo::where('Activo','=',1)
+							  ->lists('Nombre', 'Id');
 
 				$combotipousuario  = array(0 => "Seleccione Cargo") + $tipousuario;
 
@@ -284,7 +1020,7 @@ class PersonalController extends BaseController
 
 				DB::beginTransaction();
 
-				$IdMotivoSolicitud 	= Input::get('motivosolicitud');
+				/*$IdMotivoSolicitud 	= Input::get('motivosolicitud');
 				$IdUsuario 			= Input::get('usuarior');
 				$IdMotivoRemplazo 	= Input::get('motivoreemplazo');
 				$Autorizacion 		= Input::get('autorizacion');
@@ -296,12 +1032,12 @@ class PersonalController extends BaseController
 				$PerfilPuesto 		= Input::get('perfilpuesto');
 				$FuncionesPuesto 	= Input::get('funcionpuesto');
 				$HorariosTrabajo 	= Input::get('horatrabajo');			
-				$Sueldo 			= Input::get('sueldo');
+				$Sueldo 			= Input::get('sueldo');*/
 				$Observacion 		= Input::get('observacion');
 				$IdUsuarioMod 		= Session::get('Usuario')[0]->Id;
 	
 				$tPERSolicitud						= PERSolicitud::find($idSolicitud);
-				$tPERSolicitud->IdMotivoSolicitud	= $IdMotivoSolicitud;
+				/*$tPERSolicitud->IdMotivoSolicitud	= $IdMotivoSolicitud;
 				$tPERSolicitud->IdUsuario			= $IdUsuario;
 				$tPERSolicitud->IdMotivoRemplazo	= $IdMotivoRemplazo;
 				$tPERSolicitud->Autorizacion		= $Autorizacion;
@@ -313,7 +1049,7 @@ class PersonalController extends BaseController
 				$tPERSolicitud->PerfilPuesto		= $PerfilPuesto;
 				$tPERSolicitud->FuncionesPuesto		= $FuncionesPuesto;
 				$tPERSolicitud->HorariosTrabajo		= $HorariosTrabajo;
-				$tPERSolicitud->Sueldo				= $Sueldo;
+				$tPERSolicitud->Sueldo				= $Sueldo;*/
 				$tPERSolicitud->Observacion			= $Observacion;
 				$tPERSolicitud->IdUsuarioMod		= $IdUsuarioMod;
 				$tPERSolicitud->save();
@@ -333,11 +1069,14 @@ class PersonalController extends BaseController
 
 			$data = PERSolicitud::join('GEN.Local', 'GEN.Local.Id', '=', 'PER.Solicitud.IdLocal')
 			->join('PER.MotivoSolicitud', 'PER.MotivoSolicitud.Id', '=', 'PER.Solicitud.IdMotivoSolicitud')
-			->join('SEG.TipoUsuario', 'SEG.TipoUsuario.Id', '=', 'PER.Solicitud.IdTipoUsuario')
+			->join('PER.PuestoTrabajo', 'PER.PuestoTrabajo.Id', '=', 'PER.Solicitud.IdTipoUsuario')
 			->join('tbUsuarioLocal', 'tbUsuarioLocal.Id', '=', 'PER.Solicitud.IdUsuarioCrea')		
-			->select('PER.Solicitud.Id','PER.Solicitud.IdUsuario','PER.Solicitud.IdMotivoRemplazo','PER.Solicitud.Correlativo','PER.MotivoSolicitud.Nombre as MotivoSolicitud','tbUsuarioLocal.Nombre as Nombreusuario','tbUsuarioLocal.Apellido as Apellidousuario','PER.Solicitud.Autorizacion','SEG.TipoUsuario.Descripcion as Cargo','GEN.Local.Nombre as NombreLocal','PER.Solicitud.NumeroVacantes','PER.Solicitud.EdadInicio','PER.Solicitud.EdadFin','PER.Solicitud.PerfilPuesto','PER.Solicitud.FuncionesPuesto','PER.Solicitud.HorariosTrabajo','PER.Solicitud.Sueldo','PER.Solicitud.Observacion','PER.Solicitud.FechaCrea','PER.Solicitud.IdUsuarioMod')
+			->select('PER.Solicitud.Id','PER.Solicitud.Correlativo','PER.Solicitud.Autorizacion','PER.PuestoTrabajo.Nombre as Cargo',
+					'GEN.Local.Nombre as NombreLocal','PER.Solicitud.NumeroVacantes','PER.Solicitud.Observacion','PER.Solicitud.FechaCrea',
+					'PER.Solicitud.IdUsuarioMod','PER.MotivoSolicitud.Nombre as MotivoSolicitud','PER.Solicitud.IdMotivoSolicitud')
 			->where('PER.Solicitud.Id','=',$idSolicitud)
 		    ->first();
+
 
 		    $email = GENSmsEmail::where('GEN.SmsEmail.Id','=','LIM01CEN000000000002')->first(); 
 			$asunto = $data->NombreLocal;
@@ -379,8 +1118,6 @@ class PersonalController extends BaseController
 
 				$persolicitud 			= PERSolicitud::where('PER.Solicitud.Id','=',$idSolicitud)->first();
 
-
-
 				$motivosolicitud 		= PERMotivoSolicitud::where('Id','<>',$persolicitud->IdMotivoSolicitud)
 								          ->where('Activo','=',1)
 								          ->lists('Nombre', 'Id');
@@ -388,83 +1125,15 @@ class PersonalController extends BaseController
 								          ->first();
 				$combomotivosolicitud   = array($selectmotivosolicitud->Id => $selectmotivosolicitud->Nombre) + $motivosolicitud;
 
-				$selectusuario			= tbUsuarioLocal::where('Id','=',$persolicitud->IdUsuario)
-								          ->first();		          
-				if(count($selectusuario) > 0){
 
-					$usuarior 				= tbUsuarioLocal::select(DB::raw("Id , Apellido + ' ' + Nombre as Nombre "))
-											   ->orderBy('Nombre', 'asc')
-											   ->whereIn('IdTipoUsuario', ['LIM01CEN000000000002','LIM01CEN000000000003'])
-											   ->where('Id','<>',$persolicitud->IdUsuario)
-											   ->lists('Nombre', 'Id');
-					$combousuarior  	= array($selectusuario->Id => $selectusuario->Nombre.' '.$selectusuario->Apellido ,0 => "Seleccione Personal de Remplazo") + $usuarior;
 
-				}else{
+				$tipousuario            = PERPuestoTrabajo::where('Activo','=',1)
+							  				->lists('Nombre', 'Id');											
 
-					$usuarior 				= tbUsuarioLocal::select(DB::raw("Id , Apellido + ' ' + Nombre as Nombre "))
-											   ->orderBy('Nombre', 'asc')
-											   ->whereIn('IdTipoUsuario', ['LIM01CEN000000000002','LIM01CEN000000000003'])
-											   ->lists('Nombre', 'Id');
-					$combousuarior  = array(0 => "Seleccione Personal de Remplazo") + $usuarior;
-				}
-
-				$selectmotivoreemplazo  = PERMotivoReemplazo::where('Id','=',$persolicitud->IdMotivoRemplazo)
+				$selecttipousuario  	= PERPuestoTrabajo::where('Id','=',$persolicitud->IdTipoUsuario)
 								          ->first();
 
-				if(count($selectmotivoreemplazo) > 0){
-					$motivoreemplazo 		= PERMotivoReemplazo::where('Id','<>',$persolicitud->IdMotivoRemplazo)
-											  ->where('Activo','=',1)->lists('Nombre', 'Id');
-					$combomotivoreemplazo  = array($selectmotivoreemplazo->Id => $selectmotivoreemplazo->Nombre,0 => "Seleccione Motivo Reemplazo") + $motivoreemplazo;
-
-				}else{
-					$motivoreemplazo 		= PERMotivoReemplazo::where('Activo','=',1)->lists('Nombre', 'Id');
-					$combomotivoreemplazo  = array(0 => "Seleccione Motivo Reemplazo") + $motivoreemplazo;
-				}
-
-
-				$tipousuario 			= SEGTipoUsuario::where('Activo','=',1)
-											->where('Id','<>',$persolicitud->IdTipoUsuario)
-											->whereIn('Id', ['LIM01CEN000000000002','LIM01CEN000000000003'])
-											->lists('Descripcion', 'Id');
-				$selecttipousuario  	= SEGTipoUsuario::where('Id','=',$persolicitud->IdTipoUsuario)
-								          ->first();											
-				$combotipousuario  = array($selecttipousuario->Id => $selecttipousuario->Descripcion) + $tipousuario;
-
-
-				$local= GENLocal::join('GEN.LocalMovil', 'GEN.Local.Id', '=', 'GEN.LocalMovil.IdLocal')
-							  ->where('GEN.LocalMovil.Activo','=',1)
-							  ->where('GEN.LocalMovil.IdLocal','<>',$persolicitud->IdLocal)
-							  ->where('GEN.LocalMovil.IdLocal','!=','LIM01CEN000000000000')
-							  ->select('GEN.Local.Id','GEN.Local.Nombre')
-							  ->lists('Nombre', 'Id');
-
-				$selectlocal 	= GENLocal::where('Id','=',$persolicitud->IdLocal)
-								          ->first();
-
-				$combolocal  = array($selectlocal->Id => $selectlocal->Descripcion) + $local;
-
-
-
-
-				/*
-
-
-
-
-
-
-*/
-
-
-				/*$Usuario = DB::table('Usuario')->where('Id', $idUsuario)->get();
-
-				$RolSeleccionado = DB::table('Rol')->where('Id', $Usuario[0]->IdRol)->get();
-
-				$Rol = Rol::where('Id','<>','PLCHICLA000000000001')->lists('Nombre','Id');
-
-				$comborol = array($RolSeleccionado[0]->Id => $RolSeleccionado[0]->Nombre) + $Rol;
-				$selectedrol = array();*/
-
+				$combotipousuario  = array($selecttipousuario->Id => $selecttipousuario->Nombre) + $tipousuario;
 
 
 		        return View::make('personal/modificarsolicitudpersonal', 
@@ -472,10 +1141,7 @@ class PersonalController extends BaseController
 		        					'idOpcion' 		 		=> $idOpcion,
 		        					'persolicitud' 		 	=> $persolicitud,
 		        					'combomotivosolicitud' 	=> $combomotivosolicitud,
-		        					'combousuarior' 		=> $combousuarior,
-		        					'combomotivoreemplazo' 	=> $combomotivoreemplazo,
 		        					'combotipousuario' 		=> $combotipousuario,
-		        					'combolocal' 			=> $combolocal,		
 		        				]);
 		
 			}

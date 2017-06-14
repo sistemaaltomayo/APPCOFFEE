@@ -104,8 +104,8 @@ class EncuestaController extends BaseController
 				$tGENLibroReclamaciones->NumeroReclamacion	= $numeroreclamacion;
 
 				$tGENLibroReclamaciones->Nombres			= $nombres;
-				$tGENLibroReclamaciones->Domicilio			= $dnice;
-				$tGENLibroReclamaciones->DNICE				= $domicilio;
+				$tGENLibroReclamaciones->Domicilio			= $domicilio;
+				$tGENLibroReclamaciones->DNICE				= $dnice;
 				$tGENLibroReclamaciones->Telefono			= $telefono;
 				$tGENLibroReclamaciones->Email				= $email;
 				$tGENLibroReclamaciones->PadresMadre		= $padresmadre;

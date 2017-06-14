@@ -171,9 +171,16 @@ $( document ).ready(function() {
 
         }  
         else{
+
             if(suma<0){
 
-                $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> La Operación es Negativo</div>');
+                /*if(suma==0){
+                    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> La Valor debe ser mayor a 0</div>');
+                }else{
+                    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> La Operación es Negativo</div>');
+                }*/
+
+                $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> La Operación es Negativo</div>');   
 
             }else{
                     $(this).removeClass('btn-success');
@@ -1032,7 +1039,11 @@ $( document ).ready(function() {
 
 
 
-
+function errorflotante(aleatorio,mensaje){
+    msj="<div class='rd"+aleatorio+" alert alert-danger alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+mensaje+"</strong></div>";
+    $(".permisomsj").append(msj);
+    setTimeout(function(){ $(".rd"+aleatorio).fadeOut(200).fadeIn(100).fadeOut(400).fadeIn(400).fadeOut(100);}, 2500);
+}
 
 
 

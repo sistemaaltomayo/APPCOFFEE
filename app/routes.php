@@ -129,14 +129,41 @@
 
 
 /*****************************************************************************************************/ 
-/***************************************  PERSONAL ******************************************/
+/***************************************  PERSONAL ***************************************************/
 
 			/***************************************  solicitud ******************************************/
+			
 	Route::any('/getion-solicitud-personal/{idOpcion}', 'PersonalController@actionListaSolicitudPersonal');
 	Route::any('/insertar-solicitud-personal/{idOpcion}', 'PersonalController@actionInsertarSolicitudPersonal');
 	Route::any('/modificar-solicitud-personal/{idOpcion}/{idSolicitud}', 'PersonalController@actionModificarSolicitudPersonal');
-	Route::any('/agregar-personal-solicitud/{idOpcionPlus}/{idSolicitud}', 'PersonalController@actionAgregarPersonalSolicitud');
+	Route::any('/agregar-postulante-solicitud/{idOpcionPlus}/{idSolicitud}/{idopcion}', 'PersonalController@actionAgregarPersonalSolicitud');
+	Route::any('/insertar-termino-condicion/{idOpcionPlus}', 'PersonalController@actionInsertarTerminoCondicion');
+	
+	Route::any('/proceso-seleccion-postulante/{idsolicitud}/{idpostulante}/{idopcion}', 'PersonalController@actionProcesoSeleccionPostulante');
+	Route::any('/insertar-datos-personales-postulante-ajax', 'PersonalController@actionInsertarDatosPersonalesPostulante');
+	Route::any('/continuar-termino-condiciones-ajax', 'PersonalController@actionContinuarTerminoCondiciones');
+
+	Route::any('/guardar-examen-administrativo-postulante-ajax', 'PersonalController@actionGuardarExamenAdministrativoPostulante');
+	Route::any('/continuar-proceso-seleccion-ajax', 'PersonalController@actionContinuarProcesoSeleccion');
+
+	Route::any('/empezar-primer-examen-ajax', 'PersonalController@actionEmpezarPrimerExamen');
+	Route::any('/guardar-primer-examen-administrativo-ajax', 'PersonalController@actionPrimerExamenAdministrativo');
+	Route::any('/guardar-primer-examen-atc-ajax', 'PersonalController@actionPrimerExamenATC');
+	Route::any('/empezar-segundo-examen-ajax', 'PersonalController@actionEmpezarSegundoExamen');
+	Route::any('/guardar-examen-segundo-postulante-ajax', 'PersonalController@actionGuardarSegundoExamen');
+
+
+	Route::any('/actualizar-cronometro-examen-ajax', 'PersonalController@actionActualizarCronometroExamen');
 	Route::any('/agregar-personal-termino-solicitud-ajax', 'PersonalController@actionAgregarPersonalTerminoSolicitudAjax');
+
+	Route::any('/lista-postulante-solicitud-ajax', 'PersonalController@actionListaPostulanteSolicitud');
+
+
+/******************************************************************************************************/ 
+/***************************************  WEBSERVIS ***************************************************/
+
+
+
 
 
  /***************************************  AJAX ******************************************/

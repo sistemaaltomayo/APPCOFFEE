@@ -135,6 +135,9 @@
 					@endif
 					{{--*/ $contador = $contador + 1 /*--}}
 				@endforeach
+
+
+				
 			<div class="col-xs-12 col-md-12 encuestanombre">
 
 

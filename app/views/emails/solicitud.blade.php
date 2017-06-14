@@ -33,6 +33,20 @@
                 color: #08257C;
             }
 
+            table, td, th {    
+                border: 1px solid #ddd;
+                text-align: left;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th, td {
+                padding: 15px;
+            }
+
         </style>
 
     </head>
@@ -57,13 +71,26 @@
     				<div class="panelhead">Solicitud de Personal</div>
     				<div class='panelbody'>
     					<h3>Motivo : 					<small>{{$MotivoSolicitud}}</small></h3>
-                        @if($IdMotivoRemplazo != '0') 
 
-                            {{--*/ $reemplazo = PERMotivoReemplazo::where('Id','=',$IdMotivoRemplazo)->first() /*--}}
-                            {{--*/ $usuario = tbUsuarioLocal::where('Id','=',$IdUsuario)->first() /*--}}
+                        @if($IdMotivoSolicitud == 'LIM01CEN000000000001') 
+                            {{--*/ $listapersonal = PERSolicitudPersonalMotivo::where('IdSolicitud','=',$Id)->get() /*--}}
 
-                            <h3>Personal de Reemplazo :     <small>{{$usuario->Nombre}} {{$usuario->Apellido}}</small></h3>
-                            <h3>Motivo Reemplazo :          <small>{{$reemplazo->Nombre}}</small></h3>
+                            <table  class="table demo" >
+                                <tr>
+                                    <th>
+                                        Personal
+                                    </th>
+                                    <th >
+                                        Motivo
+                                    </th>                                          
+                                </tr>
+                                @foreach($listapersonal as $item)
+                                <tr>
+                                        <td>{{$item->Usuario}}</td>
+                                        <td>{{$item->Remplazo}}</td>
+                                </tr>
+                                 @endforeach
+                            </table>
                         @else
                             <h3>Autorización :              <small>{{$Autorizacion}}</small></h3>                        
                         @endif
@@ -74,11 +101,6 @@
     					<h3>Cargo o puesto a ocupar : 	<small>{{$Cargo}}</small></h3>
     					<h3>Area : 						<small>{{$NombreLocal}}</small></h3>
     					<h3>Número Vacantes : 			<small>{{$NumeroVacantes}}</small></h3>
-    					<h3>Edad : 						<small>{{$EdadInicio}} - {{$EdadFin}}</small></h3>
-    					<h3>Perfil del Puesto : 		<small>{{$PerfilPuesto}}</small></h3>
-    					<h3>Funciones del Puesto : 		<small>{{$FuncionesPuesto}}</small></h3>
-    					<h3>Hora de Trabajo : 			<small>{{$HorariosTrabajo}}</small></h3>
-    					<h3>Sueldo : 					<small>{{$Sueldo}}</small></h3>
     					<h3>Observacion : 				<small>{{$Observacion}}</small></h3>
     				</div>
     			</div>

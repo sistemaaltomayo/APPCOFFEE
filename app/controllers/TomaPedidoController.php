@@ -229,6 +229,7 @@ class TomaPedidoController extends BaseController
 		$xmldet=$xmldet.'</D>';
 
 		$idpedidog="";
+		
 		$stmt = DB::connection('sqlsrv')->getPdo()->prepare('SET NOCOUNT ON;EXEC AM_PEDIDOXML ?,?,?,?');
         $stmt->bindParam(1, $xml ,PDO::PARAM_STR);
         $stmt->bindParam(2, $xmldet ,PDO::PARAM_STR);

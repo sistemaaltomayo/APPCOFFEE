@@ -1,3 +1,154 @@
+/******** VENTA *************/
+
+
+
+
+
+
+#timer{margin:30px auto 0;width:140px;position: fixed;bottom: 0px;}
+#timer .containert{display:table;background:#c9302c;color:#fff;font-weight:bold;width:100%;text-align:center;text-shadow:1px 1px 4px #999;}
+#timer .containert div{display:table-cell;font-size:1em;padding:2px 2px 2px 2px;width:20px;}
+#timer .containert p{display:table-cell;font-size:1em;padding:2px;width:20px;}
+#timer .containert .divider{width:10px;color:#ddd;}
+#timer article{
+	width: 41% !important;
+    margin-left: 32px;
+    font-size: 22px;
+}
+
+
+
+.alert-danger{
+	text-align: left;
+}
+
+.titulotabla{
+  background:#BE1E2D;
+  color: #fff;
+}
+.lugartabla{
+  background: #47a447;
+  color: #fff;
+}
+.funkyradio{
+	margin: 0 auto;
+	width: 108% !important;
+}
+
+.funkyradio input[type="radio"]:empty ~ label, .funkyradio input[type="checkbox"]:empty ~ label{
+	margin-bottom:0px !important;
+}
+
+
+
+
+.funkyradioventa{
+	width: 90% !important;
+}
+
+.funkyradioventa .funkyradio-success{
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+
+.fa-question-circle{
+    color: #BE1E2D;
+    top: 11px;
+    right: -20px;
+    display: none;
+}
+.signointerrogacion{
+	display: inline-block !important;
+}
+
+/* Testimonials */
+.testimonials blockquote {
+    background: #fff none repeat scroll 0 0;
+    border: medium none;
+    color: #666;
+    display: block;
+    font-size: 15px;
+    line-height: 20px;
+    padding: 15px;
+    position: relative;
+    text-align: left;
+}
+.testimonials blockquote::before {
+    width: 0; 
+    height: 0;
+	right: 0;
+	bottom: 0;
+	content: " "; 
+	display: block; 
+	position: absolute;
+    border-bottom: 20px solid #fff;    
+	border-right: 0 solid transparent;
+	border-left: 15px solid transparent;
+	border-left-style: inset; /*FF fixes*/
+	border-bottom-style: inset; /*FF fixes*/
+}
+.testimonials blockquote::after {
+    width: 0;
+    height: 0;
+    right: 0;
+    bottom: 0;
+    content: " ";
+    display: block;
+    position: absolute;
+    border-style: solid;
+    border-width: 20px 20px 0 0;
+    border-color: #e63f0c transparent transparent transparent;
+}
+.testimonials .carousel-info img {
+    border: 1px solid #f5f5f5;
+    border-radius: 150px !important;
+    height: 75px;
+    padding: 3px;
+    width: 75px;
+}
+.testimonials .carousel-info {
+    overflow: hidden;
+}
+.testimonials .carousel-info img {
+    margin-right: 15px;
+}
+.testimonials .carousel-info span {
+    display: block;
+}
+.testimonials span.testimonials-name {
+    color: #e6400c;
+    font-size: 16px;
+    font-weight: 300;
+    margin: 23px 0 7px;
+}
+.testimonials span.testimonials-post {
+    color: #656565;
+    font-size: 12px;
+}
+
+
+.box > .icon { text-align: center; position: relative; }
+.box > .icon > .image { position: relative; z-index: 2; margin: auto; width: 88px; height: 88px; border: 8px solid white; line-height: 88px; border-radius: 50%; background: rgb(170,196,196); vertical-align: middle; }
+.box > .icon:hover > .image { background: #6CB4C4; }
+.box > .icon > .image > i { font-size: 36px !important; color: #fff !important; }
+.box > .icon:hover > .image > i { color: #000 !important; }
+.box > .icon > .info { margin-top: -24px; background: rgba(0, 0, 0, 0.04); border: 1px solid #e0e0e0; padding: 15px 0 10px 0; }
+.box > .icon:hover > .info { background: rgba(0, 0, 0, 0.04); border-color: #e0e0e0; color: #000; }
+.box > .icon > .info > h3.title { font-family: "Quicksand",sans-serif !important; font-size: 28px; color: #222; font-weight: 500; }
+.box > .icon > .info > p { font-family: "Quicksand",sans-serif !important; font-size: 15px; color: #666; line-height: 1.5em; margin: 20px;}
+.box > .icon > .info > .more a { font-family: "Quicksand",sans-serif !important; font-size: 12px; color: #222; line-height: 12px; text-transform: uppercase; text-decoration: none; }
+.box .space { height: 2px; background-color: #6CB4C4;}
+
+
+.table thead{
+	background: #adadad !important;
+	color: #000 !important;
+}
+
+.ocultar{
+	display: none;
+}
 .scrollbar
 {
 	margin-left: 30px;

@@ -5,6 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
         <title>Sistema COFFEE AND ARTS - Multiplataforma</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
         <link rel="icon" href="{{asset('img/logo.ico')}}"/>
 
         {{ HTML::style('css/bootstrap.min.css'); }}
@@ -136,6 +137,8 @@
             {{ HTML::script('js/bootstrap.min.js'); }}
             {{ HTML::script('js/validaciones.js'); }}
             {{ HTML::script('js/jquery.numeric.js'); }}
+
+
 
             @yield('script')
 

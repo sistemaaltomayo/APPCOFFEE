@@ -39,11 +39,10 @@
 
 						<div class="input-group grupo-imput">
 						    <span class="input-group-addon" id="basic-addon1">Motivo: </span>
-							{{ Form::select('motivosolicitud', $combomotivosolicitud, array(),['class' => 'selectmotivosolicitud form-control control' , 'id' => 'motivosolicitud']) }}
+							{{ Form::select('motivosolicitud', $combomotivosolicitud, array(),['class' => 'selectmotivosolicitud form-control control' , 'id' => 'motivosolicitud', 'disabled' => 'disabled']) }}
 						</div>
 
-
-						@if($persolicitud->IdUsuario != '0')
+						@if($persolicitud->IdMotivoSolicitud == 'LIM01CEN000000000001')
 
 							<div class='reemplazopersonal' style='display:inline-block;'>
 
@@ -51,18 +50,31 @@
 								    <span class="titulospan input-group-addon" id="basic-addon1">PERSONAL Y MOTIVO DE REEMPLAZO: <br><li>(Seleccionar el nombre del personal y motivo de reemplazo)</li> </span>
 								</div>
 
-								<div class="input-group grupo-imput">
-								    <span class="input-group-addon" id="basic-addon1">Personal de Reemplazo: </span>
-									{{ Form::select('usuarior', $combousuarior, array(),['class' => 'selectusuarior form-control control' , 'id' => 'usuarior']) }}
-								</div>
+                            {{--*/ $listapersonal = PERSolicitudPersonalMotivo::where('IdSolicitud','=',$persolicitud->Id)->get() /*--}}
 
-								<div class="input-group grupo-imput">
-								    <span class="input-group-addon" id="basic-addon1">Motivo Reemplazo: </span>
-									{{ Form::select('motivoreemplazo', $combomotivoreemplazo, array(),['class' => 'selectmotivoreemplazo form-control control' , 'id' => 'motivoreemplazo']) }}
-								</div>
+							    <table id='listapersonalmotivo'  class="table demo" >
+							      	<thead>
+								        <tr>
+								        	<th>
+								            	Usuario
+								          	</th>
+								          	<th >
+								            	Motivo
+								          	</th>
+								          	
+								        </tr>
+							      	</thead>
+							      	<tbody>
+		                                @foreach($listapersonal as $item)
+		                                <tr>
+		                                        <td>{{$item->Usuario}}</td>
+		                                        <td>{{$item->Remplazo}}</td>
+		                                </tr>
+		                                 @endforeach
+							      	</tbody>
+							    </table> 
 
 							</div>
-
 
 							<div class='autorizacion'>
 
@@ -70,18 +82,14 @@
 								    <span class="titulospan input-group-addon" id="basic-addon1">AUTORIZACION DE INCREMENTO DE PERSONAL: <br><li>(Indicar quien autorizo el incremento y por que medio)</li> </span>
 								</div>
 
-
 								<div class="input-group grupo-imput">
 									<span class="input-group-addon" id="basic-addon1"></span>
-								  	{{Form::text('autorizacion',$persolicitud->Autorizacion, array('class' => 'form-control control', 'placeholder' => 'Autorización', 'id' => 'autorizacion', 'maxlength' => '1000'))}}
+								  	{{Form::text('autorizacion',$persolicitud->Autorizacion, array('class' => 'form-control control', 'placeholder' => 'Autorización', 'id' => 'autorizacion', 'maxlength' => '1000', 'disabled' => 'disabled'))}}
 								</div>
 
 							</div>
 
-
 						@else
-
-
 
 							<div class='reemplazopersonal' >
 
@@ -89,18 +97,7 @@
 								    <span class="titulospan input-group-addon" id="basic-addon1">PERSONAL Y MOTIVO DE REEMPLAZO: <br><li>(Seleccionar el nombre del personal y motivo de reemplazo)</li> </span>
 								</div>
 
-								<div class="input-group grupo-imput">
-								    <span class="input-group-addon" id="basic-addon1">Personal de Reemplazo: </span>
-									{{ Form::select('usuarior', $combousuarior, array(),['class' => 'selectusuarior form-control control' , 'id' => 'usuarior']) }}
-								</div>
-
-								<div class="input-group grupo-imput">
-								    <span class="input-group-addon" id="basic-addon1">Motivo Reemplazo: </span>
-									{{ Form::select('motivoreemplazo', $combomotivoreemplazo, array(),['class' => 'selectmotivoreemplazo form-control control' , 'id' => 'motivoreemplazo']) }}
-								</div>
-
 							</div>
-
 
 							<div class='autorizacion' style='display:inline-block;'>
 
@@ -108,82 +105,32 @@
 								    <span class="titulospan input-group-addon" id="basic-addon1">AUTORIZACION DE INCREMENTO DE PERSONAL: <br><li>(Indicar quien autorizo el incremento y por que medio)</li> </span>
 								</div>
 
-
 								<div class="input-group grupo-imput">
 									<span class="input-group-addon" id="basic-addon1"></span>
-								  	{{Form::text('autorizacion',$persolicitud->Autorizacion, array('class' => 'form-control control', 'placeholder' => 'Autorización', 'id' => 'autorizacion', 'maxlength' => '1000'))}}
+								  	{{Form::text('autorizacion',$persolicitud->Autorizacion, array('class' => 'form-control control', 'placeholder' => 'Autorización', 'id' => 'autorizacion', 'maxlength' => '1000' , 'disabled' => 'disabled'))}}
 								</div>
 
 							</div>	
 
 						@endif
 
-
-
-
 					</div>
 				</div>
 
 
-				<div class="panel panel-info">
+				<div class="panel panel-success">
 					<div class="panel-heading" style="text-align:center;">
 						<h3 class="panel-title">Datos del Cargo</h3>
 					</div>
 					<div class="panel-body">
-
-
 						<div class="input-group grupo-imput">
 						    <span class="input-group-addon" id="basic-addon1">Cargo o puesto a ocupar: </span>
-							{{ Form::select('tipousuario', $combotipousuario, array(),['class' => 'selecttipousuario form-control control' , 'id' => 'tipousuario']) }}
-						</div>
-
-						<div class="input-group grupo-imput">
-						    <span class="input-group-addon" id="basic-addon1">Area: </span>
-							{{ Form::select('local', $combolocal, array(),['class' => 'selectlocal form-control control' , 'id' => 'local']) }}
+							{{ Form::select('tipousuario', $combotipousuario, array(),['class' => 'selecttipousuario form-control control' , 'id' => 'tipousuario' , 'disabled' => 'disabled']) }}
 						</div>
 
 						<div class="input-group grupo-imput">
 						    <span class="input-group-addon" id="basic-addon1">Número Vacantes: </span>
-						  	{{Form::number('numerovacantes',$persolicitud->NumeroVacantes, array('class' => 'form-control control', 'id' => 'numerovacantes' , 'min' => '1' ))}}
-						</div>
-
-
-						<div class="input-group grupo-imput">
-						    <span class="input-group-addon" id="basic-addon1">Edad: </span>
-						  	{{Form::number('edadinicio',$persolicitud->EdadInicio, array('class' => 'form-control control', 'id' => 'edadinicio' , 'min' => '18' ))}}
-						  	<span class="input-group-addon">entre</span>
-						  	{{Form::number('edadfin',$persolicitud->EdadFin, array('class' => 'form-control control', 'id' => 'edadfin' , 'min' => '18' ))}}
-						</div>
-
-
-						<div class="input-group grupo-imput">
-						    <span class="titulospan input-group-addon" id="basic-addon1">Perfil del Puesto: <br><li>(Estudios, cursos, tiempo, de experiencia y conocimientos adicionales)</li> </span>
-						</div>
-
-						<div class="input-group grupo-imput textarea">
-							{{ Form::textarea('perfilpuesto', $persolicitud->PerfilPuesto, ['class' => 'form-control', 'rows' => '5','placeholder' => 'Perfil del Puesto...', 'id' => 'perfilpuesto', 'maxlength' => '1000']) }}
-						</div>
-
-
-						<div class="input-group grupo-imput">
-						    <span class="titulospan input-group-addon" id="basic-addon1">Funciones del Puesto: <br><li>(Actividades que realizará en el puesto de manera detallada)</li> </span>
-						</div>
-
-						<div class="input-group grupo-imput textarea">
-							{{ Form::textarea('funcionpuesto', $persolicitud->FuncionesPuesto, ['class' => 'form-control', 'rows' => '5','placeholder' => 'Funciones del Puesto...', 'id' => 'funcionpuesto', 'maxlength' => '1000']) }}
-						</div>
-
-						<div class="input-group grupo-imput">
-						    <span class="titulospan input-group-addon" id="basic-addon1">Hora de Trabajo: <br><li>(Días trabajados y días de descanso si aplica)</li> </span>
-						</div>
-
-						<div class="input-group grupo-imput textarea">
-							{{ Form::textarea('horatrabajo', $persolicitud->HorariosTrabajo, ['class' => 'form-control', 'rows' => '5','placeholder' => 'Horario de Trabajo...', 'id' => 'horatrabajo', 'maxlength' => '1000']) }}
-						</div>
-
-						<div class="input-group grupo-imput">
-						    <span class="input-group-addon" id="basic-addon1">Sueldo: S/.</span>
-						  	{{Form::number('sueldo',$persolicitud->Sueldo, array('class' => 'form-control control', 'id' => 'sueldo' ))}}
+						  	{{Form::number('numerovacantes',$persolicitud->NumeroVacantes, array('class' => 'form-control control', 'id' => 'numerovacantes' , 'min' => '1' , 'disabled' => 'disabled'))}}
 						</div>
 
 						<div class="input-group grupo-imput">
@@ -191,11 +138,8 @@
 						</div>
 
 						<div class="input-group grupo-imput textarea">
-							{{ Form::textarea('observacion', $persolicitud->Observacion, ['class' => 'form-control', 'rows' => '5','placeholder' => 'Observación...', 'id' => 'observacion', 'maxlength' => '1000']) }}
+							{{ Form::textarea('observacion', $persolicitud->Observacion, ['class' => 'form-control', 'rows' => '5','placeholder' => 'Observación...', 'id' => 'observacion', 'maxlength' => '1000' ]) }}
 						</div>
-
-
-
 
 					</div>
 				</div>
@@ -298,16 +242,6 @@
 	 	if(!valSelect($('#tipousuario').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Cargo o puesto a ocupar seleccionado es invalido<br>';}
 	 	if(!valSelect($('#local').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Area seleccionado es invalido<br>';}
 	 	if(!numeroentre($('#numerovacantes').val(),1,10)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Número Vacantes debe ser de 1 a 10<br>';}
-
-	 	if(!numeromayor($('#edadinicio').val(),18)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Edad debe ser mayor a 18<br>';}
-	 	if(!numeromayor($('#edadfin').val(),18)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Edad debe ser mayor a 18<br>';}
-
-		if(!valVacio($('#perfilpuesto').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Perfil del Puesto es obligatorio<br>';}
-		if(!valVacio($('#funcionpuesto').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Funciones del Puesto es obligatorio<br>';}
-		if(!valVacio($('#horatrabajo').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Hora de Trabajo es obligatorio<br>';}
-
-	 	if(!numeromayor($('#sueldo').val(),1)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Sueldo debe ser mayor a 0<br>';}
-
 
 
 		$( ".mensaje-error" ).html("");

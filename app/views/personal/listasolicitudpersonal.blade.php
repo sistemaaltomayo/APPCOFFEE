@@ -107,10 +107,12 @@
 										    <ul class="dropdown-menu menulistas">
 										      <li><a href="{{ url('/modificar-solicitud-personal/'.$idOpcion.'/'.$item->Id) }}">Modificar</a></li>
 
-										      @foreach($listaOpcionPlus as $itemp)
+										      @foreach($listaOpcionPlus as $itemp) 
 
-										      	<li><a href="{{ url('/'.$itemp->Pagina.'/'.Hashids::encode(substr($itemp->Id, -12)).'/'.$item->Id)}}">{{$itemp->Nombre}}</a></li>										    	
+										      	<li><a href="{{ url('/'.$itemp->Pagina.'/'.Hashids::encode(substr($itemp->Id, -12)).'/'.Hashids::encode(substr($item->Id, -12)).'/'.$idOpcion)}}">{{$itemp->Nombre}}</a></li>										    	
 										      @endforeach
+
+										      <li class='topsolicitud' id='{{$item->Id}}'><a href="#" class='postulantessolicitud' data-toggle="modal" data-target="#modallistapostulante">Lista Postulante</a></li>
 
 										    </ul>
 										</div>
@@ -125,6 +127,7 @@
 				        	</tr>
 				      	</tfoot>
 				    </table>  
+				    <input type="hidden" name="idOpcion" id="idOpcion" value="{{$idOpcion}}">
 				</div>
 			</div>
 
@@ -132,6 +135,30 @@
 
 	</div>	
 </div>
+
+
+ <div class="modal fade" id="modallistapostulante" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" style = 'text-align: center;font-style: italic;font-weight: bold;'>LISTA DE POSTULANTES </h4>
+        </div>
+        <div class="modal-body ajaxlistapostulante">
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 @stop
 
 @section('script')
@@ -151,6 +178,26 @@
 	    $(function () {
 		  $('[data-toggle="tooltip"]').tooltip()
 		})
+
+		$(".postulantessolicitud").click(function(e) {
+
+			$(".ajaxlistapostulante").html("");
+			var idsolicitud = $(this).parent('.topsolicitud').attr("id");
+			var idopcion    = $("#idOpcion").val();
+
+			$.ajax(
+	        {
+	            url: "/APPCOFFEE/lista-postulante-solicitud-ajax",
+	            type: "POST",
+	            data: { idsolicitud : idsolicitud  , idopcion : idopcion },
+
+	        }).done(function(pagina) 
+	        {
+				$(".ajaxlistapostulante").html(pagina); 				
+	        });
+		});		
+
+
 	</script>
 
 @stop

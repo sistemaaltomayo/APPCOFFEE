@@ -58,11 +58,43 @@
 							    <span class="input-group-addon" id="basic-addon1">Motivo Reemplazo: </span>
 								{{ Form::select('motivoreemplazo', $combomotivoreemplazo, array(),['class' => 'selectmotivoreemplazo form-control control' , 'id' => 'motivoreemplazo']) }}
 							</div>
+
+							<div style="float:right;margin-bottom:12px;">
+								<button type="button" class="agregar usuariomotivo btn btn-success">
+									Agregar <i class="fa fa-plus" aria-hidden="true"></i>
+								</button>
+							</div>
+
+
+							<div>
+							    <table id='listapersonalmotivo'  class="table demo" >
+							      	<thead>
+								        <tr>
+								        	<th>
+								            	Usuario
+								          	</th>
+								          	<th >
+								            	Motivo
+								          	</th>
+								          	<th >
+								            	Eliminar
+								          	</th>								          	
+								        </tr>
+							      	</thead>
+							      	<tbody>
+
+							      	</tbody>
+							    </table> 
+							</div>
+
+
+
+
 						</div>
 						<div class='autorizacion'>
 
 							<div class="input-group grupo-imput">
-							    <span class="titulospan input-group-addon" id="basic-addon1">AUTORIZACION DE INCREMENTO DE PERSONAL: <br><li>(Indicar quien autorizo el incremento y por que medio)</li> </span>
+							    <span class="titulospan input-group-addon" id="basic-addon1">AUTORIZACION DE NUEVO PERSONAL: <br><li>(Indicar quien autorizo el ingreso de un nuevo personal y por que medio)</li> </span>
 							</div>
 
 
@@ -82,7 +114,7 @@
 				</div>
 
 
-				<div class="panel panel-info">
+				<div class="panel panel-success">
 					<div class="panel-heading" style="text-align:center;">
 						<h3 class="panel-title">Datos del Cargo</h3>
 					</div>
@@ -94,53 +126,10 @@
 							{{ Form::select('tipousuario', $combotipousuario, array(),['class' => 'selecttipousuario form-control control' , 'id' => 'tipousuario']) }}
 						</div>
 
-						<div class="input-group grupo-imput">
-						    <span class="input-group-addon" id="basic-addon1">Area: </span>
-							{{ Form::select('local', $combolocal, array(),['class' => 'selectlocal form-control control' , 'id' => 'local']) }}
-						</div>
 
 						<div class="input-group grupo-imput">
 						    <span class="input-group-addon" id="basic-addon1">Número Vacantes: </span>
 						  	{{Form::number('numerovacantes','1', array('class' => 'solonumero form-control control', 'id' => 'numerovacantes'))}}
-						</div>
-
-
-						<div class="input-group grupo-imput">
-						    <span class="input-group-addon" id="basic-addon1">Edad: </span>
-						  	{{Form::number('edadinicio','18', array('class' => 'solonumero form-control control', 'id' => 'edadinicio' ))}}
-						  	<span class="input-group-addon">entre</span>
-						  	{{Form::number('edadfin','18', array('class' => 'solonumero form-control control', 'id' => 'edadfin'  ))}}
-						</div>
-
-
-						<div class="input-group grupo-imput">
-						    <span class="titulospan input-group-addon" id="basic-addon1">Perfil del Puesto: <br><li>(Estudios, cursos, tiempo, de experiencia y conocimientos adicionales)</li> </span>
-						</div>
-
-						<div class="input-group grupo-imput textarea">
-							{{ Form::textarea('perfilpuesto', null, ['class' => 'form-control', 'rows' => '5','placeholder' => 'Perfil del Puesto...', 'id' => 'perfilpuesto', 'maxlength' => '1000']) }}
-						</div>
-
-
-						<div class="input-group grupo-imput">
-						    <span class="titulospan input-group-addon" id="basic-addon1">Funciones del Puesto: <br><li>(Actividades que realizará en el puesto de manera detallada)</li> </span>
-						</div>
-
-						<div class="input-group grupo-imput textarea">
-							{{ Form::textarea('funcionpuesto', null, ['class' => 'form-control', 'rows' => '5','placeholder' => 'Funciones del Puesto...', 'id' => 'funcionpuesto', 'maxlength' => '1000']) }}
-						</div>
-
-						<div class="input-group grupo-imput">
-						    <span class="titulospan input-group-addon" id="basic-addon1">Hora de Trabajo: <br><li>(Días trabajados y días de descanso si aplica)</li> </span>
-						</div>
-
-						<div class="input-group grupo-imput textarea">
-							{{ Form::textarea('horatrabajo', null, ['class' => 'form-control', 'rows' => '5','placeholder' => 'Horario de Trabajo...', 'id' => 'horatrabajo', 'maxlength' => '1000']) }}
-						</div>
-
-						<div class="input-group grupo-imput">
-						    <span class="input-group-addon" id="basic-addon1">Sueldo: S/.</span>
-						  	{{Form::text('sueldo','0', array('class' => 'decimal form-control control', 'id' => 'sueldo' ))}}
 						</div>
 
 						<div class="input-group grupo-imput">
@@ -158,6 +147,10 @@
 
 	
 			</div>
+
+
+			<input type="hidden" name="xmlusuariomotivo" id="xmlusuariomotivo">
+
 
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="text-align:center;">
 				<input type="submit" id="btninsertarsolicitudpersonal" class="btn btn-primary" value="Guardar">
@@ -228,20 +221,77 @@
 
 
 
+	$(".usuariomotivo").click(function(e) {
+
+		var countcarrito = 0;
+		var alertaMensajeGlobal='';
+		var idusuario = $('#usuarior').val();
+		var idmotivo =  $('#motivoreemplazo').val();
+		var usuario = $('#usuarior :selected').text();
+		var motivo =  $('#motivoreemplazo :selected').text();
+
+		if(idusuario !='0' && idmotivo !='0'){
+
+
+			var eliminar = '<button type=button class="eliminar btn btn-default"><i class="fa fa-times" aria-hidden="true"></i></button>'					
+			fila =  '<tr><td class="idusuario ocultar">'+idusuario+'</td><td class="idmotivo ocultar">'+idmotivo+'</td><td class="usuario">'+usuario+'</td><td class="motivo">'+motivo+'</td><td>'+eliminar+'</td></tr>'
+
+		    $("#listapersonalmotivo tbody tr").each(function(){
+		    	usuario = $(this).find('.usuario').html();
+		    	if (usuario == idusuario){
+					countcarrito =  1;
+			    }
+	    	});
+
+	    	if (countcarrito == 0){
+				$('#listapersonalmotivo tbody').append(fila);
+		    }else{
+		    	alertaMensajeGlobal+='<strong>Error!</strong> Usuario ya Existe <br>';
+		    	$(".mensaje-error").append("<div class='alert alert-danger alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>"+alertaMensajeGlobal+"</div>");
+				$('html, body').animate({scrollTop : 0},800);
+		    }
+
+
+		}
+
+	});
+
+
+	$("#listapersonalmotivo").on('click','.eliminar', function() {
+		$(this).closest('tr').remove();
+	})
+
+
 
 	$("#btninsertarsolicitudpersonal").click(function(e) {
 
 	 	var alertaMensajeGlobal='';
+	 	var countcarrito = 0;
+	 	var idusuario = '';
+	 	var idmotivo = '';
+	 	var usuario = '';
+	 	var motivo = '';
+	 	var xml = '';
 		
+		$('#xmlusuariomotivo').val('');
 	 	if(!valSelect($('#motivosolicitud').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Motivo seleccionado es invalido<br>';}
 
 		if(valSelect($('#motivosolicitud').val(),0)){ 
 
 			if($('#motivosolicitud').val()=='LIM01CEN000000000001'){
+				
+			    $("#listapersonalmotivo tbody tr").each(function(){
+					idusuario = $(this).find('.idusuario').html();
+					idmotivo  = $(this).find('.idmotivo').html();
+					usuario   = $(this).find('.usuario').html();
+					motivo    = $(this).find('.motivo').html();
+			    	xml = xml + idusuario +'***'+ idmotivo +'***'+ usuario +'***'+ motivo +'&&&';
+			    	countcarrito = 1;
 
-				if(!valSelect($('#usuarior').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Personal de Reemplazo seleccionado es invalido<br>';}
+		    	});
 
-				if(!valSelect($('#motivoreemplazo').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Motivo Reemplazo seleccionado es invalido<br>';}
+				if(!valSelect(countcarrito,0)){ alertaMensajeGlobal+='<strong>Error!</strong> Seleccione por lo menos un Personal y Motivo <br>';}
+				$('#xmlusuariomotivo').val(xml);
 
 			}else{
 					if(!valVacio($('#autorizacion').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Autorización es obligatorio<br>';}
@@ -254,16 +304,6 @@
 	 	if(!valSelect($('#tipousuario').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Cargo o puesto a ocupar seleccionado es invalido<br>';}
 	 	if(!valSelect($('#local').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Area seleccionado es invalido<br>';}
 	 	if(!numeroentre($('#numerovacantes').val(),1,10)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Número Vacantes debe ser de 1 a 10<br>';}
-
-	 	if(!numeromayor($('#edadinicio').val(),18)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Edad debe ser mayor a 18<br>';}
-	 	if(!numeromayor($('#edadfin').val(),18)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Edad debe ser mayor a 18<br>';}
-
-		if(!valVacio($('#perfilpuesto').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Perfil del Puesto es obligatorio<br>';}
-		if(!valVacio($('#funcionpuesto').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Funciones del Puesto es obligatorio<br>';}
-		if(!valVacio($('#horatrabajo').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Hora de Trabajo es obligatorio<br>';}
-
-	 	if(!numeromayor($('#sueldo').val(),1)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Sueldo debe ser mayor a 0<br>';}
-
 
 
 		$( ".mensaje-error" ).html("");

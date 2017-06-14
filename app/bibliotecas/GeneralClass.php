@@ -142,6 +142,25 @@ class GeneralClass {
 	  }
 
 
+	  public function getDecodificarId($id) {
+
+	  		$id= Hashids::decode($id);
+	  		$idopcioncompleta = str_pad($id[0], 12, "0", STR_PAD_LEFT); 
+		  	//concatenar prefijo
+			$idlocalpre = DB::table('GEN.EquipoTablet')->select('GEN.EquipoTablet.Idlocal')->first();
+			$prefijon = DB::table('GEN.local')
+			->select('GEN.local.prefijolocal')
+			->where('GEN.local.Id', '=', $idlocalpre->Idlocal)
+			->first(); 
+			$prefijo = $prefijon->prefijolocal;
+
+
+			$idopcioncompleta = $prefijo.$idopcioncompleta;
+	  		return $idopcioncompleta;
+	  		
+	  }
+
+
 	  public function getCreateId($basedatos) {
 
 	  		// maximo valor de la tabla referente
