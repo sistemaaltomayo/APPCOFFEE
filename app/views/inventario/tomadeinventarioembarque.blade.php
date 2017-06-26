@@ -408,6 +408,228 @@
 
 
 
+		/*****************************************************************************************************************/
+
+		/**********************************************  INVENTARIO  EMBARQUE ******************************************************/
+
+
+
+		     $(".btnagregarstockE").click(function(e) {
+
+		        var idopcion = $('#idopcion').html();
+		        var stock = $(this).parent().siblings('.stockingresado').val();
+		        var puntero = $(this);
+
+		        var idtabla = $(this).attr('id');
+		        var array = idtabla.split('*');
+
+		        var suma = parseFloat(stock) + parseFloat($(puntero).parent().siblings('#totalstock').html());
+
+		        $(this).parent().parent().siblings('.alerterror').html("");
+
+		        if($(this).parent().siblings('.stockingresado').val()==""){
+
+		            $(this).parent().parent().siblings('.alerterror').html('<div class="alertstock alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Formato Errado</div>');
+
+		        }  
+		        else{
+		            if(suma<=0){
+
+		                if(suma==0){
+		                    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> La Valor debe ser mayor a 0</div>');
+
+		                }else{
+
+		                    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> La Operación es Negativo</div>');
+		                }
+
+		            }else{
+		                    $(this).removeClass('btn-success');
+		                    $(this).addClass('btn-primary');
+		                    $(this).children('.fa-floppy-o').css("display", "none");
+		                    $(this).children('.loader').css("display", "block");
+		                    $(this).parent().parent().siblings('.alertstock').css("display", "none");
+
+		                    
+		                    $.ajax(
+		                    {
+		                        url: "/APPCOFFEE/insertar-stock-inventario-embarque",
+		                        type: "POST",
+		                        data: "idstock="+$(this).attr('id')+"&stock="+suma,
+		                    }).done(function(pagina) 
+		                    { 
+		                        if(pagina==1){
+		                            $(puntero).parent().siblings('#totalstock').html(parseFloat(suma).toFixed(3));
+		                            $("#S"+array[1]).html(suma.toFixed(3));
+		                            $(puntero).parent().siblings('#plusstock').val('');
+		                            $(puntero).addClass('btn-success');
+		                            $(puntero).removeClass('btn-primary');
+		                            $(puntero).children('.fa-check').css("display", "inline-block");
+		                            $(puntero).children('.fa-floppy-o').css("display", "inline-block");
+		                            $(puntero).children('.loader').css("display", "none");
+		                            $("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
+
+		                            $('#plusstock').focus();
+		                        }else{
+		                            window.location.href = '/APPCOFFEE/getion-inventario-embarque/'+idopcion;
+		                           // window.location.href = '/inventario/lista-toma-inventariocerro-embarque';
+		                        }
+		                        
+		                    }); 
+		            }  
+		        }
+
+
+		     });
+
+
+		     $(".btndisminuirstockE").click(function(e) {
+
+		        var idopcion = $('#idopcion').html();
+		        var stock = $(this).parent().siblings('.stockingresado').val();
+		        var puntero = $(this);
+		        var idtabla = $(this).attr('id');
+		        var array = idtabla.split('*');
+
+		        var suma =  parseFloat($(puntero).parent().siblings('#totalstock').html()) - parseFloat(stock);
+		        
+		        $(this).parent().parent().siblings('.alerterror').html("");
+
+
+		        if($(this).parent().siblings('.stockingresado').val()==""){
+
+		            $(this).parent().parent().siblings('.alerterror').html('<div class="alertstock alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Formato Errado</div>');
+
+		        }else{
+
+		            if(suma<=0){
+
+		                if(suma==0){
+		                    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> La Valor debe ser mayor a 0</div>');
+
+		                }else{
+
+		                    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> La Operación es Negativo</div>');
+		                }
+
+		            }else{
+		            
+		                $(this).removeClass('btn-success');
+		                $(this).addClass('btn-primary');
+		                $(this).children('.fa-floppy-o').css("display", "none");
+		                $(this).children('.loader').css("display", "block");
+		                $(this).parent().parent().siblings('.alertstock').css("display", "none");
+
+
+		                $.ajax(
+		                {
+		                    url: "/APPCOFFEE/insertar-stock-inventario-embarque",
+		                    type: "POST",
+		                    data: "idstock="+$(this).attr('id')+"&stock="+suma,
+		                }).done(function(pagina) 
+		                {
+
+		                    if(pagina==1){
+		                        $(puntero).parent().siblings('#totalstock').html(parseFloat(suma).toFixed(3));
+		                        $("#S"+array[1]).html(suma.toFixed(3));
+		                        $(puntero).parent().siblings('#plusstock').val('');
+		                        $(puntero).addClass('btn-success');
+		                        $(puntero).removeClass('btn-primary');
+		                        $(puntero).children('.fa-check').css("display", "inline-block");
+		                        $(puntero).children('.fa-floppy-o').css("display", "inline-block");
+		                        $(puntero).children('.loader').css("display", "none");
+		                        $("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
+
+		                        $('#plusstock').focus();
+		                    }else{
+		                        window.location.href = '/APPCOFFEE/getion-inventario-embarque/'+idopcion;
+		                        //window.location.href = '/inventario/lista-toma-inventariocerro-embarque';
+		                    }
+		                    
+		                });  
+		            }
+		        }
+
+
+		     });
+
+
+		     $(".btneditstockE").click(function(e) {
+
+		        var idopcion = $('#idopcion').html();
+		        var stock = $(this).parent().siblings('.stockingresado').val();
+		        var puntero = $(this);
+		        var idtabla = $(this).attr('id');
+		        var array = idtabla.split('*');
+
+
+		        var suma = parseFloat(stock);
+
+
+		        $(this).parent().parent().siblings('.alerterror').html("");
+
+		        if($(this).parent().siblings('.stockingresado').val()==""){
+
+		            $(this).parent().parent().siblings('.alerterror').html('<div class="alertstock alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Formato Errado</div>');
+
+		        }else{
+
+            		if(suma<=0){
+
+		                if(suma==0){
+		                    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> La Valor debe ser mayor a 0</div>');
+
+		                }else{
+
+		                    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> La Operación es Negativo</div>');
+		                }
+
+		            }else{
+		            
+		                $(this).removeClass('btn-success');
+		                $(this).addClass('btn-primary');
+		                $(this).children('.fa-floppy-o').css("display", "none");
+		                $(this).children('.loader').css("display", "block");
+		                $(this).parent().parent().siblings('.alertstock').css("display", "none");
+
+
+		                $.ajax(
+		                {
+		                    url: "/APPCOFFEE/insertar-stock-inventario-embarque",
+		                    type: "POST",
+		                    data: "idstock="+$(this).attr('id')+"&stock="+suma,
+		                }).done(function(pagina) 
+		                {
+
+		                    if(pagina==1){
+		                        $(puntero).parent().siblings('#totalstock').html(parseFloat(suma).toFixed(3));
+		                        $("#S"+array[1]).html(suma.toFixed(3));
+		                        $(puntero).parent().siblings('#plusstock').val('');
+		                        $(puntero).addClass('btn-success');
+		                        $(puntero).removeClass('btn-primary');
+		                        $(puntero).children('.fa-check').css("display", "inline-block");
+		                        $(puntero).children('.fa-floppy-o').css("display", "inline-block");
+		                        $(puntero).children('.loader').css("display", "none");
+		                        $("#S"+array[1]).siblings('.descripcion').find('.digito').html("<i class='fa fa-check-circle-o fa-lg' aria-hidden='true'></i>");
+
+		                        $('#plusstock').focus();
+
+		                    }else{
+		                        window.location.href = '/APPCOFFEE/getion-inventario-embarque/'+idopcion;
+		                        //window.location.href = '/inventario/lista-toma-inventariocerro-embarque';
+		                    }
+		                    
+		                }); 
+		            } 
+		        }
+
+
+		     });
+
+
+
+
+
 	</script>
 
 @stop

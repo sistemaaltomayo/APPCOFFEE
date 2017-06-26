@@ -7,6 +7,7 @@
     {{ HTML::style('/css/tabla/footable.paginate.css') }}
     {{ HTML::style('/css/tabla/bootstrapSwitch.css') }}
     {{ HTML::style('/css/font-awesome.min.css') }}
+     {{ HTML::style('/css/cssPersonal.css') }}
 
 
 @stop
@@ -66,15 +67,18 @@
 					          	<th >
 					            	Zona
 					          	</th>
-					          	<th data-sort-initial="descending">
-					            	Fecha Creación
-					          	</th>
 					          	<th >
 					            	Motivo
 					          	</th>
 					          	<th data-hide="phone,tablet">
 					            	Cargo
 					          	</th>
+					          	<th data-hide="phone,tablet">
+					            	Estado
+					          	</th>					          	
+					          	<th>
+					            	Fecha Creación
+					          	</th>					          	
 					          	<th data-hide="phone,tablet">
 					            	Usuario Creación
 					          	</th>					          	
@@ -86,13 +90,33 @@
 				      	</thead>
 				      	<tbody>
 				      		@foreach($listaSolicitudPersonal as $item)
-				        	<tr>
-				        		
+
+
+				        			{{--*/ $class = '' /*--}}
+				        			{{--*/ $fila = '' /*--}}
+							    	{{--*/ $estado = '' /*--}}
+								    @if($item->Estado == 'ES') 
+							      		{{--*/ $estado = 'Espera' /*--}}
+							      		{{--*/ $class = 'notactiveurl' /*--}}
+							      		{{--*/ $fila = 'filaespera' /*--}}	
+							      	@else
+							      		{{--*/ $estado = 'Aceptado' /*--}}
+							      		{{--*/ $fila = 'filaactivo' /*--}}		      		
+								    @endif
+
+
+
+				        	<tr class='{{$fila}}'>
+
+
+
+
 				        			<td>{{$item->Correlativo}}</td>
 				        			<td>{{$item->Nombre}}</td>
-				        			<td>{{date_format(date_create($item->FechaCrea), 'm/d/Y H:i:s')}}</td>
 					        		<td>{{$item->MotivoSolicitud}}</td>
 					        		<td>{{$item->Cargo}}</td>
+					        		<td>{{$estado}}</td>
+					        		<td>{{date_format(date_create($item->FechaCrea), 'm/d/Y H:i:s')}}</td>
 					        		<td>{{$item->Nombreusuario}} {{$item->Apellidousuario}}</td>
 
 
@@ -105,14 +129,20 @@
 										    </button>
 
 										    <ul class="dropdown-menu menulistas">
-										      <li><a href="{{ url('/modificar-solicitud-personal/'.$idOpcion.'/'.$item->Id) }}">Modificar</a></li>
 
-										      @foreach($listaOpcionPlus as $itemp) 
+										    	
 
-										      	<li><a href="{{ url('/'.$itemp->Pagina.'/'.Hashids::encode(substr($itemp->Id, -12)).'/'.Hashids::encode(substr($item->Id, -12)).'/'.$idOpcion)}}">{{$itemp->Nombre}}</a></li>										    	
-										      @endforeach
+											    <li>
+											      	<a href="{{ url('/modificar-solicitud-personal/'.$idOpcion.'/'.$item->Id) }}">Modificar</a>
+											    </li>
 
-										      <li class='topsolicitud' id='{{$item->Id}}'><a href="#" class='postulantessolicitud' data-toggle="modal" data-target="#modallistapostulante">Lista Postulante</a></li>
+										      	@foreach($listaOpcionPlus as $itemp)
+											      	<li class='{{$class}}'>
+											      		<a href="{{ url('/'.$itemp->Pagina.'/'.Hashids::encode(substr($itemp->Id, -12)).'/'.Hashids::encode(substr($item->Id, -12)).'/'.$idOpcion)}}">{{$itemp->Nombre}}</a>
+											      	</li>										    	
+										      	@endforeach
+
+										        <li class='topsolicitud' id='{{$item->Id}}'><a href="#" class='postulantessolicitud' data-toggle="modal" data-target="#modallistapostulante">Lista Postulante</a></li>
 
 										    </ul>
 										</div>
@@ -123,7 +153,7 @@
 				      	</tbody>
 				      	<tfoot class="footable-pagination">
 				        	<tr>
-				          		<td colspan="7"><ul id="pagination" class="footable-nav"></ul></td>
+				          		<td colspan="8"><ul id="pagination" class="footable-nav"></ul></td>
 				        	</tr>
 				      	</tfoot>
 				    </table>  

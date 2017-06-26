@@ -28,13 +28,15 @@
 
 <div class="@if($postulante->Estado == '0')  mostrar @else ocultar @endif toptermino paneltop formulario col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
 			
+	<h4 class='etapasnumero'><strong style='color:#08257C;font-size:1.2em;'>(2/8)</strong></h4>
+
 	<div class="col-sx-12">
 		<div class="box" style="width:90%;margin:0 auto">							
 			<div class="icon">
 				<div class="image"><i class="fa fa-thumbs-o-up"></i></div>
 				<div class="info">
 					<h3 class="title">Bien Hecho <br><small>(Por favor llamar al Administrador)</small></h3>
-					<h2>(1/5)</h2>
+
 					
 					<div class="row">
 						<div class="col-xs-6 col-xs-offset-5">
@@ -73,7 +75,7 @@
 
 
 <div class="@if($postulante->Estado == '1') mostrar @else ocultar @endif topexamenadmin paneltop formulario col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
-		
+	<h4 class='etapasnumero'><strong style='color:#08257C;font-size:1.2em;'>(3/8)</strong></h4>	
 	<div class="col-sx-12">
 				<div class="listatoma">
 				    <table  class="table demo">
@@ -176,7 +178,7 @@
 
 
 <div class="@if($postulante->Estado == '2') mostrar @else ocultar @endif topresultadoexamenadmin paneltop formulario col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
-		
+	<h4 class='etapasnumero'><strong style='color:#08257C;font-size:1.2em;'>(4/8)</strong></h4>		
 	<div class="col-sx-12">
 		<div class="box" style="width:90%;margin:0 auto">							
 			<div class="icon">
@@ -200,15 +202,15 @@
 
 						@if(isset($respuestaexamenadmin->Calificacion))
 
-							@if($respuestaexamenadmin->Si > 6)
+							@if($respuestaexamenadmin->Si > 16)
 								<div class="col-xs-10 col-xs-offset-1 evaluacioncontinuar">
-									<h4> Felicidades <b>{{$postulante->Nombre}}</b> sigues en el proceso de selección</h4>	
+									<h4> Felicidades <b>{{$postulante->Nombre}}</b> CONTINUA en el proceso de selección</h4>	
 									<br>			           
 									<input type="submit" id="btncontinuarprocesoseleccion" class="btn btn-primary" value="CONTINUAR">
 								</div>
 						    @else
 								<div class="col-xs-10 col-xs-offset-1 evaluacionterminar">
-									<h4> Postulante <b>{{$postulante->Nombre}}</b> termino su proceso de selección por que no aprobo la evaluación</h4>	
+									<h4> Postulante <b>{{$postulante->Nombre}}</b> TERMINO su proceso de selección por que no aprobo la evaluación</h4>	
 									<br>			           
 									<input type="submit" id="btnterminarprocesoseleccion" class="btn btn-primary" value="TERMINAR">
 								</div>
@@ -217,13 +219,13 @@
 						@else
 
 							<div class="col-xs-10 col-xs-offset-1 evaluacioncontinuar ocultar">
-								<h4> Felicidades <b>{{$postulante->Nombre}}</b> sigues en el proceso de selección</h4>	
+								<h4> Felicidades <b>{{$postulante->Nombre}}</b> CONTINUA en el proceso de selección</h4>	
 								<br>			           
 								<input type="submit" id="btncontinuarprocesoseleccion" class="btn btn-primary" value="CONTINUAR">
 							</div>	
 
 							<div class="col-xs-10 col-xs-offset-1 evaluacionterminar ocultar">
-								<h4> Postulante <b>{{$postulante->Nombre}}</b> termino su proceso de selección por que no aprobo la evaluación</h4>	
+								<h4> Postulante <b>{{$postulante->Nombre}}</b> TERMINO su proceso de selección por que no aprobo la evaluación</h4>	
 								<br>			           
 								<input type="submit" id="btnterminarprocesoseleccion" class="btn btn-primary" value="TERMINAR">
 							</div>
@@ -242,6 +244,8 @@
 
 
 <div class="@if($postulante->Estado == '3') mostrar @else ocultar @endif topdatospersonales paneltop formulario col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+
+	<h4 class='etapasnumero'><strong style='color:#08257C;font-size:1.2em;'>(5/8)</strong></h4>	
 	<div class="col-sx-12">
 			<div class="panelespersonal col-xs-12">
 
@@ -264,22 +268,22 @@
 							  	{{Form::text('dnitermino',$postulante->Dni, array('class' => 'solonumero form-control control', 'placeholder' => 'DNI', 'id' => 'dnitermino', 'maxlength' => '8' ,'disabled ' => 'disabled'))}}
 						</div>
 
-						<div class="input-group grupo-imput">
+						<div class="input-group grupo-imput cajafn">
 						    <span class="input-group-addon" id="basic-addon1">Fecha Nacimiento (*) : </span>
 							{{  Form::date('fechanacimiento','',array('class' => 'form-control control', 'id' => 'fechanacimiento')) }}
 						</div>
 
-						<div class="input-group grupo-imput">
+						<div class="input-group grupo-imput cajadi">
 						    <span class="input-group-addon" id="basic-addon1">Dirección (*) : </span>
 							{{Form::text('direccion','', array('class' => 'form-control control', 'placeholder' => 'Dirección', 'id' => 'direccion', 'maxlength' => '200' ))}}
 						</div>
 
-						<div class="input-group grupo-imput">
+						<div class="input-group grupo-imput cajapro">
 						    <span class="input-group-addon" id="basic-addon1">Provincia (*) : </span>
 							{{ Form::select('provincia', $comboprovincia, array(),['class' => 'selectpicker form-control control' , 'id' => 'provincia' , 'data-live-search' => 'true']) }}
 						</div>
 
-						<div class="ajaxdistrito input-group grupo-imput">
+						<div class="ajaxdistrito input-group grupo-imput cajadis">
 						    <span class="input-group-addon" id="basic-addon1">Distrito (*) : </span>
 							{{ Form::select('distrito', array(), array(),['class' => 'selectpicker form-control control' , 'id' => 'distrito' , 'data-live-search' => 'true']) }}
 						</div>
@@ -289,13 +293,13 @@
 							{{Form::text('telefono','', array('class' => 'solonumero form-control control', 'placeholder' => 'Telefono', 'id' => 'telefono', 'maxlength' => '15' ))}}
 						</div>
 
-						<div class="input-group grupo-imput">
+						<div class="input-group grupo-imput cajacel">
 						    <span class="input-group-addon" id="basic-addon1">Celular (*) :  </span>
 							{{Form::text('celular','', array('class' => 'solonumero form-control control', 'placeholder' => 'Celular', 'id' => 'celular', 'maxlength' => '15' ))}}						    
 						</div>
 
 
-						<div class="input-group grupo-imput">
+						<div class="input-group grupo-imput cajacorreo">
 						    <span class="input-group-addon" id="basic-addon1">Correo Electrónico (*) : </span>
 							{{Form::text('correoelectronico','', array('class' => 'form-control control', 'placeholder' => 'Correo Electrónico', 'id' => 'correoelectronico', 'maxlength' => '100' ))}}						    
 						</div>
@@ -317,7 +321,7 @@
 						</div>
 
 						<div style="float:right;margin-bottom:12px;">
-							<button type="button" class="agregar btnreferencia btn btn-success">
+							<button type="button" class="agregar btnreferencia btn btn-success cajareferencia">
 								Agregar Referencia <i class="fa fa-plus" aria-hidden="true"></i>
 							</button>
 						</div>
@@ -349,22 +353,38 @@
 						    </span>
 						</div>
 
+
+					    <span class="titulospan input-group-addon" id="basic-addon1">
+					    	DATOS DEL ESPOSO(A) </li> 
+					    </span>
+
 	                	<div class="inputs grupo-imput">
 	                		<div class="cajamedidas entry input-group">
-	                 			<span class="input-group-addon" id="basic-addon1">Esposa(o): </span>
-		                        <input type="text" class="form-control" placeholder = 'Nombre de la Esposa(o)' name="nombreesposa" id='nombreesposa' maxlength = '100' />
+	                 			<span class="input-group-addon" id="basic-addon1">Nombre: </span>
+		                        <input type="text" class="form-control" placeholder = 'Nombre' name="nombreesposa" id='nombreesposa' maxlength = '100' />
 
-	                			<span class="input-group-addon" id="basic-addon1">Edad de la Esposa(o): </span>
-		                        <input type="text" class="solonumero form-control" placeholder = 'Edad de la Esposa(o)' name="edadesposa" id='edadesposa' />
+	                			<span class="input-group-addon" id="basic-addon1">DNI: </span>
+		                        <input type="text" class="solonumero form-control" placeholder = 'DNI' name="dniesposa" id='dniesposa' maxlength = '8' />
+
+	                			<span class="input-group-addon" id="basic-addon1">Edad: </span>
+		                        <input type="text" class="solonumero form-control" placeholder = 'Edad' name="edadesposa" id='edadesposa' />
 	                    	</div>
 	                    </div>
 
+
+					    <span class="titulospan input-group-addon" id="basic-addon1">
+					    	DATOS DEL HIJO(A) </li> 
+					    </span>
 	                	<div class="inputs grupo-imput">
 	                		<div class="cajamedidas entry input-group">
-	                 			<span class="input-group-addon" id="basic-addon1">Hija(o): </span>
-		                        <input type="text" class="form-control" placeholder = 'Nombre de la Hija(o)' name="nombrehija" id='nombrehija' maxlength = '100'/>
-	                			<span class="input-group-addon" id="basic-addon1">Edad de la Hija(o): </span>
-		                        <input type="text" class="solonumero form-control" placeholder = 'Edad de la Hija(o)' name="edadhija" id='edadhija' />
+	                 			<span class="input-group-addon" id="basic-addon1">Nombre: </span>
+		                        <input type="text" class="form-control" placeholder = 'Nombre' name="nombrehija" id='nombrehija' maxlength = '100'/>
+
+	                			<span class="input-group-addon" id="basic-addon1">DNI: </span>
+		                        <input type="text" class="solonumero form-control" placeholder = 'DNI' name="dnihija" id='dnihija' maxlength = '8' />
+
+	                			<span class="input-group-addon" id="basic-addon1">Edad: </span>
+		                        <input type="text" class="solonumero form-control" placeholder = 'Edad' name="edadhija" id='edadhija' />
 	                    	</div>
 	                    </div>
 
@@ -379,17 +399,23 @@
 						      	<thead>
 							        <tr>
 							        	<th>
-							            	Esposa(o)
+							            	Nombre(E)
 							          	</th>
 							          	<th >
-							            	Edad de Esposa(o)
+							            	DNI(E)
 							          	</th>
 							        	<th>
-							            	Hija(o)
+							            	Edad(E)
+							          	</th>
+							        	<th>
+							            	Nombre(H)
 							          	</th>
 							          	<th >
-							            	Edad de Hija(o)
-							          	</th>							          	
+							            	DNI(H)
+							          	</th>
+							        	<th>
+							            	Edad(H)
+							          	</th>						          	
 							          	<th >
 							            	Eliminar
 							          	</th>								          	
@@ -403,17 +429,15 @@
 
 
 
-
-
-
-
 						<div class="input-group grupo-imput">
-						    <span class="titulospan input-group-addon" id="basic-addon1">¿TIENES ALGUNA HABILIDAD O TALENTO?: <br><li>(háganos saber cuales son sus talentos)</li> </span>
+						    <span class="titulospan input-group-addon" id="basic-addon1">¿TIENES ALGUNA HABILIDAD O TALENTO?: <br><li>(háganos saber cual es su talento ó habilidad)</li> </span>
 						</div>
 
-						<div class="input-group grupo-imput textarea">
-							{{ Form::textarea('talento', null, ['class' => 'form-control', 'rows' => '5','placeholder' => 'Talento...', 'id' => 'talento', 'maxlength' => '2000']) }}
+						<div class="input-group grupo-imput cajatalento">
+						    <span class="input-group-addon" id="basic-addon1">Talento ó Habilidad (*): </span>
+							{{ Form::select('talento', $combohabilidadtalento, array(),['class' => 'form-control control' , 'id' => 'talento']) }}
 						</div>
+
 
 					</div>
 				</div>
@@ -426,10 +450,43 @@
 					<div class="panel-body">
 
 
-						<div class="input-group grupo-imput">
+						<div class="input-group grupo-imput cajagradoinst">
 						    <span class="input-group-addon" id="basic-addon1">Grado de Instrucción (*) : </span>
 							{{ Form::select('gradoinstruccion', $combogradoinstruccion, array(),['class' => 'form-control control' , 'id' => 'gradoinstruccion']) }}
 						</div>
+
+
+						<div class='rowgradointruccion' style='display:none;'>
+							<div class="input-group grupo-imput cajanombrecarrera">
+							    <span class="input-group-addon" id="basic-addon1">Nombre de la Carrera (*) : </span>
+								{{Form::text('nombrecarrera','', array('class' => 'form-control control', 'placeholder' => 'Nombre de la Carrera', 'id' => 'nombrecarrera', 'maxlength' => '100' ))}}
+							</div>
+
+							<div class="input-group grupo-imput cajacentroestudio">
+							    <span class="input-group-addon" id="basic-addon1">Centro de Estudios (*) : </span>
+								{{Form::text('centroestudios','', array('class' => 'form-control control', 'placeholder' => 'Centro de Estudios', 'id' => 'centroestudios', 'maxlength' => '100' ))}}
+							</div>
+
+							<div class='rowcicloacademico'>
+								<div class="input-group grupo-imput cajacicloacademico">
+								    <span class="input-group-addon" id="basic-addon1">Ciclo Académico (*) : </span>
+									{{Form::text('cicloacademico','', array('class' => 'solonumero form-control control', 'placeholder' => 'Ciclo Académico', 'id' => 'cicloacademico' , 'maxlength' => '2'))}}
+								</div>
+							</div>
+							<div class='rowgradoestudio'>								
+								<div class="input-group grupo-imput cajagradoestudio">
+								    <span class="input-group-addon" id="basic-addon1">Grado de Estudios (*) : </span>
+									{{ Form::select('gradoestudio', $combogradoestudio, array(),['class' => 'form-control control' , 'id' => 'gradoestudio']) }}
+								</div>
+							</div>
+
+
+						</div>
+
+
+
+
+
 
 						<div class="input-group grupo-imput">
 						    <span class="titulospan input-group-addon" id="basic-addon1">COMPUTACIÓN:  </span>
@@ -445,8 +502,8 @@
 							{{ Form::select('nivelprograma', $combonivel, array(),['class' => 'form-control control' , 'id' => 'nivelprograma']) }}
 						</div>
 
-						<div style="float:right;margin-bottom:12px;">
-							<button type="button" class="agregar btnprograma btn btn-success">
+						<div style="float:right;margin-bottom:12px; ">
+							<button type="button" class="agregar btnprograma btn btn-success cajaprograma">
 								Agregar Programa <i class="fa fa-plus" aria-hidden="true"></i>
 							</button>
 						</div>
@@ -488,8 +545,8 @@
 						</div>
 
 
-						<div style="float:right;margin-bottom:12px;">
-							<button type="button" class="agregar btnidioma btn btn-success">
+						<div style="float:right;margin-bottom:12px; ">
+							<button type="button" class="agregar btnidioma btn btn-success cajaidioma">
 								Agregar Idioma <i class="fa fa-plus" aria-hidden="true"></i>
 							</button>
 						</div>
@@ -526,8 +583,8 @@
 							{{Form::text('cursoadicional','', array('class' => 'form-control control', 'placeholder' => 'Curso Adicional', 'id' => 'cursoadicional', 'maxlength' => '200' ))}}
 						</div>
 
-						<div style="float:right;margin-bottom:12px;">
-							<button type="button" class="agregar btncursoadicional btn btn-success">
+						<div style="float:right;margin-bottom:12px; ">
+							<button type="button" class="agregar btncursoadicional btn btn-success cajacusrsoadi">
 								Agregar Cursos adicionales <i class="fa fa-plus" aria-hidden="true"></i>
 							</button>
 						</div>
@@ -563,17 +620,22 @@
 
 					<div class="panel-body">
 
+
+
+
+
+
 						<div class="input-group grupo-imput">
 						    <span class="titulospan input-group-addon" id="basic-addon1">COMO SE ENTERO DEL PUESTO DE TRABAJO:  </span>
 						</div>
 						
-						<div class="input-group grupo-imput">
+						<div class="input-group grupo-imput cajamedio">
 						    <span class="input-group-addon" id="basic-addon1">Medios (*) : </span>
 							{{ Form::select('medio', $combomedio, array(),['class' => 'form-control control' , 'id' => 'medio']) }}
 						</div>
 
-						<div class="input-group grupo-imput">
-						    <span class="input-group-addon" id="basic-addon1">Especificar (*) : </span>
+						<div class="input-group grupo-imput cajaespecificar">
+						    <span class="input-group-addon" id="basic-addon1">Especificar : </span>
 							{{Form::text('especificarmedio','', array('class' => 'form-control control', 'placeholder' => 'Especificar', 'id' => 'especificarmedio', 'maxlength' => '200' ))}}
 						</div>
 
@@ -605,7 +667,7 @@
 						</div>
 
 						<div style="float:right;margin-bottom:12px;">
-							<button type="button" class="agregar btnreferenciatrabajo btn btn-success">
+							<button type="button" class="agregar btnreferenciatrabajo btn btn-success cajareftra">
 								Agregar Referencias de Trabajos <i class="fa fa-plus" aria-hidden="true"></i>
 							</button>
 						</div>
@@ -642,15 +704,16 @@
 						    <li>(contacto con el cual nos podemos comunicar)</li>  </span>
 						</div>
 
-						<div class="input-group grupo-imput">
+						<div class="input-group grupo-imput cajanultimo">
 						    <span class="input-group-addon" id="basic-addon1">Nombre Contacto (*): </span>
 							{{Form::text('nombreultimo','', array('class' => 'form-control control', 'placeholder' => 'Nombre Contacto', 'id' => 'nombreultimo', 'maxlength' => '200' ))}}
 						</div>
 
-						<div class="input-group grupo-imput">
+						<div class="input-group grupo-imput cajacelultimo">
 						    <span class="input-group-addon" id="basic-addon1">Celular Contacto (*): </span>
 							{{Form::text('celularultimmo','', array('class' => 'solonumero form-control control', 'placeholder' => 'Celular Contacto', 'id' => 'celularultimmo', 'maxlength' => '15' ))}}
 						</div>
+
 
 					</div>
 				</div>
@@ -664,13 +727,14 @@
 
 
 <div class="@if($postulante->Estado == '4') mostrar @else ocultar @endif topempezarexamen1 paneltop formulario col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
-		
+	<h4 class='etapasnumero'><strong style='color:#08257C;font-size:1.2em;'>(6/8)</strong></h4>	
+
 	<div class="@if($puestotrabajo == 'ADM') mostrar @else ocultar @endif empezaradm col-sx-12">
 		<div class="box" style="width:90%;margin:0 auto">							
 			<div class="icon">
 				<div class="image"><i class="fa fa-thumbs-o-up"></i></div>
 				<div class="info">
-					<h3 class="title"> EXAMEN 01 <br><strong><small>(INSTRUCCIONES)</small></strong> <br>
+					<h3 class="title"> LABORATORIO 01 <br><strong><small>(INSTRUCCIONES)</small></strong> <br>
 						<strong><small style='color:#e63f0c;'>(SOLO TIENE 10 MINUTOS PARA RESOLVER EL EXAMEN)</small></strong></h3>
 	
 					<div class="row">
@@ -716,7 +780,7 @@
 				                </div>
 				            </div>				            
 
-							<input type="submit" id="btnempezarprimerexamen" class="btn btn-primary" value="EMPEZAR PRIMER EXAMEN (TIENE 10 MINUTOS)">
+							<input type="submit" id="btnempezarprimerexamen" class="btn btn-primary" value="EMPEZAR PRIMER LABORATORIO (TIENE 10 MINUTOS)">
 
 						</div>							
 					</div>
@@ -732,16 +796,17 @@
 			<div class="icon">
 				<div class="image"><i class="fa fa-thumbs-o-up"></i></div>
 				<div class="info">
-					<h3 class="title"> EXAMEN 01 <br><strong><small>(INSTRUCCIONES)</small></strong> <br>
-						<strong><small style='color:#e63f0c;'>(SOLO TIENE 10 MINUTOS PARA RESOLVER EL EXAMEN)</small></strong></h3>
+					<h3 class="title"> LABORATORIO 01 <br><strong><small>(INSTRUCCIONES)</small></strong> <br>
+						<strong><small style='color:#e63f0c;'>(SOLO TIENE 10 MINUTOS PARA RESOLVER EL LABORATORIO)</small></strong></h3>
 	
 					<div class="row">
 						<div class="col-xs-10 col-xs-offset-1">
 							<h4>
-								Escribe los <b> NUMEROS </b> que corresponden en la serie numerica (Recuerde que solo tienes 10 minutos para resolver la prueba).
+								LEE CON ATENCION EL ENUNCIADO Y RESUELVE LA PREGUNTA SELECCIONANDO TU RESPUESTA
+								(Recuerde que solo tienes 10 minutos para resolver la prueba).
 							</h4>
 						
-							<input type="submit" id="btnempezarprimerexamenatc" class="btn btn-primary" value="EMPEZAR PRIMER EXAMEN (TIENE 10 MINUTOS)">
+							<input type="submit" id="btnempezarprimerexamenatc" class="btn btn-primary" value="EMPEZAR PRIMER LABORATORIO (TIENE 10 MINUTOS)">
 
 						</div>							
 					</div>
@@ -758,7 +823,7 @@
 
 
 <div class="@if($postulante->Estado == '5') mostrar @else ocultar @endif topexamen1 paneltop formulario col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
-		
+	<h4 class='etapasnumero'><strong style='color:#08257C;font-size:1.2em;'>(6/8)</strong></h4>		
 	<div class="@if($puestotrabajo == 'ADM') mostrar @else ocultar @endif primeradm col-sx-12">
 			<div class="panelespersonal col-xs-12">
 
@@ -810,15 +875,15 @@
 							</div>	
 
 					        <div id="timer">
-					        	<div class="containert">
-					                <p>Tiempo Estimado ({{$postulante->TiempoPrimerExamenAdm}}) min</p>             
-					            </div>
-					            <div class="containert">
+					            <div class="containert relojcontainer">
 					            	<article>
 						                <div id="minutePEAd" class='minute'>00</div>
 						                <div class="divider">:</div>
 						                <div id="secondPEAd" class='second'>00</div>  
 					            	</article>
+					            </div>					        	
+					        	<div class="containert">
+					                <p>Tiempo Estimado ({{$postulante->TiempoPrimerExamenAdm}}) min</p>             
 					            </div>
 					        </div>
 
@@ -907,6 +972,7 @@
 
 
 	<div class="@if($puestotrabajo == 'ATC') mostrar @else ocultar @endif primeratc col-sx-12">
+
 			<div class="panelespersonal col-xs-12">
 
 				<div class="panel panel-info">
@@ -918,68 +984,77 @@
 						<div class="row">
 							<div class="col-xs-10 col-xs-offset-1">
 								<h4>
-									Escribe los <b> NUMEROS </b> que corresponden en la serie numerica (Recuerde que solo tienes 10 minutos para resolver la prueba).
+									LEE CON ATENCION EL ENUNCIADO Y RESUELVE LA PREGUNTA SELECCIONANDO TU RESPUESTA
+										<br>(Recuerde que solo tienes 10 minutos para resolver la prueba).
 								</h4>
 											            
 							</div>	
 
 					        <div id="timer">
-					        	<div class="containert">
-					                <p>Tiempo Estimado ({{$postulante->TiempoPrimerExamenAtc}}) min</p>             
-					            </div>
-					            <div class="containert">
+					            <div class="containert relojcontainer">
 					            	<article>
 						                <div id="minutePEAtc" class='minute'>00</div>
 						                <div class="divider">:</div>
 						                <div id="secondPEAtc" class='second'>00</div>  
 					            	</article>
 					            </div>
+					        	<div class="containert">
+					                <p>Tiempo Estimado ({{$postulante->TiempoPrimerExamenAtc}}) min</p>             
+					            </div>					            
 					        </div>
 
 						</div>
 
-					    <table id='listaprimerexamenatc'  class="table demo" >
-					      	<thead>
-						        <tr>
-						        	<th>
-						            	Nº
-						          	</th>
-						        	<th>
-						            	Escribe los dos números que faltan a esta serie ( X -Y )
-						          	</th>	
-						          	<th>
-						            	X
-						          	</th>
-						          	<th>
-						            	Y
-						          	</th>	
-							          							          	
-						        </tr>
-					      	</thead>
-					      	<tbody>
-					      		
-					      			{{--*/ $contador = 1 /*--}}
-						      		@foreach($listaprimerexamenatc as $item)
-						        	<tr id='{{$item->Id}}'>
-						        			<td> <h4 style='color:#adadad;'>{{$contador}}</h4></td>
-						        			<td> <h4>{{$item->Pregunta}}</h4> </td>
 
-						        			<td class='x' style='width:17%;'>  
-							  					{{Form::text('imput'.$contador.'1','', array('class' => 'decimal form-control control', 'placeholder' => 'X', 'id' => 'imput'.$contador.'1', 'maxlength' => '200'))}}		
-						        			</td>
-							        		<td class='y' style='width:17%;'>
-							  					{{Form::text('imput'.$contador.'2','', array('class' => 'decimal form-control control', 'placeholder' => 'Y', 'id' => 'imput'.$contador.'2', 'maxlength' => '200'))}} 
-							        		</td>
 
-						            </tr>
-						            {{--*/ $contador = $contador + 1 /*--}}
-						            @endforeach
-					      		
+						{{--*/ $idPregunta = "" /*--}}
+						{{--*/ $contadorItem = 1 /*--}}
+						{{--*/ $contador = 0 /*--}}
+						{{--*/ $contadorUnicov = 0 /*--}}
+						{{--*/ $numeracion = 1 /*--}}
 
-					      	</tbody>
-					    </table> 
+				        @foreach($listaprimerexamenatcpostulante as $item)
+							
+				        	@if($item->IdPreguntaPrimerExamenAtc != $idPregunta)
 
-						<input type="submit" id="btncalcularprimerexamenatc" class="btn btn-primary" value="CUARDAR">
+								<div class="col-xs-12 col-md-12">
+									<div class="preguntas pregunta{{$contadorItem}}">
+
+										<div class="numero" style='left:25%;text-align:center;width:300px;'><p>{{$contadorItem}}. {{$item->Categoria}}</p></div>
+										<div class="pregunta">
+											<p><b>{{$item->NombrePregunta}}</b></p>	
+										</div>
+
+									    <div class="funkyradio funkyradioventa">
+										{{--*/ $contadorUnicov = $contadorUnicov + 1 /*--}}
+										{{--*/ $idPregunta = $item->IdPreguntaPrimerExamenAtc /*--}}
+										{{--*/ $contadorItem = $contadorItem + 1 /*--}}	    
+				        	@endif
+							
+							    <div class="funkyradio-success">
+						            <input type="radio" name="radiope{{$contadorUnicov}}" id="radiope{{$contador}}" value="{{$item->Id}}" />
+						            <label for="radiope{{$contador}}">{{$item->Descripcion}}</label>
+						        </div>
+						        {{--*/ $numeracion = $numeracion + 1 /*--}}
+
+							@if(count($listaprimerexamenatcpostulante) == ($contador + 1))
+										  </div>
+									</div>
+								</div>
+							@else
+					        	@if($listaprimerexamenatcpostulante[$contador+1]->IdPreguntaPrimerExamenAtc != $idPregunta)
+					        				</div>
+									</div>
+								</div>
+					        	@endif
+							@endif
+							{{--*/ $contador = $contador + 1 /*--}}
+						@endforeach
+
+						<p id="contadorUnicopea" style="display:none;">{{$numeracion}}</p>	
+						<div class="col-xs-12" style = 'margin-top:15px;'>
+							<input type="submit" id="btncalcularprimerexamenatc" class="btn btn-primary" value="CUARDAR">
+						</div>
 					</div>
 
 
@@ -992,19 +1067,19 @@
 
 
 <div class="@if($postulante->Estado == '6') mostrar @else ocultar @endif topempezarexamen2 paneltop formulario col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
-		
+	<h4 class='etapasnumero'><strong style='color:#08257C;font-size:1.2em;'>(7/8)</strong></h4>		
 	<div class="col-sx-12">
 		<div class="box" style="width:90%;margin:0 auto">							
 			<div class="icon">
 				<div class="image"><i class="fa fa-thumbs-o-up"></i></div>
 				<div class="info">
-					<h3 class="title"> EXAMEN 02 <br><strong><small>(INSTRUCCIONES)</small></strong> <br>
-						<strong><small style='color:#e63f0c;'>(SOLO TIENE 10 MINUTOS PARA RESOLVER EL EXAMEN)</small></strong></h3>
+					<h3 class="title"> LABORATORIO 02 <br><strong><small>(INSTRUCCIONES)</small></strong> <br>
+						<strong><small style='color:#e63f0c;'>(SOLO TIENE 10 MINUTOS PARA RESOLVER EL LABORATORIO)</small></strong></h3>
 	
 					<div class="row">
 						<div class="col-xs-10 col-xs-offset-1">
 							<h4>A continuación tendras <b> BANCO DE PREGUNTAS PARA MEDIR ACTITUD A LAS VENTAS.</b></h4>
-							<input type="submit" id="btnempezarsegundoexamen" class="btn btn-primary" value="EMPEZAR SEGUNDO EXAMEN (TIENE 10 MINUTOS)">
+							<input type="submit" id="btnempezarsegundoexamen" class="btn btn-primary" value="EMPEZAR SEGUNDO LABORATORIO (TIENE 10 MINUTOS)">
 						</div>							
 					</div>
 				</div>
@@ -1018,7 +1093,7 @@
 
 
 <div class="@if($postulante->Estado == '7') mostrar @else ocultar @endif topexamen2 paneltop formulario col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
-		
+		<h4 class='etapasnumero'><strong style='color:#08257C;font-size:1.2em;'>(7/8)</strong></h4>	
 	<div class="col-sx-12">
 
 				{{--*/ $idPregunta = "" /*--}}
@@ -1070,15 +1145,15 @@
 				<div class="col-xs-12" style = 'margin-top:15px;'>
 
 			        <div id="timer">
-			        	<div class="containert">
-			                <p>Tiempo Estimado ({{$postulante->TiempoPrimerExamenAtc}}) min</p>             
-			            </div>
-			            <div class="containert">
+			            <div class="containert relojcontainer">
 			            	<article>
 				                <div id="minuteSEA" class='minute'>00</div>
 				                <div class="divider">:</div>
 				                <div id="secondSEA" class='second'>00</div>  
 			            	</article>
+			            </div>			        	
+			        	<div class="containert">
+			                <p>Tiempo Estimado ({{$postulante->TiempoPrimerExamenAtc}}) min</p>             
 			            </div>
 			        </div>
 
@@ -1093,7 +1168,7 @@
 
 
 <div class="@if($postulante->Estado == '8') mostrar @else ocultar @endif terminoprocesoseleccion paneltop formulario col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
-		
+	<h4 class='etapasnumero'><strong style='color:#08257C;font-size:1.2em;'>(8/8)</strong></h4>	
 	<div class="col-sx-12">
 
 		<div class="box" style="width:90%;margin:0 auto">							
@@ -1511,22 +1586,12 @@
 				$('#modalcargando').modal('hide');
 				$("#culminosea").val('1');
 
-				/*JSONdata     = JSON.parse(pagina);
-				si 			 = JSONdata[0].si;
-				calificacion = JSONdata[0].calificacion;
-
-				$("#calificacionadm .si").html(si);
-				$("#calificacionadm .cal").html(calificacion);
-
-				if(parseInt(si) > 6){
-					$(".evaluacionterminar").css("display", "none");
-					$(".evaluacioncontinuar").css("display", "inline-block");
-				}else{
-					$(".evaluacioncontinuar").css("display", "none");
-					$(".evaluacionterminar").css("display", "inline-block");
-				}*/
 
 		    });
+
+
+
+
 
 	    });
 
@@ -1668,24 +1733,26 @@
 
 	$("#btncalcularprimerexamenatc").click(function(e) {
 
+
+		var xml 				= "";
+		var sw 					= "1";
+		var id 					= "";
+		var puntaje 			= "";
+		var alertaMensajeGlobal = "";
+		$(".alerta").html("");
+		var aleatorio = Math.floor((Math.random() * 500) + 1);
+		idpostulante 	        = $('#idpostulante').val();
+
+
+		for (i=1; i<=parseInt($("#contadorUnicopea").html())-1; i++)
+		{
+			if($('input:radio[name=radiope'+i+']').is(':checked')) {
+				idrespuesta = $('input:radio[name=radiope'+i+']:checked').val();
+				xml= xml + idrespuesta + '&&&';
+			}
+		}
 		$("#modalcargando").modal();
-		idpostulante 	    = $('#idpostulante').val();
-		count 				= 1;
-		xml 				= '';
 
-	    $("#listaprimerexamenatc tbody tr").each(function(){
-
-	    	rpt1            = '';
-	    	rpt2            = '';
-	    	idexamen 	    = $(this).attr("id");
-
-	    	rpt1 = 	$('#imput'+count+'1').val().trim();
-	    	rpt2 = 	$('#imput'+count+'2').val().trim();
-
-			xml 	= xml + idexamen +'***'+ rpt1 +'***'+ rpt2 +'&&&';
-	    	count 	= count + 1;
-
-    	});
 
 		$.ajax(
         {
@@ -1761,7 +1828,17 @@
 	 	idpostulante 	    = $('#idpostulante').val();
 	 	talento 	    	= $('#talento').val();	 	
 	 	nombreultimo 	    = $('#nombreultimo').val();
-	 	celularultimmo 	    = $('#celularultimmo').val();	
+	 	celularultimmo 	    = $('#celularultimmo').val();
+
+	 	nombrecarrera 	    = $('#nombrecarrera').val();
+	 	centroestudios 	    = $('#centroestudios').val();	 	
+	 	cicloacademico 	    = $('#cicloacademico').val();
+	 	gradoestudio 	    = $('#gradoestudio').val();
+
+
+
+
+
 
 
 
@@ -1780,14 +1857,21 @@
 
 
 
+
+
+	 	limpiarerrores();
+
+		$('.cajapasaje').css("border-bottom", "3px solid #d43f3a");
+
+
 	 	/************************ datos personales **********************/
-	 	if(!valVacio($('#fechanacimiento').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo fecha nacimiento es obligatorio<br>';}
-	 	if(!valVacio($('#direccion').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo direccion es obligatorio<br>';}
-	 	if(!valSelect($('#provincia').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo provincia seleccionado es invalido<br>';}
-		if(!valSelect($('#distrito').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo distrito seleccionado es invalido<br>';}
-		if(!valVacio($('#celular').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo celular es obligatorio<br>';}
-		if(!valVacio($('#correoelectronico').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo correo electronico es obligatorio<br>';}
-		if(!valEmail($('#correoelectronico').val(),-1)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo correo electronico no corresponde con una dirección de e-mail válida<br>'}
+	 	if(!valVacio($('#fechanacimiento').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo fecha nacimiento es obligatorio<br>'; pintar('cajafn');}
+	 	if(!valVacio($('#direccion').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo direccion es obligatorio<br>'; pintar('cajadi');}
+	 	if(!valSelect($('#provincia').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo provincia seleccionado es invalido<br>';  pintar('cajapro');}
+		if(!valSelect($('#distrito').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo distrito seleccionado es invalido<br>'; pintar('cajadis');}
+		if(!valVacio($('#celular').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo celular es obligatorio<br>'; pintar('cajacel');}
+		if(!valVacio($('#correoelectronico').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo correo electronico es obligatorio<br>'; pintar('cajacorreo');}
+		if(!valEmail($('#correoelectronico').val(),-1)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo correo electronico no corresponde con una dirección de e-mail válida<br>'; pintar('cajacorreo');}
 
 	    $("#listareferencia tbody tr").each(function(){
 
@@ -1797,27 +1881,58 @@
 	    	carritoreferencia 	= 1;
 
     	});
-		if(!valSelect(carritoreferencia,0)){ alertaMensajeGlobal+='<strong>Error!</strong> Debe haber por lo menos una referencia en caso de emergencia<br>';}
+		if(!valSelect(carritoreferencia,0)){ alertaMensajeGlobal+='<strong>Error!</strong> Debe haber por lo menos una referencia en caso de emergencia<br>'; pintar('cajareferencia'); }
 		
 	    $("#listarhijosesposa tbody tr").each(function(){
 
 			esposo 			= $(this).find('.nombreesposa').html();
+			dniesposo 		= $(this).find('.dniesposa').html();
 			edadesposo    	= $(this).find('.edadesposa').html();
 			hijo 			= $(this).find('.nombrehija').html();
+			dnihijo 		= $(this).find('.dnihija').html();
 			edadhijo    	= $(this).find('.edadhija').html();
-	    	xmlhijosesposa 	= xmlhijosesposa + esposo +'***'+ edadesposo +'***'+ hijo +'***'+ edadhijo +'&&&';
+	    	xmlhijosesposa 	= xmlhijosesposa + esposo +'***'+ dniesposo +'***'+ edadesposo +'***'+ hijo +'***'+ dnihijo +'***'+ edadhijo +'&&&';
 
     	});
 
 
+		if(!valSelect($('#talento').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo talento seleccionado es invalido<br>'; pintar('cajatalento');}
 
-		if(!valVacio($('#talento').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo talento es obligatorio<br>';}
-
-		/*******************************************************************/
+		/*******************************************************************/ 
 
 		/************************ grado instruccion **********************/
 
-		if(!valSelect($('#gradoinstruccion').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo grado de instrucción seleccionado es invalido<br>';}
+		if(!valSelect($('#gradoinstruccion').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo grado de instrucción seleccionado es invalido<br>'; pintar('cajagradoinst');}
+
+
+
+
+
+		    if(gradoinstruccion == 'LIM01CEN000000000003' || gradoinstruccion == 'LIM01CEN000000000005'){
+
+		    	if(!valVacio($('#nombrecarrera').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo nombre carrera es obligatorio<br>'; pintar('cajanombrecarrera');}
+		    	if(!valVacio($('#centroestudios').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo centro de estudios es obligatorio<br>'; pintar('cajacentroestudio');}
+
+		    	if(!valVacio($('#cicloacademico').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo ciclo académico es obligatorio<br>'; pintar('cajacicloacademico');}
+
+		    }else{
+
+			    if(gradoinstruccion == 'LIM01CEN000000000004' || gradoinstruccion == 'LIM01CEN000000000006'){
+
+		    	if(!valVacio($('#nombrecarrera').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo nombre carrera es obligatorio<br>'; pintar('cajanombrecarrera');}
+		    	if(!valVacio($('#centroestudios').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo centro de estudios es obligatorio<br>'; pintar('cajacentroestudio');}
+
+		    	if(!valSelect($('#gradoestudio').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo grado de estudio seleccionado es invalido<br>'; pintar('cajagradoestudio');}
+
+			    }
+		    }
+
+
+
+
+
+
+
 
 	    $("#listaprograna tbody tr").each(function(){
 
@@ -1827,7 +1942,7 @@
 	    	carritoprograma = 1;
 
     	});
-		if(!valSelect(carritoprograma,0)){ alertaMensajeGlobal+='<strong>Error!</strong> Debe haber por lo menos un programa de computacion agregado<br>';}
+		if(!valSelect(carritoprograma,0)){ alertaMensajeGlobal+='<strong>Error!</strong> Debe haber por lo menos un programa de computacion agregado<br>'; pintar('cajaprograma');}
 
 
 	    $("#listaidioma tbody tr").each(function(){
@@ -1838,7 +1953,7 @@
 	    	carritoidioma 	= 1;
 
     	});
-		if(!valSelect(carritoidioma,0)){ alertaMensajeGlobal+='<strong>Error!</strong> Debe haber por lo menos un idioma agregado<br>';}
+		if(!valSelect(carritoidioma,0)){ alertaMensajeGlobal+='<strong>Error!</strong> Debe haber por lo menos un idioma agregado<br>';pintar('cajaidioma');}
 
 
 	    $("#listacursoadicionales tbody tr").each(function(){
@@ -1848,17 +1963,18 @@
 	    	carritocursoadicional 	= 1;
 
     	});
-		if(!valSelect(carritocursoadicional,0)){ alertaMensajeGlobal+='<strong>Error!</strong> Debe haber por lo menos un curso adicional agregado<br>';}
+		if(!valSelect(carritocursoadicional,0)){ alertaMensajeGlobal+='<strong>Error!</strong> Debe haber por lo menos un curso adicional agregado<br>';pintar('cajacusrsoadi');}
 
 
 
 
-		/*******************************************************************/
+		/*******************************************************************/ 
+
 
 		/************************ referecnia personales **********************/
 
-		if(!valSelect($('#medio').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo medio seleccionado es invalido<br>';}
-		if(!valVacio($('#especificarmedio').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo especificar medio es obligatorio<br>';}
+		if(!valSelect($('#medio').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo medio seleccionado es invalido<br>'; pintar('cajamedio');}
+		//if(!valVacio($('#especificarmedio').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo especificar medio es obligatorio<br>'; pintar('cajaespecificar');}
 
 	    $("#listareferenciatrabajo tbody tr").each(function(){
 
@@ -1869,11 +1985,11 @@
 	    	xmltrabajo 			= xmltrabajo + empresa +'***'+ iddepartamento +'***'+ cargo +'***'+ funcion +'&&&';
 	    	carritotrabajo 		= 1;
     	});
-		if(!valSelect(carritotrabajo,0)){ alertaMensajeGlobal+='<strong>Error!</strong> Debe haber por lo menos una referencia de trabajo agregado<br>';}
+		if(!valSelect(carritotrabajo,0)){ alertaMensajeGlobal+='<strong>Error!</strong> Debe haber por lo menos una referencia de trabajo agregado<br>'; pintar('cajareftra');}
 
 
-	 	if(!valVacio($('#nombreultimo').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo nombre contacto es obligatorio<br>';}
-	 	if(!valVacio($('#celularultimmo').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo celular contacto es obligatorio<br>';}
+	 	if(!valVacio($('#nombreultimo').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo nombre contacto es obligatorio<br>'; pintar('cajanultimo');}
+	 	if(!valVacio($('#celularultimmo').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo celular contacto es obligatorio<br>'; pintar('cajacelultimo');}
 
 
 
@@ -1892,9 +2008,13 @@
             {
                 url: "/APPCOFFEE/insertar-datos-personales-postulante-ajax",
                 type: "POST",
-                data: { nombretermino : nombretermino , dnitermino : dnitermino, fechanacimiento : fechanacimiento, direccion : direccion, provincia : provincia, distrito : distrito, celular : celular, telefono : telefono, correoelectronico : correoelectronico, gradoinstruccion : gradoinstruccion , medio : medio,idpostulante : idpostulante , xmlreferencia : xmlreferencia, xmlprograma : xmlprograma, xmlidioma : xmlidioma, xmltrabajo : xmltrabajo, especificarmedio : especificarmedio , talento : talento , xmlhijosesposa : xmlhijosesposa , xmlcursoadicional : xmlcursoadicional , nombreultimo : nombreultimo , celularultimmo : celularultimmo },
+                data: { nombretermino : nombretermino , dnitermino : dnitermino, fechanacimiento : fechanacimiento, direccion : direccion, provincia : provincia, distrito : distrito, celular : celular, telefono : telefono, correoelectronico : correoelectronico, gradoinstruccion : gradoinstruccion , medio : medio,idpostulante : idpostulante , xmlreferencia : xmlreferencia, xmlprograma : xmlprograma, xmlidioma : xmlidioma, xmltrabajo : xmltrabajo, especificarmedio : especificarmedio , talento : talento , xmlhijosesposa : xmlhijosesposa , xmlcursoadicional : xmlcursoadicional , nombreultimo : nombreultimo , celularultimmo : celularultimmo , nombrecarrera : nombrecarrera , centroestudios : centroestudios , cicloacademico : cicloacademico ,gradoestudio : gradoestudio },
             }).done(function(pagina) 
             {
+            	
+
+
+
 
             	$(".topdatospersonales").css("display", "none");
 				$(".topempezarexamen1").css("display", "inline-block");
@@ -1909,8 +2029,36 @@
 	});
 
 
+	function pintar(caja){
+		$("."+caja).addClass("errorcaja");
+	}
 
+	function limpiarerrores(){
+		$(".cajafn").removeClass("errorcaja");
+		$(".cajadi").removeClass("errorcaja");
+		$(".cajapro").removeClass("errorcaja");
+		$(".cajadis").removeClass("errorcaja");
+		$(".cajacel").removeClass("errorcaja");
+		$(".cajacorreo").removeClass("errorcaja");
+		$(".cajacorreo").removeClass("errorcaja");
+		$(".cajareferencia").removeClass("errorcaja");
+		$(".cajatalento").removeClass("errorcaja");
+		$(".cajagradoinst").removeClass("errorcaja");
+		$(".cajaprograma").removeClass("errorcaja");
+		$(".cajaidioma").removeClass("errorcaja");
+		$(".cajacusrsoadi").removeClass("errorcaja");
+		$(".cajamedio").removeClass("errorcaja");
+		$(".cajaespecificar").removeClass("errorcaja");
+		$(".cajareftra").removeClass("errorcaja");
+		$(".cajanultimo").removeClass("errorcaja");
+		$(".cajacelultimo").removeClass("errorcaja");
 
+		$(".cajanombrecarrera").removeClass("errorcaja");
+		$(".cajacentroestudio").removeClass("errorcaja");
+		$(".cajacicloacademico").removeClass("errorcaja");
+		$(".cajagradoestudio").removeClass("errorcaja");
+
+	}
 
     /*************************************  DATOS PERSONALES ***************************************/
 
@@ -2126,26 +2274,40 @@
 
 		var countcarrito = 0;
 		var alertaMensajeGlobal='';
-		var nombreesposa = $('#nombreesposa').val();
+		var nombreesposa =  $('#nombreesposa').val();
+		var dniesposa 	 =  $('#dniesposa').val();
 		var edadesposa 	 =  $('#edadesposa').val();
-		var nombrehija 	 = $('#nombrehija').val();
+
+		var nombrehija 	 =  $('#nombrehija').val();
+		var dnihija 	 =  $('#dnihija').val();
 		var edadhija 	 =  $('#edadhija').val();
 		var aleatorio = Math.floor((Math.random() * 500) + 1);		
 
-		if(!valVacio(nombreesposa)){ errorflotante(aleatorio,"El campo Esposa(o) es obligarotio"); return false;}
-		if(!valVacio(edadesposa)){ errorflotante(aleatorio,"El campo Edad de la Esposa(o) es obligarotio"); return false;}
 
-		if(nombrehija != '' && edadhija == '' ){
-			if(!valVacio(edadesposa)){ errorflotante(aleatorio,"El campo Edad de la Hija(o) es obligarotio"); return false;}
+		if(!valVacio(nombreesposa)){ errorflotante(aleatorio,"El campo nombre del esposo es obligarotio"); return false;}
+		if(!valVacio(dniesposa)){ errorflotante(aleatorio,"El campo dni del esposo es obligarotio"); return false;}
+		if(!valVacio(edadesposa)){ errorflotante(aleatorio,"El campo edad de la esposo es obligarotio"); return false;}
+
+		if(nombrehija != ''  && edadhija == '' && dnihija ==''){
+			if(!valVacio(edadesposa)){ errorflotante(aleatorio,"Complete los campos (DNI , Edad) del hijo son obligatorios"); return false;}
 		}
-		if(nombrehija == '' && edadhija != '' ){
-			if(!valVacio(edadesposa)){ errorflotante(aleatorio,"El campo Hija(o) es obligarotio"); return false;}
-		}		
+	
+		if(nombrehija == ''  && edadhija != '' && dnihija ==''){
+			if(!valVacio(edadesposa)){ errorflotante(aleatorio,"Complete los campos (Nombre , DNI ) del hijo son obligatorios"); return false;}
+		}
+
+		if(nombrehija == ''  && edadhija == '' && dnihija !=''){
+			if(!valVacio(edadesposa)){ errorflotante(aleatorio,"Complete los campos (Nombre , Edad) del hijo son obligatorios"); return false;}
+		}
+
+
+
 
 		var eliminar = '<button type=button class="eliminar btn btn-default"><i class="fa fa-times" aria-hidden="true"></i></button>'					
-		fila =  '<tr><td class="nombreesposa">'+nombreesposa+'</td><td class="edadesposa">'+edadesposa+'</td><td class="nombrehija">'+nombrehija+'</td><td class="edadhija">'+edadhija+'</td><td>'+eliminar+'</td></tr>'
+		fila =  '<tr><td class="nombreesposa">'+nombreesposa+'</td><td class="dniesposa">'+dniesposa+'</td><td class="edadesposa">'+edadesposa+'</td><td class="nombrehija">'+nombrehija+'</td><td class="dnihija">'+dnihija+'</td><td class="edadhija">'+edadhija+'</td><td>'+eliminar+'</td></tr>'
 		$('#listarhijosesposa tbody').append(fila);
 		$('#nombrehija').val('');
+		$('#dnihija').val('');
 		$('#edadhija').val('');	
 
 
@@ -2273,10 +2435,33 @@
 	});
 
 
-	/*document.onkeydown = function(e){
-		tecla = (document.all) ? e.keyCode : e.which;
-		if (tecla = 116) {return false;}
-	}*/
+
+    $("#gradoinstruccion").change(function(e) {
+    		var idgrado = $(this).val();
+    		$("#gradoestudio option[value='0']").prop("selected", true);
+		    $("#nombrecarrera").val("");
+		    $("#centroestudios").val("");
+		    $("#cicloacademico").val("");
+
+		    if(idgrado == '0' || idgrado == 'LIM01CEN000000000001' || idgrado == 'LIM01CEN000000000002'){
+		    	$('.rowgradointruccion').css("display", "none");
+		    }else{
+
+			    if(idgrado == 'LIM01CEN000000000003' || idgrado == 'LIM01CEN000000000005'){
+			    	$('.rowgradointruccion').css("display", "block");
+			    	$('.rowcicloacademico').css("display", "block");
+			    	$('.rowgradoestudio').css("display", "none");
+			    }else{
+			    	$('.rowgradointruccion').css("display", "block");
+			    	$('.rowcicloacademico').css("display", "none");
+			    	$('.rowgradoestudio').css("display", "block");			    	
+			    }
+		    }
+    });
+
+
+
+
 
 	$('.selectpicker').selectpicker();
     $("#provincia").change(function(e) {

@@ -1,18 +1,49 @@
-/******** VENTA *************/
+
+/******** Personal *************/
+
+.funkyradio input[type="radio"]:empty ~ label:before, .funkyradio input[type="checkbox"]:empty ~ label:before{
+	height: 2.5em;
+}
+.etapasnumero{
+	position: absolute;
+    top: -98px;
+    right: 0px;
+}
+
+.filaespera{
+	background: #fee;
+    font-style: italic;
+}
+.filaactivo{
+	background: #dff0d8;
+    font-style: italic;
+}
+
+.errorcaja{
+	border: 3px solid #d43f3a;
+    border-radius: 7px;
+}
+
+.relojcontainer{
+	width: 80px !important;
+    text-align: center !important;
+    height: 80px;
+    border-radius: 48px;
+    border: 2px solid #000;
+    padding-top: 21px;
+    padding-left: 3px;
+    margin: 0 auto;
+}
 
 
 
-
-
-
-#timer{margin:30px auto 0;width:140px;position: fixed;bottom: 0px;}
+#timer{margin:30px auto 0;width:140px;position: fixed;bottom: 0px; z-index: 1}
 #timer .containert{display:table;background:#c9302c;color:#fff;font-weight:bold;width:100%;text-align:center;text-shadow:1px 1px 4px #999;}
 #timer .containert div{display:table-cell;font-size:1em;padding:2px 2px 2px 2px;width:20px;}
 #timer .containert p{display:table-cell;font-size:1em;padding:2px;width:20px;}
 #timer .containert .divider{width:10px;color:#ddd;}
 #timer article{
-	width: 41% !important;
-    margin-left: 32px;
+	text-align:center;
     font-size: 22px;
 }
 
@@ -141,10 +172,10 @@
 .box .space { height: 2px; background-color: #6CB4C4;}
 
 
-.table thead{
+/*.table thead{
 	background: #adadad !important;
 	color: #000 !important;
-}
+}*/
 
 .ocultar{
 	display: none;

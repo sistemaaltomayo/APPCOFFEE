@@ -49,8 +49,14 @@ class PersonalController extends BaseController
 
 		}
 
+		$solicitudpersonal 	  			= PERSolicitudPersonal::whereId($id)->first();
+		$solicitud 	  					= PERSolicitud::whereId($solicitudpersonal->IdSolicitud)->first();
 
-		if($puntaje <= 10){ $calificacion = 'MUY MALO'; }else{ if($puntaje <= 20){	$calificacion = 'MALO'; }else{ if($puntaje <= 30){ $calificacion = 'REGULAR'; }else{ $calificacion = 'BUENO'; }	} }
+		if($solicitud->IdTipoUsuario == 'LIM01CEN000000000003'){
+			if($puntaje <= 14){ $calificacion = 'DESAPROBADO'; }else{ $calificacion = 'APROBADO'; }
+		}else{
+			if($puntaje <= 18){ $calificacion = 'DESAPROBADO'; }else{ $calificacion = 'APROBADO'; }
+		}
 
 
 		$tCabecera 							= PERSegundoExamenVenta::find($idcabe); 
@@ -121,7 +127,7 @@ class PersonalController extends BaseController
 		}
 
 
-		if($si <= 9){ $calificacion = 'MUY MALO'; }else{ if($si <= 14){	$calificacion = 'MALO'; }else{ if($si <= 19){ $calificacion = 'REGULAR'; }else{ $calificacion = 'BUENO'; }	} }
+		if($si <= 16){ $calificacion = 'MALO'; }else{ if($si <= 19){ $calificacion = 'REGULAR'; }else{  $calificacion = 'BUENO'; } }
 
 
 
@@ -133,7 +139,7 @@ class PersonalController extends BaseController
 
 		$tPERSolicitudPersonal = PERSolicitudPersonal::find($id); 
 		$tPERSolicitudPersonal->Estado 				= 2;
-		if($si <= 14){
+		if($si <= 16){
 			$tPERSolicitudPersonal->EstadoCulmino 	= 2;
 		}
 		$tPERSolicitudPersonal->save();	
@@ -152,12 +158,13 @@ class PersonalController extends BaseController
 	public function actionPrimerExamenATC()
 	{
 
+
 		$generalclass        		 	= new GeneralClass();
 		$idpostulante  	 	 	     	= Input::get('idpostulante');
 		$xml  	 	 	     		 	= Input::get('xml');
+		$fecha 				 			= date("Ymd H:i:s");
 
 		$id 						 	= $generalclass->getDecodificarId($idpostulante);
-
 		$idcabe 					  	= $generalclass->getCreateIdInvictus('PER.PrimerExamenAtcPostulante');
 
 		$tCabecera            	 		=  new PERPrimerExamenAtcPostulante;
@@ -166,45 +173,35 @@ class PersonalController extends BaseController
 		$tCabecera->save();
 
 
-		$listarexamen 	= explode('&&&', $xml);
+		$listarexamen 					= explode('&&&', $xml);
 		$calificacion  	 	 	     	= '';
+		$puntaje  	 	 	     		= 0;
 		$buenas  	 	 	     		= 0;
-		$malas  	 	 	     		= 0;
-
-	    $listaprimerexamenatc     = DB::table('PER.PrimerExamenAtc')
-				            	    ->get();
+		$malas  	 	 	     		= 0;		
 
 		for ($i = 0; $i < count($listarexamen)-1; $i++) {
 
-			$listadetalleexamen 	= explode('***', $listarexamen[$i]);
-			$idexa 			 		= $listadetalleexamen[0];
-			$rpt1 			 		= (float)$listadetalleexamen[1];
-			$rpt2 			 		= (float)$listadetalleexamen[2];
+			$idexa 			 					= $listarexamen[$i];
+			$respuesta 	  						= PERRespuestaPrimerExamenAtc::whereId($idexa)->first();
 
-			$iddet 					= $generalclass->getCreateIdInvictus('PER.DetallePrimerExamenAtcPostulante');
+			$iddet = $generalclass->getCreateIdInvictus('PER.DetallePrimerExamenAtcPostulante');
 
-			$tDetalle            	 							=  new PERDetallePrimerExamenAtcPostulante;
-			$tDetalle->Id 	     	 							=  $iddet;
-			$tDetalle->IdPrimerExamenAtc  						=  $idexa;
-			$tDetalle->IdPrimerExamenAtcPostulante 				=  $idcabe;
-			$tDetalle->IdSolicitudPersonal 						=  $id;
-			$tDetalle->X 										=  $rpt1;
-			$tDetalle->Y 										=  $rpt2;										
+			$tDetalle									= new PERDetallePrimerExamenAtcPostulante;
+			$tDetalle->Id 								= $iddet;
+			$tDetalle->IdRespuestaPrimerExamenAtc 		= $respuesta->Id;
+			$tDetalle->IdPreguntaPrimerExamenAtc 		= $respuesta->IdPreguntaPrimerExamenAtc;
+			$tDetalle->IdPrimerExamenAtcPostulante		= $idcabe;
+			$tDetalle->IdSolicitudPersonal 				= $id;
+			$tDetalle->Descripcion						= $respuesta->Descripcion;
+			$tDetalle->Valoracion						= $respuesta->Valoracion;
 			$tDetalle->save();
 
-			foreach($listaprimerexamenatc as $item){
-
-				if($item->Id ==  $idexa){
-
-					if($rpt1 != 0){ if($item->X == $rpt1){ $buenas = $buenas +1; }else{ $malas = $malas +1; } }
-					if($rpt2 != 0){ if($item->Y == $rpt2){ $buenas = $buenas +1; }else{ $malas = $malas +1; } }
-				}
-			}
+			if($respuesta->Valoracion == 1){ $buenas = $buenas +1; }else{ $malas = $malas +1; }
 
 		}
 
-		if($buenas <= 11){ $calificacion = 'MALO'; }else{ if($buenas <= 23){ $calificacion = 'REGULAR'; }else{ $calificacion = 'BUENO'; } }
 
+		if($buenas <= 0){ $calificacion = 'MUY MALO'; }else{ if($buenas <= 5){	$calificacion = 'MALO'; }else{ if($buenas <= 9){ $calificacion = 'REGULAR'; }else{ $calificacion = 'BUENO'; }	} }
 
 		$tCabecera = PERPrimerExamenAtcPostulante::find($idcabe); 
 		$tCabecera->Buenas 				= $buenas;	
@@ -411,7 +408,14 @@ class PersonalController extends BaseController
 		$celular  	 	 	         = Input::get('celular');
 		$telefono  	 	 	         = Input::get('telefono');
 		$correoelectronico  	 	 = Input::get('correoelectronico');
+
 		$gradoinstruccion  	 	 	 = Input::get('gradoinstruccion');
+		$nombrecarrera  	 	 	 = Input::get('nombrecarrera');
+		$centroestudios  	 	 	 = Input::get('centroestudios');		
+		$cicloacademico  	 	 	 = Input::get('cicloacademico');
+		$gradoestudio  	 	 	 	 = Input::get('gradoestudio');	
+
+
 		$medio  	 	 	         = Input::get('medio');
 		$idpostulante  	 	 	     = Input::get('idpostulante');
 		$xmlreferencia  	 	 	 = Input::get('xmlreferencia');
@@ -437,11 +441,17 @@ class PersonalController extends BaseController
 		$tPERSolicitudPersonal->Celular 	 		= $celular;
 		$tPERSolicitudPersonal->CorreoElectronico 	= $correoelectronico;
 		$tPERSolicitudPersonal->IdGradoInstruccion 	= $gradoinstruccion;
+
+		$tPERSolicitudPersonal->NombreCarrera 		= $nombrecarrera;
+		$tPERSolicitudPersonal->CentroEstudios 	 	= $centroestudios;
+		$tPERSolicitudPersonal->CicloAcademico 		= $cicloacademico;
+		$tPERSolicitudPersonal->IdGradoEstudio 		= $gradoestudio;
+
 		$tPERSolicitudPersonal->IdMedio 	 		= $medio;
 		$tPERSolicitudPersonal->EspecificarMedio 	= $especificarmedio;
 		$tPERSolicitudPersonal->CelularUltimoTrabajo = $celularultimmo;
 		$tPERSolicitudPersonal->NombreUltimoTrabajo = $nombreultimo;
-		$tPERSolicitudPersonal->Talento 			= $talento;
+		$tPERSolicitudPersonal->IdHabilidadTalento 	= $talento;
 		$tPERSolicitudPersonal->Estado 				= 4;		
 		$tPERSolicitudPersonal->save();
 
@@ -473,9 +483,11 @@ class PersonalController extends BaseController
 
 			$listahijosesposanumero 	= explode('***', $listahijosesposa[$i]);
 			$ne 			 	= $listahijosesposanumero[0];
-			$ee 			 	= (int)$listahijosesposanumero[1];
-			$nh 			 	= $listahijosesposanumero[2];
-			$eh 			 	= $listahijosesposanumero[3];
+			$dnie 			 	= $listahijosesposanumero[1];
+			$ee 			 	= (int)$listahijosesposanumero[2];
+			$nh 			 	= $listahijosesposanumero[3];
+			$dnih 			 	= $listahijosesposanumero[4];
+			$eh 			 	= $listahijosesposanumero[5];
 
 			$iddet = $generalclass->getCreateIdInvictus('PER.EsposaHijoPostulante');
 
@@ -483,10 +495,12 @@ class PersonalController extends BaseController
 			$tDetalle->Id 	     	 		=  $iddet;
 			$tDetalle->IdSolicitudPersonal  =  $id;
 			$tDetalle->NombreEsposo 		=  $ne;
+			$tDetalle->DNIEsposo 			=  $dnie;
 			$tDetalle->EdadEsposo 			=  $ee;
 			if($nh != ''){
-				$tDetalle->NombreHijo 			=  $nh;
-				$tDetalle->EdadHijo 			=  (int)$eh;	
+				$tDetalle->NombreHijo 		=  $nh;
+				$tDetalle->DNIHijo 			=  $dnih;
+				$tDetalle->EdadHijo 		=  (int)$eh;	
 
 			}
 			$tDetalle->save();
@@ -600,7 +614,7 @@ class PersonalController extends BaseController
 		$departamento  				= GENDepartamento::where('Activo','=',1)->orderBy('Descripcion', 'asc')->lists('Descripcion', 'Id');
 		$combodepartamento 			= array(0 => "Seleccione Departamento") + $departamento;
 
-		$gradoinstruccion  			= PERGradoInstruccion::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
+		$gradoinstruccion  			= PERGradoInstruccion::where('Activo','=',1)->orderBy('Id', 'asc')->lists('Nombre', 'Id');
 		$combogradoinstruccion  	= array(0 => "Seleccione Grado Instrucción") + $gradoinstruccion;
 
 		$nivel  					= PERNivel::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
@@ -618,6 +632,11 @@ class PersonalController extends BaseController
 		$estadocivil  				= PEREstadoCivil::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
 		$comboestadocivil  			= array(0 => "Seleccione Estado Civil") + $estadocivil;
 
+		$habilidadtalento  			= PERHabilidadTalento::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
+		$combohabilidadtalento  	= array(0 => "Seleccione Talento") + $habilidadtalento;
+
+		$gradoestudio  				= PERGradoEstudios::where('Activo','=',1)->orderBy('Nombre', 'asc')->lists('Nombre', 'Id');
+		$combogradoestudio 			= array(0 => "Seleccione Grado Estudio") + $gradoestudio;
 
 		/************************   Examen del Administrador al Postulante *********************/
 
@@ -645,6 +664,20 @@ class PersonalController extends BaseController
 				            	    ->get();				            	    
 
 
+		/************************   Primer Examen atc *********************/
+
+		$listaprimerexamenatcpostulante  = PERPreguntaPrimerExamenAtc::join('PER.RespuestaPrimerExamenAtc', 'PER.PreguntaPrimerExamenAtc.Id', '=', 'PER.RespuestaPrimerExamenAtc.IdPreguntaPrimerExamenAtc')
+										 ->select('PER.PreguntaPrimerExamenAtc.Descripcion as NombrePregunta','PER.RespuestaPrimerExamenAtc.IdPreguntaPrimerExamenAtc','PER.RespuestaPrimerExamenAtc.Id',
+										 		  'PER.RespuestaPrimerExamenAtc.Descripcion','PER.RespuestaPrimerExamenAtc.Valoracion','PER.PreguntaPrimerExamenAtc.Categoria')
+										 ->where('PER.PreguntaPrimerExamenAtc.Activo','=','1')
+										 ->where('PER.RespuestaPrimerExamenAtc.Activo','=','1')
+										 ->orderBy('PER.RespuestaPrimerExamenAtc.IdPreguntaPrimerExamenAtc', 'asc')
+										 ->get();
+
+		/****************************************************************************************/
+
+
+
 
 		/************************   Segundo Examen seleccion *********************/
 
@@ -657,10 +690,6 @@ class PersonalController extends BaseController
 									 ->get();
 
 		/****************************************************************************************/
-
-
-		/*print_r($listasegundoexamen);
-		exit();*/
 
 
 		return View::make('personal/procesoseleccion',
@@ -679,13 +708,16 @@ class PersonalController extends BaseController
 		 'comboidioma' 				=> $comboidioma,
 		 'combomedio' 				=> $combomedio,
 		 'combodepartamento' 		=> $combodepartamento,
+		 'combohabilidadtalento' 	=> $combohabilidadtalento,
+		 'combogradoestudio' 		=> $combogradoestudio,
 		 'listaLugarInspeccion'     => $listaLugarInspeccion,
 		 'listaTituloInspeccion'    => $listaTituloInspeccion,
 		 'listaPreguntaDetalleBPM'  => $listaPreguntaDetalleBPM,
 		 'respuestaexamenadmin'  	=> $respuestaexamenadmin,
 		 'listaprimerexamenadmin' 	=> $listaprimerexamenadmin,
 		 'listaprimerexamenatc' 	=> $listaprimerexamenatc,
-		 'listasegundoexamen' 		=> $listasegundoexamen,		 
+		 'listasegundoexamen' 		=> $listasegundoexamen,	
+		 'listaprimerexamenatcpostulante' 		=> $listaprimerexamenatcpostulante,		 
 		]);
 
 
@@ -817,7 +849,11 @@ class PersonalController extends BaseController
 		->join('PER.MotivoSolicitud', 'PER.MotivoSolicitud.Id', '=', 'PER.Solicitud.IdMotivoSolicitud')
 		->join('PER.PuestoTrabajo', 'PER.PuestoTrabajo.Id', '=', 'PER.Solicitud.IdTipoUsuario')
 		->join('tbUsuarioLocal', 'tbUsuarioLocal.Id', '=', 'PER.Solicitud.IdUsuarioCrea')
-		->select('PER.Solicitud.Id','PER.Solicitud.Correlativo','GEN.Local.Nombre','PER.Solicitud.FechaCrea','PER.MotivoSolicitud.Nombre as MotivoSolicitud','PER.PuestoTrabajo.Nombre as Cargo','tbUsuarioLocal.Nombre as Nombreusuario','tbUsuarioLocal.Apellido as Apellidousuario')
+		->select('PER.Solicitud.Id','PER.Solicitud.Correlativo','GEN.Local.Nombre','PER.Solicitud.FechaCrea',
+				 'PER.MotivoSolicitud.Nombre as MotivoSolicitud','PER.PuestoTrabajo.Nombre as Cargo',
+				 'tbUsuarioLocal.Nombre as Nombreusuario','tbUsuarioLocal.Apellido as Apellidousuario','PER.Solicitud.Estado')
+		->where('PER.Solicitud.Estado','<>','RE')
+		->where('PER.Solicitud.Estado','<>','CE')
    		->orderBy('PER.Solicitud.FechaCrea', 'desc')
    		->take(30)
 	    ->get();
@@ -851,8 +887,11 @@ class PersonalController extends BaseController
 				$IdTipoUsuario 		= Input::get('tipousuario');
 				$NumeroVacantes 	= Input::get('numerovacantes');
 				$Observacion 		= Input::get('observacion');
+
+
 				$IdUsuarioCrea 		= Session::get('Usuario')[0]->Id;
 				$fecha 				= date("Ymd H:i:s");
+				$hoy 				= date("Ymd");
 
 				$clases 			= new GeneralClass();
 		    	$id 				= $clases->getCreateIdInvictus('PER.Solicitud');
@@ -873,6 +912,8 @@ class PersonalController extends BaseController
 				$tPERSolicitud->Activo 				= 1;
 				$tPERSolicitud->Email 				= 0;
 				$tPERSolicitud->EmailMod 			= 0;
+				$tPERSolicitud->Estado				= 'ES';	
+				$tPERSolicitud->Fecha				= $hoy;				
 				$tPERSolicitud->FechaCrea			= $fecha;
 				$tPERSolicitud->save();
 

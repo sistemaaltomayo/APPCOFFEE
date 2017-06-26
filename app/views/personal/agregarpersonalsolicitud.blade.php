@@ -19,6 +19,7 @@
 <div class="titulo col-xs-12 col-md-12 col-sm-12 col-lg-12">
 	<div class="msj"></div>
 	<h4 style="text-align:center;">Agregar Postulante Solicitud</h4>
+
 </div>
 
 
@@ -31,10 +32,14 @@
   </div>
 @endif
 
+
+
+
 <div class="container">
 	<div class="row">
 
 	  	<div class="terminopersonal paneltop formulario col-xs-12 col-sm-12 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+	  		<h4 class='etapasnumero'><strong style='color:#08257C;font-size:1.2em;'>(1/8)</strong></h4>
 	  		<!-- , 'target' => '_blank' -->
 	  		{{Form::open(array('method' => 'POST', 'url' => '/insertar-termino-condicion/'.$idOpcionRolPlus , 'target' => '_blank' ))}}
 
@@ -42,7 +47,8 @@
 
 				<div class="panel panel-info">
 					<div class="panel-heading" style="text-align:center;">
-						<h3 class="panel-title">Terminos y Condiciones del Puesto a Postular</h3>
+						<h3 class="panel-title">Terminos y Condiciones del Puesto a Postular
+						</h3>
 					</div>
 
 					<div class="panel-body">
