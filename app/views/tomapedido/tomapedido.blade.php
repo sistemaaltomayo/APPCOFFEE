@@ -239,6 +239,30 @@
   </div>
 </div>
 
+<div class="modal fade" id="modalcargando" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content" style="width:320px;height:310px;margin:0 auto">
+
+        <div class="modal-body">
+          	<div class="cargandoreportefail">
+				{{ HTML::image('img/cargando1.gif', 'cargando') }}
+			</div>
+			<p class="msjcargando">Espere por favor</p>
+			<p class="msjcargando">Esto puede tardar varios minutos ...</p>
+
+		    <div class="alertajax alert alert-danger ">
+		        <a href="javascript:location.reload()" class="btnfail btn btn-xs btn-danger pull-right">Intentar Nuevamente</a>
+		        <strong>Error: </strong> <span class='msjfailajax'></span>
+		    </div>
+
+
+        </div>
+
+      </div>
+    </div>
+</div>
+
+
 <div id="mensajellama">
 </div>
 <audio class="player" id="audio" style="display:none;">
@@ -519,8 +543,14 @@
 						$(".avisoruc").html("<strong>Error!</strong> Ingrese 8(DNI) ó 11(RUC) Digitos")
 						$("#txtnd"+mtotal).focus();
 					}else{
+
+						
+						$('#myModal').modal('hide');
+						$('#modalcargando').modal();
+
+
 						$(".tooltip").css("opacity", "0");
-						$(".cargando").css("display", "block");
+						//$(".cargando").css("display", "block");
 						$.ajax({
 						type: "POST",
 						url: "/APPCOFFEE/insertarconajax",

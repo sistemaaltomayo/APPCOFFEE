@@ -77,6 +77,11 @@
 								  	{{Form::text('nombretermino','', array('class' => 'form-control control', 'placeholder' => 'Nombre', 'id' => 'nombretermino', 'maxlength' => '200'))}}
 							</div>
 
+							<div class="input-group grupo-imput" >
+							    <span class="input-group-addon" id="basic-addon1">Apellido Completo: </span>
+								  	{{Form::text('apellidotermino','', array('class' => 'form-control control', 'placeholder' => 'Apellido', 'id' => 'apellidotermino', 'maxlength' => '200'))}}
+							</div>
+
 							<div class="input-group grupo-imput">
 							    <span class="input-group-addon" id="basic-addon1">DNI: </span>
 								  	{{Form::text('dnitermino','', array('class' => 'solonumero form-control control', 'placeholder' => 'DNI', 'id' => 'dnitermino', 'maxlength' => '8'))}}
@@ -213,6 +218,7 @@
 	 	dni      	= $('#dnitermino').val()
 		
 		if(!valVacio($('#nombretermino').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Nombre es obligatorio<br>';}
+		if(!valVacio($('#apellidotermino').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo Apellido es obligatorio<br>';}
 		if(!valVacio($('#dnitermino').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo DNI  es obligatorio<br>';}
         if(!CantidadNumeros($('#dnitermino').val(),8)){ alertaMensajeGlobal+='<strong>Error!</strong>El campo DNI debe tener 8 digitos<br>';}
 		$("#termino").val($(this).attr("name"));

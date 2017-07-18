@@ -66,6 +66,7 @@ class PersonalController extends BaseController
 
 		$tPERSolicitudPersonal 				= PERSolicitudPersonal::find($id); 
 		$tPERSolicitudPersonal->Estado 		= 8;
+		$tPERSolicitudPersonal->Ubicacion	= 'C';	
 		$tPERSolicitudPersonal->save();	
 
 
@@ -86,6 +87,7 @@ class PersonalController extends BaseController
 		$fecha 				 			= date("Ymd H:i:s");
 		$id 						 	= $generalclass->getDecodificarId($idpostulante);
 		$idcabe 					  	= $generalclass->getCreateIdInvictus('PER.RespuestaZonaADM');
+		$idusuario 			 			= Session::get('Usuario')[0]->Id;
 
 		$tCabecera            	 		=  new PERRespuestaZonaADM;
 		$tCabecera->Id 	     	 		=  $idcabe;
@@ -139,9 +141,19 @@ class PersonalController extends BaseController
 
 		$tPERSolicitudPersonal = PERSolicitudPersonal::find($id); 
 		$tPERSolicitudPersonal->Estado 				= 2;
+
+
 		if($si <= 16){
-			$tPERSolicitudPersonal->EstadoCulmino 	= 2;
+
+			$tPERSolicitudPersonal->EstadoCulmino 			= 2;
+			$tPERSolicitudPersonal->Proceso					= 'T';
+			$tPERSolicitudPersonal->Ubicacion				= 'C';
+			$tPERSolicitudPersonal->IdUsuarioAT				= $idusuario;
+			$tPERSolicitudPersonal->FechaAT					= $fecha;	
+
 		}
+
+
 		$tPERSolicitudPersonal->save();	
 
 
@@ -403,6 +415,7 @@ class PersonalController extends BaseController
 		$dnitermino  	 	 	 	 = Input::get('dnitermino');
 		$fechanacimiento  	 	 	 = Input::get('fechanacimiento');
 		$direccion  	 	 	     = Input::get('direccion');
+		$sexo  	 	 	         	 = Input::get('sexo');		
 		$provincia  	 	 	     = Input::get('provincia');
 		$distrito  	 	 	         = Input::get('distrito');
 		$celular  	 	 	         = Input::get('celular');
@@ -436,6 +449,8 @@ class PersonalController extends BaseController
 		$tPERSolicitudPersonal = PERSolicitudPersonal::find($id); 
 		$tPERSolicitudPersonal->FechaNac 	 		= $fechanacimiento;
 		$tPERSolicitudPersonal->Direccion 	 		= $direccion;
+		$tPERSolicitudPersonal->Sexo 	 			= $sexo;
+
 		$tPERSolicitudPersonal->IdDistrito 	 		= $distrito;
 		$tPERSolicitudPersonal->TelefonoFijo 		= $telefono;
 		$tPERSolicitudPersonal->Celular 	 		= $celular;
@@ -691,6 +706,8 @@ class PersonalController extends BaseController
 
 		/****************************************************************************************/
 
+		$combosexo 					= array(0 => "Seleccione Sexo",'H' => "Hombre",'M' => "Mujer");
+
 
 		return View::make('personal/procesoseleccion',
 		[
@@ -710,6 +727,7 @@ class PersonalController extends BaseController
 		 'combodepartamento' 		=> $combodepartamento,
 		 'combohabilidadtalento' 	=> $combohabilidadtalento,
 		 'combogradoestudio' 		=> $combogradoestudio,
+		 'combosexo' 				=> $combosexo,
 		 'listaLugarInspeccion'     => $listaLugarInspeccion,
 		 'listaTituloInspeccion'    => $listaTituloInspeccion,
 		 'listaPreguntaDetalleBPM'  => $listaPreguntaDetalleBPM,
@@ -731,6 +749,7 @@ class PersonalController extends BaseController
 		$generalclass        = new GeneralClass();
 		$idsolicitud  	 	 = Input::get('idSolicitud');
 		$nombre  	 	 	 = Input::get('nombretermino');
+		$apellido  	 	 	 = Input::get('apellidotermino');
 		$termino  	 	 	 = Input::get('termino');
 		$dni  	 	 	 	 = Input::get('dnitermino');
 		$cantidadplay  	 	 = Input::get('cantidadplay');
@@ -751,6 +770,8 @@ class PersonalController extends BaseController
 		$tPERSolicitudPersonal->Id 							= $id;
 		$tPERSolicitudPersonal->IdSolicitud 				= $generalclass->getDecodificarId($idsolicitud);
 		$tPERSolicitudPersonal->Nombre						= $nombre;
+		$tPERSolicitudPersonal->Apellido					= $apellido;
+
 		$tPERSolicitudPersonal->Dni 			    		= $dni;
 		$tPERSolicitudPersonal->CantidadPlay 			    = $cantidadplay;
 		$tPERSolicitudPersonal->Termino						= $termino;
@@ -768,9 +789,19 @@ class PersonalController extends BaseController
 		$tPERSolicitudPersonal->FechaCrea					= $fecha;
 		$tPERSolicitudPersonal->Activo						= 1;
 		$tPERSolicitudPersonal->Estado						= '0';
+
 		if($termino == '0'){
 			$tPERSolicitudPersonal->EstadoCulmino			= '0';
+			$tPERSolicitudPersonal->Proceso					= 'T';
+			$tPERSolicitudPersonal->Ubicacion				= 'C';
+			$tPERSolicitudPersonal->IdUsuarioAT				= $idusuario;
+			$tPERSolicitudPersonal->FechaAT					= $fecha;
+		}else{
+			$tPERSolicitudPersonal->Proceso					= 'P';
+			$tPERSolicitudPersonal->Ubicacion				= 'Z';
 		}
+
+
 		$tPERSolicitudPersonal->save();
 
 

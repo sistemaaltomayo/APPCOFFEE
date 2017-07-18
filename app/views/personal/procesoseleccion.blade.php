@@ -12,7 +12,7 @@
 
 <div class="titulo col-xs-12 col-md-12 col-sm-12 col-lg-12">
 	<div class="msj"></div>
-	<h4 style="text-align:center;">PROCESO DE SELECCIÓN PERSONAL <br><small>({{$postulante->Nombre}})</small></h4>
+	<h4 style="text-align:center;">PROCESO DE SELECCIÓN PERSONAL <br><small>({{$postulante->Nombre}} {{$postulante->Apellido}})</small></h4>
 </div>
 
 
@@ -263,6 +263,11 @@
 							  	{{Form::text('nombretermino',$postulante->Nombre, array('class' => 'form-control control', 'placeholder' => 'Nombre', 'id' => 'nombretermino', 'maxlength' => '200', 'disabled ' => 'disabled'))}}
 						</div>
 
+						<div class="input-group grupo-imput" >
+						    <span class="input-group-addon" id="basic-addon1">Apellido Completo: </span>
+							  	{{Form::text('apellidotermino',$postulante->Apellido, array('class' => 'form-control control', 'placeholder' => 'Apellido', 'id' => 'apellidotermino', 'maxlength' => '200', 'disabled ' => 'disabled'))}}
+						</div>
+
 						<div class="input-group grupo-imput">
 						    <span class="input-group-addon" id="basic-addon1">DNI (*) : </span>
 							  	{{Form::text('dnitermino',$postulante->Dni, array('class' => 'solonumero form-control control', 'placeholder' => 'DNI', 'id' => 'dnitermino', 'maxlength' => '8' ,'disabled ' => 'disabled'))}}
@@ -276,6 +281,11 @@
 						<div class="input-group grupo-imput cajadi">
 						    <span class="input-group-addon" id="basic-addon1">Dirección (*) : </span>
 							{{Form::text('direccion','', array('class' => 'form-control control', 'placeholder' => 'Dirección', 'id' => 'direccion', 'maxlength' => '200' ))}}
+						</div>
+
+						<div class="input-group grupo-imput cajasexo">
+						    <span class="input-group-addon" id="basic-addon1">Sexo (*): </span>
+							{{ Form::select('sexo', $combosexo, array(),['class' => 'form-control control' , 'id' => 'sexo']) }}
 						</div>
 
 						<div class="input-group grupo-imput cajapro">
@@ -750,7 +760,7 @@
 				                  <blockquote>
 				                  	<h4>PRIMERA INDICACIÓN: </h4>
 				                  	<p>
-										Escriba una cruz <b>(✓)</b> en la <b>columna 1</b> a la altura de cada seguro de incendios o de accidentes desde 150.000 a 400.000  soles inclusive, contratado entre el 15 de marzo de 1975 y el 10 de mayo de 1976.
+										Escriba una aspa <b>(✓)</b> en la <b>columna 1</b> a la altura de cada seguro de incendios o de accidentes desde 150.000 a 400.000  soles inclusive, contratado entre el 15 de marzo de 1975 y el 10 de mayo de 1976.
 				                  	</p>
 				              		</blockquote>
 				                </div>
@@ -762,7 +772,7 @@
 				                  <blockquote>
 				                  	<h4>SEGUNDA INDICACIÓN: </h4>
 				                  	<p>
-										Escriba una cruz <b>(✓)</b> en la <b>columna 2</b> a la altura de cada seguro de vida o de accidentes, hasta 300.000  soles inclusive, contratado entre el 15 de octubre de 1975 y el 20 de agosto de 1976.	
+										Escriba una aspa <b>(✓)</b> en la <b>columna 2</b> a la altura de cada seguro de vida o de accidentes, hasta 300.000  soles inclusive, contratado entre el 15 de octubre de 1975 y el 20 de agosto de 1976.	
 													                  		
 				                  	</p>
 				              		</blockquote>
@@ -774,7 +784,7 @@
 				                  <blockquote>
 				                  	<h4>TERCERA INDICACIÓN: </h4>
 				                  	<p>
-										Escriba una cruz <b>(✓)</b> en la <b>columna 3</b> a la altura de cada seguro de incendios o de vida, desde 200.000 a  500.000 soles inclusive, contratado entre el 10 de febrero de 1975 y el 15 de junio de 1976.
+										Escriba una aspa <b>(✓)</b> en la <b>columna 3</b> a la altura de cada seguro de incendios o de vida, desde 200.000 a  500.000 soles inclusive, contratado entre el 10 de febrero de 1975 y el 15 de junio de 1976.
 				                  	</p>
 				              		</blockquote>
 				                </div>
@@ -843,7 +853,7 @@
 					                  <blockquote>
 					                  	<h4>PRIMERA INDICACIÓN: </h4>
 					                  	<p>
-											Escriba una cruz <b>(✓)</b> en la <b>columna 1</b> a la altura de cada seguro de incendios o de accidentes desde 150.000 a 400.000  soles inclusive, contratado entre el 15 de marzo de 1975 y el 10 de mayo de 1976.
+											Escriba una aspa <b>(✓)</b> en la <b>columna 1</b> a la altura de cada seguro de incendios o de accidentes desde 150.000 a 400.000  soles inclusive, contratado entre el 15 de marzo de 1975 y el 10 de mayo de 1976.
 					                  	</p>
 					              		</blockquote>
 					                </div>
@@ -855,7 +865,7 @@
 					                  <blockquote>
 					                  	<h4>SEGUNDA INDICACIÓN: </h4>
 					                  	<p>
-											Escriba una cruz <b>(✓)</b> en la <b>columna 2</b> a la altura de cada seguro de vida o de accidentes, hasta 300.000  soles inclusive, contratado entre el 15 de octubre de 1975 y el 20 de agosto de 1976.	
+											Escriba una aspa <b>(✓)</b> en la <b>columna 2</b> a la altura de cada seguro de vida o de accidentes, hasta 300.000  soles inclusive, contratado entre el 15 de octubre de 1975 y el 20 de agosto de 1976.	
 														                  		
 					                  	</p>
 					              		</blockquote>
@@ -867,7 +877,7 @@
 					                  <blockquote>
 					                  	<h4>TERCERA INDICACIÓN: </h4>
 					                  	<p>
-											Escriba una cruz <b>(✓)</b> en la <b>columna 3</b> a la altura de cada seguro de incendios o de vida, desde 200.000 a  500.000 soles inclusive, contratado entre el 10 de febrero de 1975 y el 15 de junio de 1976.
+											Escriba una aspa <b>(✓)</b> en la <b>columna 3</b> a la altura de cada seguro de incendios o de vida, desde 200.000 a  500.000 soles inclusive, contratado entre el 10 de febrero de 1975 y el 15 de junio de 1976.
 					                  	</p>
 					              		</blockquote>
 					                </div>
@@ -1018,7 +1028,7 @@
 				        	@if($item->IdPreguntaPrimerExamenAtc != $idPregunta)
 
 								<div class="col-xs-12 col-md-12">
-									<div class="preguntas pregunta{{$contadorItem}}">
+									<div class="preguntas preguntatc{{$contadorItem}}">
 
 										<div class="numero" style='left:25%;text-align:center;width:300px;'><p>{{$contadorItem}}. {{$item->Categoria}}</p></div>
 										<div class="pregunta">
@@ -1107,7 +1117,7 @@
 		        	@if($item->IdPreguntaVenta != $idPregunta)
 
 						<div class="col-xs-12 col-md-12">
-							<div class="preguntas pregunta{{$contadorItem}}">
+							<div class="preguntas preguntasgex{{$contadorItem}}">
 
 								<div class="numero"><p>{{$contadorItem}}</p></div>
 								<div class="pregunta">
@@ -1666,7 +1676,7 @@
 					$("#calificacionadm .si").html(si);
 					$("#calificacionadm .cal").html(calificacion);
 
-					if(parseInt(si) > 6){
+					if(parseInt(si) > 16){
 						$(".evaluacionterminar").css("display", "none");
 						$(".evaluacioncontinuar").css("display", "inline-block");
 					}else{
@@ -1834,7 +1844,7 @@
 	 	centroestudios 	    = $('#centroestudios').val();	 	
 	 	cicloacademico 	    = $('#cicloacademico').val();
 	 	gradoestudio 	    = $('#gradoestudio').val();
-
+	 	sexo 	    		= $('#sexo').val();
 
 
 
@@ -1867,6 +1877,11 @@
 	 	/************************ datos personales **********************/
 	 	if(!valVacio($('#fechanacimiento').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo fecha nacimiento es obligatorio<br>'; pintar('cajafn');}
 	 	if(!valVacio($('#direccion').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo direccion es obligatorio<br>'; pintar('cajadi');}
+
+	 	if(!valSelect($('#sexo').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo sexo seleccionado es invalido<br>';  pintar('cajasexo');}
+
+
+
 	 	if(!valSelect($('#provincia').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo provincia seleccionado es invalido<br>';  pintar('cajapro');}
 		if(!valSelect($('#distrito').val(),0)){ alertaMensajeGlobal+='<strong>Error!</strong> El campo distrito seleccionado es invalido<br>'; pintar('cajadis');}
 		if(!valVacio($('#celular').val())){ alertaMensajeGlobal+='<strong>Error!</strong> El campo celular es obligatorio<br>'; pintar('cajacel');}
@@ -2008,14 +2023,10 @@
             {
                 url: "/APPCOFFEE/insertar-datos-personales-postulante-ajax",
                 type: "POST",
-                data: { nombretermino : nombretermino , dnitermino : dnitermino, fechanacimiento : fechanacimiento, direccion : direccion, provincia : provincia, distrito : distrito, celular : celular, telefono : telefono, correoelectronico : correoelectronico, gradoinstruccion : gradoinstruccion , medio : medio,idpostulante : idpostulante , xmlreferencia : xmlreferencia, xmlprograma : xmlprograma, xmlidioma : xmlidioma, xmltrabajo : xmltrabajo, especificarmedio : especificarmedio , talento : talento , xmlhijosesposa : xmlhijosesposa , xmlcursoadicional : xmlcursoadicional , nombreultimo : nombreultimo , celularultimmo : celularultimmo , nombrecarrera : nombrecarrera , centroestudios : centroestudios , cicloacademico : cicloacademico ,gradoestudio : gradoestudio },
+                data: { nombretermino : nombretermino , dnitermino : dnitermino, fechanacimiento : fechanacimiento, direccion : direccion, provincia : provincia, distrito : distrito, celular : celular, telefono : telefono, correoelectronico : correoelectronico, gradoinstruccion : gradoinstruccion , medio : medio,idpostulante : idpostulante , xmlreferencia : xmlreferencia, xmlprograma : xmlprograma, xmlidioma : xmlidioma, xmltrabajo : xmltrabajo, especificarmedio : especificarmedio , talento : talento , xmlhijosesposa : xmlhijosesposa , xmlcursoadicional : xmlcursoadicional , nombreultimo : nombreultimo , celularultimmo : celularultimmo , nombrecarrera : nombrecarrera , centroestudios : centroestudios , cicloacademico : cicloacademico ,gradoestudio : gradoestudio ,sexo : sexo },
             }).done(function(pagina) 
             {
             	
-
-
-
-
             	$(".topdatospersonales").css("display", "none");
 				$(".topempezarexamen1").css("display", "inline-block");
             	$('#modalcargando').modal('hide');
@@ -2052,6 +2063,8 @@
 		$(".cajareftra").removeClass("errorcaja");
 		$(".cajanultimo").removeClass("errorcaja");
 		$(".cajacelultimo").removeClass("errorcaja");
+		$(".cajasexo").removeClass("errorcaja");
+
 
 		$(".cajanombrecarrera").removeClass("errorcaja");
 		$(".cajacentroestudio").removeClass("errorcaja");

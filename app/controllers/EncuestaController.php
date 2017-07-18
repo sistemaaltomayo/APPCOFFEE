@@ -61,9 +61,7 @@ class EncuestaController extends BaseController
 
 		if($_POST){
 
-			try{
 
-				DB::beginTransaction();
 
 				$local 				= Input::get('local');
 				$fecha 				= Input::get('fecha'); //(string)date_format(date_create(Input::get('fecha')), 'Y-m-d');
@@ -121,14 +119,6 @@ class EncuestaController extends BaseController
 				$tGENLibroReclamaciones->IdUsuario			= $IdUsuarioCrea;
 
 				$tGENLibroReclamaciones->save();
-
-				DB::commit();
-
-
-			}catch(Exception $ex){
-				DB::rollback();
-				return Redirect::to('/getion-libro-reclamaciones/'.$idOpcion)->with('alertaMensajeGlobalE', 'Ocurrio un error inesperado. Porfavor contacte con el administrador del sistema');	
-			}
 
 
 			return Redirect::to('/getion-libro-reclamaciones'.'/'.$idOpcion)->with('alertaMensajeGlobal', 'Registro Exitoso');
