@@ -39,7 +39,7 @@ $('#listacheckplus input').on('click', function(event){
 
 	$.ajax(
     {
-        url: "/APPALTOMAYO/activar-ajax-permisos-plus",
+        url: "/APPCOFFEE/activar-ajax-permisos-plus",
         type: "POST",
         data: "identiti="+identiti+"&checkcadena="+checkcadena,
     }).done(function(pagina) 

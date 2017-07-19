@@ -675,8 +675,8 @@ class PersonalController extends BaseController
 	    $listaprimerexamenadmin     = DB::table('PER.PrimerExamenAdministrador')
 				            	    ->get();
 
-	    $listaprimerexamenatc     = DB::table('PER.PrimerExamenAtc')
-				            	    ->get();				            	    
+	    /*$listaprimerexamenatc     = DB::table('PER.PrimerExamenAtc')
+				            	    ->get();	*/			            	    
 
 
 		/************************   Primer Examen atc *********************/
@@ -733,7 +733,7 @@ class PersonalController extends BaseController
 		 'listaPreguntaDetalleBPM'  => $listaPreguntaDetalleBPM,
 		 'respuestaexamenadmin'  	=> $respuestaexamenadmin,
 		 'listaprimerexamenadmin' 	=> $listaprimerexamenadmin,
-		 'listaprimerexamenatc' 	=> $listaprimerexamenatc,
+		 //'listaprimerexamenatc' 	=> $listaprimerexamenatc,
 		 'listasegundoexamen' 		=> $listasegundoexamen,	
 		 'listaprimerexamenatcpostulante' 		=> $listaprimerexamenatcpostulante,		 
 		]);

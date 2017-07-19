@@ -220,7 +220,7 @@ class AutentificacionController extends BaseController
 		$checkcadena 	= Input::get('checkcadena');
 		$accion 		= Input::get('accion');
 
-		$consultadeshabilitar ="UPDATE GEN.RolOpcionPlus SET Activo= 0 where IdRolOpcion='".$identiti."'";
+		$consultadeshabilitar ="UPDATE GEN.RolOpcionPlusZ SET Activo= 0 where IdRolOpcion='".$identiti."'";
 		DB::update($consultadeshabilitar);
 
 		if(count($checkcadena)>0){
@@ -228,7 +228,7 @@ class AutentificacionController extends BaseController
 			$arrays = explode(",", $checkcadena);
 
 			for($i = 0; $i < count($arrays)-1; $i++) {
-				$consulta ="UPDATE GEN.RolOpcionPlus SET Activo = 1 where Id='".$arrays[$i]."'";
+				$consulta ="UPDATE GEN.RolOpcionPlusZ SET Activo = 1 where Id='".$arrays[$i]."'";
 				DB::update($consulta);
 			}
 
