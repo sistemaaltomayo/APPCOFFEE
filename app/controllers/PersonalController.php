@@ -910,6 +910,7 @@ class PersonalController extends BaseController
 
 			try{
 
+				set_time_limit(0);
 				DB::beginTransaction();
 
 				$IdMotivoSolicitud 	= Input::get('motivosolicitud');
