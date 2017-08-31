@@ -552,7 +552,7 @@
         var suma = parseFloat(stock) + parseFloat($(puntero).parent().siblings('#totalstock').html());
         $(this).parent().parent().siblings('.alerterror').html("");
 
-        alert(suma);
+        //alert(suma);
 
         if($(this).parent().siblings('.stockingresado').val()==""){
 

@@ -62,6 +62,12 @@
  	Route::any('/agregar-reclamaciones/{idOpcion}', 'EncuestaController@actionAgregarReclamaciones');
  	Route::any('/insertar-libro-reclamaciones/{idOpcion}', 'EncuestaController@actionRegistrarLibroReclamaciones');
 
+
+
+ 	Route::any('/getion-artesania-productos/{idOpcion}', 'EncuestaController@actionListaProductoArtesania');
+ 	Route::any('/ajax-producto-artesania', 'EncuestaController@actionajaxProductoArtesania');
+
+
 /*****************************************************************************************************/ 
 /***************************************  Inventario ******************************************/
 
@@ -160,9 +166,7 @@
 
 
 /******************************************************************************************************/ 
-/***************************************  WEBSERVIS ***************************************************/
-
-
+/***************************************  CATALOGO ***************************************************/
 
 
 

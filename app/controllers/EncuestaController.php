@@ -5,6 +5,53 @@ class EncuestaController extends BaseController
 {
 
 
+	public function actionajaxProductoArtesania()
+	{
+		$codproducto 				= Input::get('codproducto');
+
+		$listaproducto  					=  tbListarProductoArtesania::join('GEN.ProductoImagen', 'tbListarProductoArtesania.codigoproducto', '=', 'GEN.ProductoImagen.Codigo')
+									   			->where('tbListarProductoArtesania.codigoproducto','=',$codproducto)
+									   			->get();
+
+		$producto  							=  tbListarProductoArtesania::join('GEN.ProductoDetalle', 'tbListarProductoArtesania.codigoproducto', '=', 'GEN.ProductoDetalle.Codigo')
+									   			->where('tbListarProductoArtesania.codigoproducto','=',$codproducto)
+									   			->first();
+				   
+
+		return View::make('encuestaajax/productosartesanias',
+						  [
+						   'producto' 		=> $producto,
+						   'listaproducto' 	=> $listaproducto
+						  ]
+						 );
+
+
+	}
+
+
+
+
+	public function actionListaProductoArtesania($idOpcion)
+	{
+
+
+		$producto  				= tbListarProductoArtesania::orderBy('descripcion', 'asc')->lists('descripcion', 'codigoproducto');
+
+		$comboproducto  		= array(0 => "Busca Producto") + $producto;
+
+
+		return View::make('encuesta/listaproductosartesanias',
+						  [
+						   'idOpcion' 		=> $idOpcion,
+						   'comboproducto' 	=> $comboproducto
+						  ]
+						 );
+
+	}
+
+
+
+
 	public function actionLibroReclamaciones($idOpcion)
 	{
 
