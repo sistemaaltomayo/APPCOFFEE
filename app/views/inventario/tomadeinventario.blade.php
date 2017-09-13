@@ -368,6 +368,7 @@
 						<div class="input-group" >
 					    	<span class="input-group-addon" id="totalstock"></span>
 						    <input type="number" min="0.0" id="plusstock" autofocus class="stockingresado decimal form-control" placeholder="0.00" >
+
 						    <span class="input-group-btn">
 						    	<button class="btnagregarstock btn btn-success" id="" type="button">
 							    	<i class="fa fa-plus fa-lg"></i>
@@ -554,6 +555,18 @@
 
         //alert(suma);
 
+    	if(!Number.isInteger(parseFloat(stock))){
+			arr = stock.toString().split(".");   
+			entero= arr[0]; 
+			decimal = arr[1];
+			if(decimal.length>3){
+			    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> El valor solo debe tener 3 decimales </div>');
+			    return false;	
+			}
+			
+    	}
+
+
         if($(this).parent().siblings('.stockingresado').val()==""){
 
             $(this).parent().parent().siblings('.alerterror').html('<div class="alertstock alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Formato Errado</div>');
@@ -632,6 +645,18 @@
         $(this).parent().parent().siblings('.alerterror').html("");
 
 
+    	if(!Number.isInteger(parseFloat(stock))){
+			arr = stock.toString().split(".");   
+			entero= arr[0]; 
+			decimal = arr[1];
+			if(decimal.length>3){
+			    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> El valor solo debe tener 3 decimales </div>');
+			    return false;	
+			}
+			
+    	}
+
+
         if($(this).parent().siblings('.stockingresado').val()==""){
 
             $(this).parent().parent().siblings('.alerterror').html('<div class="alertstock alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Formato Errado</div>');
@@ -698,6 +723,19 @@
 
         var suma = parseFloat(stock);
         $(this).parent().parent().siblings('.alerterror').html("");
+
+
+    	if(!Number.isInteger(parseFloat(stock))){
+			arr = stock.toString().split(".");   
+			entero= arr[0]; 
+			decimal = arr[1];
+			if(decimal.length>3){
+			    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> El valor solo debe tener 3 decimales </div>');
+			    return false;	
+			}
+			
+    	}
+
 
         if($(this).parent().siblings('.stockingresado').val()==""){
 

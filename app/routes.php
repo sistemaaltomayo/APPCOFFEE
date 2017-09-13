@@ -66,6 +66,10 @@
 
  	Route::any('/getion-artesania-productos/{idOpcion}', 'EncuestaController@actionListaProductoArtesania');
  	Route::any('/ajax-producto-artesania', 'EncuestaController@actionajaxProductoArtesania');
+ 	Route::any('/ajax-filtro-artesania-select', 'EncuestaController@actionajaxFiltroArtesaniaSelect');
+ 	Route::any('/ajax-filtro-artesania-price', 'EncuestaController@actionajaxFiltroArtesaniaPrice');
+
+ 	
 
 
 /*****************************************************************************************************/ 

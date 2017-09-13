@@ -5,6 +5,134 @@ class EncuestaController extends BaseController
 {
 
 
+	public function actionajaxFiltroArtesaniaPrice()
+	{
+
+		/*$precio1 				= Input::get('precio1');
+		$precio2 				= Input::get('precio2');
+
+
+		$query = DB::table('tbListarProductoArtesania')
+		->leftJoin('GEN.ProductoDetalle', 'tbListarProductoArtesania.codigoproducto', '=', 'GEN.ProductoDetalle.Codigo')
+		->leftJoin('GEN.ProductoImagen', 'tbListarProductoArtesania.codigoproducto', '=', 'GEN.ProductoImagen.Codigo')
+		->where('tbListarProductoArtesania.precio','','')
+		->where('','','')
+	  	->groupBy('tbListarProductoArtesania.codigoproducto')
+	  	->groupBy('tbListarProductoArtesania.descripcion')
+	  	->groupBy('tbListarProductoArtesania.precio')
+	  	->select(DB::raw("tbListarProductoArtesania.codigoproducto , tbListarProductoArtesania.descripcion , tbListarProductoArtesania.precio
+	  			, max([GEN].[ProductoImagen].Url) as imagen  "));
+
+Where  [dbo].[tbListarProductoArtesania].precio >= 2 and [dbo].[tbListarProductoArtesania].precio<=8
+
+		if($region != '0') {                            
+		    $query->where('GEN.ProductoDetalle.Region','=',$region);
+		    $sw = 1;
+		}
+ 		if($taller != '0') {                            
+		    $query->Where('GEN.ProductoDetalle.Taller','=',$taller);
+		    $sw = 1;
+		}
+		if($materia != '0') {                            
+		    $query->Where('GEN.ProductoDetalle.Materia','=',$materia);
+		    $sw = 1;
+		}
+		if($linea != '0') {                            
+		    $query->Where('GEN.ProductoDetalle.Linea','=',$linea);
+		    $sw = 1;
+		}		
+		$listaproducto = $query->orderBy('tbListarProductoArtesania.descripcion', 'asc')->get();
+
+		if($sw == 0) { 
+
+			$listaproducto = DB::table('tbListarProductoArtesania')
+			->leftJoin('GEN.ProductoDetalle', 'tbListarProductoArtesania.codigoproducto', '=', 'GEN.ProductoDetalle.Codigo')
+			->leftJoin('GEN.ProductoImagen', 'tbListarProductoArtesania.codigoproducto', '=', 'GEN.ProductoImagen.Codigo')
+		  	->groupBy('tbListarProductoArtesania.codigoproducto')
+		  	->groupBy('tbListarProductoArtesania.descripcion')
+		  	->groupBy('tbListarProductoArtesania.precio')
+		  	->select(DB::raw("tbListarProductoArtesania.codigoproducto , tbListarProductoArtesania.descripcion , tbListarProductoArtesania.precio
+		  			, max([GEN].[ProductoImagen].Url) as imagen  "))
+		  	->orderBy('tbListarProductoArtesania.descripcion', 'asc')
+	   		->take(15)
+		    ->get();
+
+		}	
+
+		return View::make('encuestaajax/productosartesaniasselect',
+						  [
+						   'listaproducto' 	=> $listaproducto
+						  ]
+						 );*/
+
+
+	}
+
+
+	public function actionajaxFiltroArtesaniaSelect()
+	{
+
+		$region 				= Input::get('region');
+		$taller 				= Input::get('taller');
+		$materia 				= Input::get('materia');
+		$linea 					= Input::get('linea');
+		$sw 					= 0;
+
+
+		$query = DB::table('tbListarProductoArtesania')
+		->leftJoin('GEN.ProductoDetalle', 'tbListarProductoArtesania.codigoproducto', '=', 'GEN.ProductoDetalle.Codigo')
+		->leftJoin('GEN.ProductoImagen', 'tbListarProductoArtesania.codigoproducto', '=', 'GEN.ProductoImagen.Codigo')
+	  	->groupBy('tbListarProductoArtesania.codigoproducto')
+	  	->groupBy('tbListarProductoArtesania.descripcion')
+	  	->groupBy('tbListarProductoArtesania.precio')
+	  	->select(DB::raw("tbListarProductoArtesania.codigoproducto , tbListarProductoArtesania.descripcion , tbListarProductoArtesania.precio
+	  			, max([GEN].[ProductoImagen].Url) as imagen  "));
+
+		if($region != '0') {                            
+		    $query->where('GEN.ProductoDetalle.Region','=',$region);
+		    $sw = 1;
+		}
+ 		if($taller != '0') {                            
+		    $query->Where('GEN.ProductoDetalle.Taller','=',$taller);
+		    $sw = 1;
+		}
+		if($materia != '0') {                            
+		    $query->Where('GEN.ProductoDetalle.Materia','=',$materia);
+		    $sw = 1;
+		}
+		if($linea != '0') {                            
+		    $query->Where('GEN.ProductoDetalle.Linea','=',$linea);
+		    $sw = 1;
+		}		
+		$listaproducto = $query->orderBy('tbListarProductoArtesania.descripcion', 'asc')->get();
+
+		if($sw == 0) { 
+
+			$listaproducto = DB::table('tbListarProductoArtesania')
+			->leftJoin('GEN.ProductoDetalle', 'tbListarProductoArtesania.codigoproducto', '=', 'GEN.ProductoDetalle.Codigo')
+			->leftJoin('GEN.ProductoImagen', 'tbListarProductoArtesania.codigoproducto', '=', 'GEN.ProductoImagen.Codigo')
+		  	->groupBy('tbListarProductoArtesania.codigoproducto')
+		  	->groupBy('tbListarProductoArtesania.descripcion')
+		  	->groupBy('tbListarProductoArtesania.precio')
+		  	->select(DB::raw("tbListarProductoArtesania.codigoproducto , tbListarProductoArtesania.descripcion , tbListarProductoArtesania.precio
+		  			, max([GEN].[ProductoImagen].Url) as imagen  "))
+		  	->orderBy('tbListarProductoArtesania.descripcion', 'asc')
+	   		->take(15)
+		    ->get();
+
+		}	
+
+		return View::make('encuestaajax/productosartesaniasselect',
+						  [
+						   'listaproducto' 	=> $listaproducto
+						  ]
+						 );
+
+
+	}
+
+
+
 	public function actionajaxProductoArtesania()
 	{
 		$codproducto 				= Input::get('codproducto');
@@ -36,14 +164,45 @@ class EncuestaController extends BaseController
 
 
 		$producto  				= tbListarProductoArtesania::orderBy('descripcion', 'asc')->lists('descripcion', 'codigoproducto');
-
 		$comboproducto  		= array(0 => "Busca Producto") + $producto;
+
+		$linea  				= GENProductoDetalle::groupBy('GEN.ProductoDetalle.Linea')->orderBy('Linea', 'asc')->select('Linea as Id','Linea')->lists('Linea', 'Id');
+		$combolinea  			= array(0 => "LINEA") + $linea;
+
+		$taller  				= GENProductoDetalle::groupBy('GEN.ProductoDetalle.Taller')->orderBy('Taller', 'asc')->select('Taller as Id','Taller')->lists('Taller', 'Id');
+		$combotaller  			= array(0 => "TALLER") + $taller;
+
+		$materia  				= GENProductoDetalle::groupBy('GEN.ProductoDetalle.Materia')->orderBy('Materia', 'asc')->select('Materia as Id','Materia')->lists('Materia', 'Id');
+		$combomateria  			= array(0 => "MATERIA") + $materia;
+
+		$region  				= GENProductoDetalle::groupBy('GEN.ProductoDetalle.Region')->orderBy('Region', 'asc')->select('Region as Id','Region')->lists('Region', 'Id');
+		$comboregion 			= array(0 => "REGION") + $region;
+
+
+		$listaproducto = DB::table('tbListarProductoArtesania')
+		->leftJoin('GEN.ProductoDetalle', 'tbListarProductoArtesania.codigoproducto', '=', 'GEN.ProductoDetalle.Codigo')
+		->leftJoin('GEN.ProductoImagen', 'tbListarProductoArtesania.codigoproducto', '=', 'GEN.ProductoImagen.Codigo')
+	  	->groupBy('tbListarProductoArtesania.codigoproducto')
+	  	->groupBy('tbListarProductoArtesania.descripcion')
+	  	->groupBy('tbListarProductoArtesania.precio')
+	  	->select(DB::raw("tbListarProductoArtesania.codigoproducto , tbListarProductoArtesania.descripcion , tbListarProductoArtesania.precio
+	  			, max([GEN].[ProductoImagen].Url) as imagen  "))
+	  	->orderBy('tbListarProductoArtesania.descripcion', 'asc')
+   		->take(15)
+	    ->get();
+
+
 
 
 		return View::make('encuesta/listaproductosartesanias',
 						  [
 						   'idOpcion' 		=> $idOpcion,
-						   'comboproducto' 	=> $comboproducto
+						   'comboproducto' 	=> $comboproducto,
+						   'combolinea' 	=> $combolinea,
+						   'combotaller' 	=> $combotaller,
+						   'combomateria' 	=> $combomateria,
+						   'comboregion' 	=> $comboregion,
+						   'listaproducto' 	=> $listaproducto,						   						   
 						  ]
 						 );
 

@@ -454,6 +454,19 @@
 
         $(this).parent().parent().siblings('.alerterror').html("");
 
+
+    	if(!Number.isInteger(parseFloat(stock))){
+			arr = stock.toString().split(".");   
+			entero= arr[0]; 
+			decimal = arr[1];
+			if(decimal.length>3){
+			    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> El valor solo debe tener 3 decimales </div>');
+			    return false;	
+			}
+			
+    	}
+
+
         if($(this).parent().siblings('.stockingresado').val()==""){
 
             $(this).parent().parent().siblings('.alerterror').html('<div class="alertstock alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Formato Errado</div>');
@@ -519,6 +532,17 @@
         
         $(this).parent().parent().siblings('.alerterror').html("");
 
+
+    	if(!Number.isInteger(parseFloat(stock))){
+			arr = stock.toString().split(".");   
+			entero= arr[0]; 
+			decimal = arr[1];
+			if(decimal.length>3){
+			    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> El valor solo debe tener 3 decimales </div>');
+			    return false;	
+			}
+			
+    	}
 
         if($(this).parent().siblings('.stockingresado').val()==""){
 
@@ -591,6 +615,18 @@
 
 
         $(this).parent().parent().siblings('.alerterror').html("");
+
+    	if(!Number.isInteger(parseFloat(stock))){
+			arr = stock.toString().split(".");   
+			entero= arr[0]; 
+			decimal = arr[1];
+			if(decimal.length>3){
+			    $(this).parent().parent().siblings('.alerterror').html('<div class="alertnegativo alert alert-danger" ><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> El valor solo debe tener 3 decimales </div>');
+			    return false;	
+			}
+			
+    	}
+
 
         if($(this).parent().siblings('.stockingresado').val()==""){
 
