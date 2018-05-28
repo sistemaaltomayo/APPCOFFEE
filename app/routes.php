@@ -40,6 +40,14 @@
 	Route::any('/getion-toma-pedido-listos/{idOpcion}', 'TomaPedidoController@actionCocinaMesero');
 
 
+	Route::any('/getion-carta/{idOpcion}', 'TomaPedidoController@actionGestionCarta');
+	Route::any('/listar-productos-carta-ajax', 'TomaPedidoController@actionListarProductoCartaAjax');
+	Route::any('/listar-select-ajax', 'TomaPedidoController@actionListarSelectCartaAjax');
+	Route::any('/activo-carta-ajax', 'TomaPedidoController@actionActivoCartaAjax');
+	Route::any('/agregar-productos-carta-ajax', 'TomaPedidoController@actionAgregarProductoCartaAjax');
+	Route::any('/ordenar-productos-carta-ajax', 'TomaPedidoController@actionOrdenarProductoCartaAjax');
+
+
  /***************************************  ENCUESTAS ******************************************/
 
  	Route::any('/getion-encuesta/{idOpcion}', 'EncuestaController@actionEncuesta');

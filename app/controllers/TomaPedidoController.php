@@ -4,6 +4,174 @@ use app\bibliotecas\GeneralClass;
 class TomaPedidoController extends BaseController
 {
 
+	public function actionOrdenarProductoCartaAjax()
+	{
+		$data 			= Input::get('data');
+		$lista 			= explode('***', $data);
+		$etiqueta 		= Input::get('etiqueta');
+
+		for ($i = 0; $i < count($lista)-1; $i++) {
+
+			$idcarta 			= $lista[$i];
+			$cabecera 			= GENCartaProducto::find($idcarta);
+			$cabecera->item 	= $i+1;
+			$cabecera->save();
+
+		}
+
+		$listacategoria= DB::table('GEN.CartaCategoria')
+		->select('IdCategoria')
+		->where('Etiqueta','=',$etiqueta)
+   		->lists('IdCategoria');
+
+		
+
+		$listaCarta= DB::table('tbListarCartaG')
+   		->whereIn('tbListarCartaG.idcategoria', $listacategoria)
+   		->orderBy('tbListarCartaG.item', 'asc')
+   		->get();
+
+
+
+		return View::make('tomapedidoajax/listaproductocarta',
+						 [
+						 	'listaCarta' => $listaCarta
+						 ]);
+
+
+
+
+	}
+
+
+
+	public function actionAgregarProductoCartaAjax()
+	{
+		$etiqueta 		= Input::get('etiqueta');
+		$idproducto 	= Input::get('idproducto');
+		$generalclass   = new GeneralClass();
+		$fecha 			= date("Ymd H:i:s");
+
+		$producto 		= GENProducto::where('Id', '=', $idproducto)->first();
+		$item 			= GENCartaProducto::where('IdCategoriaProducto', '=', $producto->IdCategoria)->max('item');
+		$idcabe 		= $generalclass->getCreateIdInvictusLima('GEN.CartaProducto');
+
+
+		$tcabecera							= new GENCartaProducto;
+		$tcabecera->Id 						= $idcabe;
+		$tcabecera->IdProducto 				= $producto->Id;
+		$tcabecera->IdCategoriaProducto 	= $producto->IdCategoria;
+		$tcabecera->Largo 					= 0;
+		$tcabecera->Activo 					= 1;
+		$tcabecera->FechaCrea 				= $fecha;
+		$tcabecera->item 					= $item+1;
+		$tcabecera->save();
+
+
+
+		$listacategoria= DB::table('GEN.CartaCategoria')
+		->select('IdCategoria')
+		->where('Etiqueta','=',$etiqueta)
+   		->lists('IdCategoria');
+
+		
+
+		$listaCarta= DB::table('tbListarCartaG')
+   		->whereIn('tbListarCartaG.idcategoria', $listacategoria)
+   		->orderBy('tbListarCartaG.item', 'asc')
+   		->get();
+
+
+
+		return View::make('tomapedidoajax/listaproductocarta',
+						 [
+						 	'listaCarta' => $listaCarta
+						 ]);
+
+
+	}
+
+	public function actionActivoCartaAjax()
+	{
+		$id = Input::get('id');
+		$checked = Input::get('checked');
+
+		$cabecera 			= GENCartaProducto::find($id);
+		$cabecera->Activo 	= $checked;
+		$cabecera->save();
+
+	}
+
+	public function actionListarSelectCartaAjax()
+	{
+		$etiqueta = Input::get('etiqueta');
+
+		$listacategoria= DB::table('GEN.CartaCategoria')
+		->select('IdCategoria')
+		->where('Etiqueta','=',$etiqueta)
+   		->lists('IdCategoria');
+
+		$listaProducto=tbListarProducto::whereIn('idcategoria',$listacategoria)->get();
+
+		return View::make('tomapedidoajax/listaproductoselect',
+						 [
+						 	'listaProducto' => $listaProducto
+						 ]);
+
+	}
+
+	
+
+	public function actionListarProductoCartaAjax()
+	{
+		$etiqueta = Input::get('etiqueta');
+
+		$listacategoria= DB::table('GEN.CartaCategoria')
+		->select('IdCategoria')
+		->where('Etiqueta','=',$etiqueta)
+   		->lists('IdCategoria');
+
+
+		$listaCarta= DB::table('tbListarCartaG')
+   		->whereIn('tbListarCartaG.idcategoria', $listacategoria)
+   		->orderBy('tbListarCartaG.item', 'asc')
+   		->get();
+
+		return View::make('tomapedidoajax/listaproductocarta',
+						 [
+						 	'listaCarta' => $listaCarta
+						 ]);
+
+	}
+
+
+	public function actionGestionCarta($idOpcion)
+	{
+
+		$validarurl = new GeneralClass();
+    	$exits = $validarurl->getUrl($idOpcion);
+
+    	if(!$exits){
+    		return Response::view('error.error404',array(), 404);
+    	}
+
+    	$listaProducto=tbListarProducto::all();
+		$listaCarta= DB::table('GEN.CartaCategoria')
+		->select('Nombres','Etiqueta')
+		->groupBy('Nombres')
+		->groupBy('Etiqueta')
+		->orderBy('Nombres', 'asc')
+   		->get();
+
+		return View::make('tomapedido/gestioncarta',
+						 [
+						 	'listaCarta' => $listaCarta,
+						 	'listaProducto' => $listaProducto
+						 ]);
+
+	}
+
+
 	public function actionTomaPedido()
 	{
 		$mesas="";
@@ -68,7 +236,7 @@ class TomaPedidoController extends BaseController
 		$listaproducto=explode('*', Input::get('id'));
 		$listaCarta= DB::table('tbListarCarta')
    		->whereIn('tbListarCarta.idcategoria', $listaproducto)
-   		->orderBy('tbListarCarta.idcarta', 'asc')
+   		->orderBy('tbListarCarta.item', 'asc')
    		->get();
 		return View::make('tomapedidoajax/cartajax',
 						 ['listaCarta' => $listaCarta]);

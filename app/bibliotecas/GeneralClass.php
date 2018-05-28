@@ -281,6 +281,22 @@ class GeneralClass {
 	  }
 
 
+	  public function getCreateIdInvictusLima($tabla) {
+
+	  		$id="";
+
+			$prefijo = 'LIM01CEN';
+
+			$stmt = DB::connection('sqlsrv')->getPdo()->prepare('SET NOCOUNT ON;EXEC GEN.AM_GeneraIDM ?,?,?');
+	        $stmt->bindParam(1, $tabla ,PDO::PARAM_STR);
+	        $stmt->bindParam(2, $prefijo ,PDO::PARAM_STR);   
+	        $stmt->bindParam(3, $id ,PDO::PARAM_STR|PDO::PARAM_INPUT_OUTPUT,20);
+	        $stmt->execute();	
+
+	  		return $id;
+
+	  }
+
 
 }
 
