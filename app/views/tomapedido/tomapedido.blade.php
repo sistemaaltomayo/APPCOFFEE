@@ -239,6 +239,7 @@
   </div>
 </div>
 
+
 <div class="modal fade" id="modalcargando" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
       <div class="modal-content" style="width:320px;height:310px;margin:0 auto">

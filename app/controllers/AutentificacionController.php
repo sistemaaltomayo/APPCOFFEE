@@ -14,12 +14,11 @@ class AutentificacionController extends BaseController
 	{
 		if($_POST)
 		{
+			
 			/*************  base de datos *************/
-
 			$xml = new GeneralClass();
 	    	$basedatos = $xml->getBaseXml();
 	    	Session::put('basedatos', $basedatos);
-
 	    	/******************************************/
 
 			$usuario = strtoupper(Input::get('usuario'));

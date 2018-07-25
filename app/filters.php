@@ -17,6 +17,8 @@ App::before(function($request)
 	$xml = new GeneralClass();
 	$urls = $xml->getBaseXml();
 	$posicion_coincidencia=0;
+	$posicion_autoservicio=0;
+
 	$cadena_de_texto = Request::url();
 	$cadena_buscada   = '';
 
@@ -28,19 +30,23 @@ App::before(function($request)
 	}
 
 	$posicion_coincidencia =  strrpos($cadena_de_texto,$cadena_buscada);
+	$posicion_autoservicio =  strrpos($cadena_de_texto,'autoservicio');
 
 	//se puede hacer la comparacion con 'false' o 'true' y los comparadores '===' o '!=='
 
-	if ($posicion_coincidencia > 0) {
+	if ($posicion_autoservicio <= 0) {
+		if ($posicion_coincidencia > 0) {
 
-	    if(Request::url()!='http://'.$cadena_buscada.':8080/APPCOFFEE/login'  && !Session::has('Usuario')){
+			
+		    if(Request::url()!='http://'.$cadena_buscada.':8080/APPCOFFEE/login'  && !Session::has('Usuario')){
 
-			return Redirect::to('/login');
-		}
+				return Redirect::to('/login');
+			}
 
-	    if( (Request::url()=='http://'.$cadena_buscada.':8080/APPCOFFEE/login' ||  Request::url()=='http://'.$cadena_buscada.':8080/APPCOFFEE')  && Session::has('Usuario')){
+		    if( (Request::url()=='http://'.$cadena_buscada.':8080/APPCOFFEE/login' ||  Request::url()=='http://'.$cadena_buscada.':8080/APPCOFFEE')  && Session::has('Usuario')){
 
-			return Redirect::to('/bienvenidos-coffee-and-arts');
+				return Redirect::to('/bienvenidos-coffee-and-arts');
+			}
 		}
 	}
 

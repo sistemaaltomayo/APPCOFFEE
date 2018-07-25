@@ -160,6 +160,17 @@ class GeneralClass {
 	  		
 	  }
 
+	  public function getDecodificarIdconPrefijo($id,$prefijo) {
+
+	  		$id= Hashids::decode($id);
+	  		$idopcioncompleta = str_pad($id[0], 12, "0", STR_PAD_LEFT); 
+
+			$idopcioncompleta = $prefijo.$idopcioncompleta;
+	  		return $idopcioncompleta;
+	  		
+	  }
+
+
 
 	  public function getCreateId($basedatos) {
 

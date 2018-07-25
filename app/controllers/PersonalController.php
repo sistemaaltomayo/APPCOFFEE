@@ -5,6 +5,43 @@ class PersonalController extends BaseController
 {
 
 
+	/****************************** Asistencia ***********************************/
+
+	
+	public function actionListaAsistenciaDia($idOpcion)
+	{
+
+
+		$validarurl = new GeneralClass();
+    	$exits = $validarurl->getUrl($idOpcion);
+
+    	if(!$exits){
+    		return Response::view('error.error404',array(), 404);
+    	}
+
+		$hoy = date('Y-m-d');
+		$hoy = '2018-01-03';
+
+		$stmt = DB::connection('sqlsrv')->getPdo()->prepare('SET NOCOUNT ON;EXEC SMS_EMAILASISTENCIAWS ?');
+        $stmt->bindParam(1, $hoy ,PDO::PARAM_STR);
+        $stmt->execute();	
+
+
+		$listaAsistencia =  GENEmailAsistenciaEmpleadosWS::join('GEN.EquipoTablet', 'GEN.EmailAsistenciaEmpleadosWS.IdLocal', '=', 'GEN.EquipoTablet.IdLocal')
+						    ->get();
+
+		return View::make('personal/listaasistenciadeldia',
+						 [
+						  	'hoy'  	 			 => $hoy,
+						  	'listaAsistencia'  	 => $listaAsistencia,						  
+						 ]);
+	}
+
+
+
+
+
+
 
 	/******************************* Personal ************************************/
 	public function actionGuardarSegundoExamen()

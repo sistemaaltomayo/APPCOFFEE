@@ -10,6 +10,21 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+
+
+ /***************************************  Autoservicio ******************************************/
+
+ 	Route::any('/autoservicio/inicio', 'AutoservicioController@actionInicio');
+ 	Route::any('/autoservicio/idioma', 'AutoservicioController@actionIdioma');
+ 	Route::any('/autoservicio/menu/{tipoentrega}', 'AutoservicioController@actionMenu');
+	Route::any('/autoservicio/ajax-productos-categoria', 'AutoservicioController@actionAjaxProductoCategoria');
+	Route::any('/autoservicio/ajax-detalle-producto', 'AutoservicioController@actionAjaxDetalleProducto');
+	Route::any('/autoservicio/ajax-carrito-compra', 'AutoservicioController@actionAjaxCarritoCompra');
+ 	Route::any('/autoservicio/comprobantedepago', 'AutoservicioController@actionComprobantePago');
+ 	Route::any('/autoservicio/detalle-pedido', 'AutoservicioController@actionDetalleproducto'); 	
+
+
+
  /***************************************  Authentication ******************************************/
 
  	Route::any('/', 'AutentificacionController@actionLogin');
@@ -170,11 +185,15 @@
 	Route::any('/empezar-segundo-examen-ajax', 'PersonalController@actionEmpezarSegundoExamen');
 	Route::any('/guardar-examen-segundo-postulante-ajax', 'PersonalController@actionGuardarSegundoExamen');
 
-
 	Route::any('/actualizar-cronometro-examen-ajax', 'PersonalController@actionActualizarCronometroExamen');
 	Route::any('/agregar-personal-termino-solicitud-ajax', 'PersonalController@actionAgregarPersonalTerminoSolicitudAjax');
-
 	Route::any('/lista-postulante-solicitud-ajax', 'PersonalController@actionListaPostulanteSolicitud');
+
+
+
+	Route::any('/getion-asistencia-dia/{idOpcion}', 'PersonalController@actionListaAsistenciaDia');
+
+
 
 
 /******************************************************************************************************/ 
