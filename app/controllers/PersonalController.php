@@ -20,7 +20,7 @@ class PersonalController extends BaseController
     	}
 
 		$hoy = date('Y-m-d');
-		$hoy = '2018-01-03';
+		//$hoy = '2018-01-03';
 
 		$stmt = DB::connection('sqlsrv')->getPdo()->prepare('SET NOCOUNT ON;EXEC SMS_EMAILASISTENCIAWS ?');
         $stmt->bindParam(1, $hoy ,PDO::PARAM_STR);
